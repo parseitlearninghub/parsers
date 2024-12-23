@@ -738,10 +738,9 @@ body {
 }
 
 .bulletin-info {
-  width: 100%;
   background-color: rgb(245, 245, 245);
   height: 100%;
-  overflow: scroll;
+  width: 100%;
 }
 
 .bulletin-info-assignment,
@@ -752,23 +751,33 @@ body {
 }
 
 .bulletin-info-assignment {
-  display: block;
   background-color: rgb(245, 245, 245);
   overflow: scroll;
-  scrollbar-width: none;
 }
 
 .bulletin-info-announcement {
   background-color: teal;
 }
 
-.assignment-container {
+.notdone-assignment {
   width: 100%;
   background-color: transparent;
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
   flex-direction: column;
+  align-items: center;
+}
+.done-assignment {
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fillers-assignment {
+  height: 50px;
+  width: 100%;
+  background-color: transparent;
 }
 
 .assignment-notdone-wrapper {
