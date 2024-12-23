@@ -859,7 +859,7 @@ body {
   background-color: transparent;
   width: 100%;
   height: 100%;
-  display: flex;
+  display: none;
   justify-content: flex-end;
   align-items: center;
   flex-direction: column;
@@ -886,9 +886,6 @@ body {
   justify-content: center;
   align-items: center;
   border-radius: 50%;
-  opacity: 0;
-  transform: scale(0.8);
-  transition: opacity 0.5s ease, transform 0.5s ease;
   aspect-ratio: 1/1;
   box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
     rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
@@ -896,16 +893,6 @@ body {
   pointer-events: all;
 }
 
-.widget-wrapper.animate {
-  opacity: 1;
-  transform: scale(1);
-  z-index: 100;
-}
-.widget-wrapper.animate-close {
-  opacity: 0;
-  transform: scale(0);
-  z-index: 100;
-}
 .widget-img {
   width: 20px;
   filter: invert(37%) sepia(100%) saturate(7404%) hue-rotate(7deg)

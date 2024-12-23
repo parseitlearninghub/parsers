@@ -183,7 +183,7 @@ document.getElementById("createassignment-btn").addEventListener("click", async 
         setTimeout(() => {
             document.getElementById("check_animation_div").style.display = "none";
             window.location.reload();
-        }, 1800);
+        }, 1800)
     });
 });
 

@@ -749,17 +749,16 @@ document.getElementById("check_bulletin").addEventListener("click", (event) => {
   document.getElementById("bulletin-wrapper").style.animation =
     "fadeScaleUp 0.25s ease-in-out forwards";
 
+  document.getElementById("bulletin-announcement").style.display = "none";
+  document.getElementById("bulletin_announcement").style.backgroundColor = "#fefefe";
+  document.getElementById("bulletin-assignment").style.display = "block";
+  document.getElementById("bulletin_assignment").style.backgroundColor = "rgb(245, 245, 245)";
 
   if (user_parser_type === "teacher") {
-    const widgets = document.querySelectorAll(".widget-wrapper");
-
-    widgets.forEach((widget, index) => {
-      // Remove the "animate-close" class first
-      widget.classList.remove("animate-close");
-      setTimeout(() => {
-        widget.classList.add("animate");
-      }, index * 100);
-    });
+    document.getElementById("teacher-widget-div").style.display = "flex";
+  }
+  else {
+    document.getElementById("teacher-widget-div").style.display = "none";
   }
 
 
@@ -776,43 +775,27 @@ document.getElementById("check_bulletin").addEventListener("click", (event) => {
       document.getElementById("bulletin-div").style.animation =
         "opacity_bg_rev 0.25s ease-in-out forwards";
 
-      const widgets = document.querySelectorAll(".widget-wrapper");
-      widgets.forEach((widget, index) => {
-        // Remove the "animate" class first
-        widget.classList.remove("animate");
-        setTimeout(() => {
-          widget.classList.add("animate-close");
-        }, index * 100);
-      });
+      document.getElementById("teacher-widget-div").style.display = "none";
     }
   });
 });
 
 document.getElementById("bulletin_assignment").addEventListener("click", () => {
   showBulletinMenu("bulletin_assignment", "bulletin_announcement", "bulletin-assignment", "bulletin-announcement");
-  const widgets = document.querySelectorAll(".widget-wrapper");
   if (user_parser_type === "teacher") {
-    widgets.forEach((widget, index) => {
-      // Remove the "animate-close" class first
-      widget.classList.remove("animate-close");
-      setTimeout(() => {
-        widget.classList.add("animate");
-      }, index * 100);
-    });
+    document.getElementById("teacher-widget-div").style.display = "flex";
+  } else {
+    document.getElementById("teacher-widget-div").style.display = "none";
   }
 });
 
 document.getElementById("bulletin_announcement").addEventListener("click", () => {
   showBulletinMenu("bulletin_announcement", "bulletin_assignment", "bulletin-announcement", "bulletin-assignment");
-  const widgets = document.querySelectorAll(".widget-wrapper");
   if (user_parser_type === "teacher") {
-    widgets.forEach((widget, index) => {
-      // Remove the "animate" class first
-      widget.classList.remove("animate");
-      setTimeout(() => {
-        widget.classList.add("animate-close");
-      }, index * 100);
-    });
+    document.getElementById("teacher-widget-div").style.display = "none";
+  }
+  else {
+    document.getElementById("teacher-widget-div").style.display = "none";
   }
 
 });
