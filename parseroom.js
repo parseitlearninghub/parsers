@@ -825,10 +825,10 @@ async function getAssignments() {
   if (type === "student") {
     const assignmentRef = ref(
       database,
-      `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members/${studentid}/assignment/`
+      `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/`
     );
 
-    onValue(assignmentRef, (snapshot) => {
+    onValue(assignmentRef, async (snapshot) => {
       const containerNotDone = document.getElementById("notdone-assignment");
       const containerDone = document.getElementById("done-assignment");
 
@@ -839,16 +839,22 @@ async function getAssignments() {
         const assignments = snapshot.val();
         for (const assignmentKey in assignments) {
           const assignment = assignments[assignmentKey];
-          const assignment_title = assignment.title;
+          const assignment_title = assignment.header;
           const assignment_date = assignment.date;
           const assignment_duedate = assignment.duedate;
 
+          let assignment_status = '';
           const wrapper = document.createElement("div");
-          wrapper.className =
-            assignment.status === "incomplete"
-              ? "assignment-notdone-wrapper"
-              : "assignment-done-wrapper";
+          const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentKey}/completed/${user_parser}`);
+          const snapshot = await get(usernameRef);
+          if (snapshot.exists()) {
+            assignment_status = 'completed';
+          }
+          else {
+            assignment_status = 'incomplete';
+          }
 
+          wrapper.className = assignment_status === "completed" ? "assignment-done-wrapper" : "assignment-notdone-wrapper";
           wrapper.addEventListener("click", (event) => {
             window.location.href = `viewassignment.html?assignment=${assignmentKey}`;
           });
@@ -859,7 +865,7 @@ async function getAssignments() {
           const iconImg = document.createElement("img");
           iconImg.src = "assets/icons/clipboard.png";
           iconImg.className =
-            assignment.status === "incomplete"
+            assignment_status === "incomplete"
               ? "assignment-img"
               : "done-assignment-img";
 
@@ -894,7 +900,7 @@ async function getAssignments() {
           wrapper.appendChild(iconSection);
           wrapper.appendChild(detailsSection);
 
-          if (assignment.status === "incomplete") {
+          if (assignment_status === "incomplete") {
             containerNotDone.appendChild(wrapper);
           } else {
             containerDone.appendChild(wrapper);

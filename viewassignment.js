@@ -67,18 +67,18 @@ function renderAssignmentUI() {
     if (type === "student") {
         const assignmentRef = ref(
             database,
-            `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members/${studentid}/assignment/${assignmentcode}`
+            `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}`
         );
 
-        onValue(assignmentRef, (snapshot) => {
+        onValue(assignmentRef, async (snapshot) => {
             const assignment_cont = document.getElementById('trainchatbot-wrapper');
             assignment_cont.innerHTML = "";
             if (snapshot.exists()) {
                 const assignment = snapshot.val();
-                const assignment_title = assignment.title;
+                const assignment_title = assignment.header;
                 const assignment_date = assignment.date;
                 const assignment_duedate = assignment.duedate;
-                const assignment_instruction = assignment.instruction;
+                const assignment_instruction = assignment.instructions;
 
 
                 const cancelButton = document.createElement('button');
@@ -97,14 +97,13 @@ function renderAssignmentUI() {
                 missingLabel.className = "missing-title";
                 missingLabel.textContent = "Missing";
 
-                if (assignment.mywork === undefined) {
+                const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${studentid}`);
+                const myworkSnapshot = await get(usernameRef);
+                if (!myworkSnapshot.exists()) {
                     if (Due(assignment_duedate)) {
                         assignment_cont.appendChild(missingLabel);
                     }
                 }
-
-
-
                 const headerSection = document.createElement('section');
                 headerSection.className = 'header-title-wrapper';
 
