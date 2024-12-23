@@ -76,6 +76,7 @@ function renderAssignmentUI() {
             if (snapshot.exists()) {
                 const assignment = snapshot.val();
                 const assignment_title = assignment.header;
+
                 const assignment_date = assignment.date;
                 const assignment_duedate = assignment.duedate;
                 const assignment_instruction = assignment.instructions;
@@ -129,32 +130,64 @@ function renderAssignmentUI() {
                 chatbotSection.className = 'chatbot-data-wrapper';
 
                 for (const file in assignment.attachedfile) {
-
+                    const attachmentid = Date.now().toString();
                     const assignmentFileWrapper = document.createElement('section');
                     assignmentFileWrapper.className = 'assignment-file-wrapper';
+                    assignmentFileWrapper.id = 'viewassignment-attachment-btn' + attachmentid;
                     chatbotSection.appendChild(assignmentFileWrapper);
-
                     const imgType = document.createElement('img');
                     imgType.className = 'img-type';
 
+                    if (assignment.attachedfile.hasOwnProperty(file)) {
+                        const fileDetails = assignment.attachedfile[file];
+                        const filePath = fileDetails.filepath;
+                        const fileExtension = filePath.split('.').pop().toLowerCase();
 
-                    if (assignment.attachedfile[file].type === 'pdf') {
-                        imgType.className = 'img-type-pdf';
-                        imgType.src = 'assets/icons/file-pdf-solid.svg';
-                        assignmentFileWrapper.appendChild(imgType);
-                    }
-                    if (assignment.attachedfile[file].type === 'docs') {
-                        imgType.src = 'assets/icons/file-word-solid.svg';
-                        assignmentFileWrapper.appendChild(imgType);
-                    }
-                    if (assignment.attachedfile[file].type === 'img') {
-                        imgType.src = 'assets/icons/image-solid.svg';
-                        assignmentFileWrapper.appendChild(imgType);
+                        const fileHandlers = {
+                            image: handleImage,
+                            docx: handleDocx,
+                            pdf: handlePdf,
+                        };
+
+                        const animations = {
+                            fadeIn: {
+                                container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
+                                content: "fadeScaleUp 0.25s ease-in-out forwards",
+                            },
+                            fadeOut: {
+                                container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
+                                content: "fadeScaleDown 0.25s ease-in-out forwards",
+                            },
+                        };
+
+                        if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                            imgType.src = 'assets/icons/image-solid.svg';
+                            assignmentFileWrapper.appendChild(imgType);
+                            assignmentFileWrapper.addEventListener("click", async (event) => {
+                                await fileHandlers.image(filePath, animations);
+                            });
+
+                        } else if (['doc', 'docx'].includes(fileExtension)) {
+                            imgType.src = 'assets/icons/file-word-solid.svg';
+                            assignmentFileWrapper.appendChild(imgType);
+                            assignmentFileWrapper.addEventListener("click", async (event) => {
+                                await fileHandlers.docx(filePath, animations);
+                            });
+                        } else if (['pdf'].includes(fileExtension)) {
+                            imgType.className = 'img-type-pdf';
+                            imgType.src = 'assets/icons/file-pdf-solid.svg';
+                            assignmentFileWrapper.appendChild(imgType);
+                            assignmentFileWrapper.addEventListener("click", async (event) => {
+                                await fileHandlers.pdf(filePath, animations);
+                            });
+                        } else {
+                            console.warn("Unsupported file type.");
+                        }
                     }
                 }
 
-                assignment_cont.appendChild(chatbotSection);
 
+                assignment_cont.appendChild(chatbotSection);
                 const instructionsLabel = document.createElement('label');
                 instructionsLabel.className = 'assignment-instruction';
                 instructionsLabel.textContent = 'Instructions';
@@ -183,6 +216,101 @@ function renderAssignmentUI() {
     }
 }
 renderAssignmentUI();
+
+
+async function handleImage(fileUrl, animations) {
+    const imgElement = document.getElementById("viewattachedfile-img");
+    const container = document.getElementById("viewattachedfile-container");
+
+    imgElement.src = fileUrl;
+    container.style.display = "flex";
+    container.style.animation = animations.fadeIn.container;
+    imgElement.style.animation = animations.fadeIn.content;
+
+    addTouchClose(container, imgElement, animations);
+
+}
+async function handleDocx(fileUrl, animations) {
+    const container = document.getElementById("viewattachedfile-container-docx");
+    const output = document.getElementById("output-wordfile");
+
+    container.style.display = "flex";
+    container.style.animation = animations.fadeIn.container;
+    output.style.animation = animations.fadeIn.content;
+
+    try {
+        const response = await fetch(fileUrl);
+        const arrayBuffer = await response.arrayBuffer();
+        const result = await mammoth.convertToHtml({ arrayBuffer });
+        output.innerHTML = result.value;
+    } catch (error) {
+        console.error("Error converting DOCX file:", error);
+    }
+
+    addTouchClose(container, output, animations);
+
+}
+async function handlePdf(fileUrl, animations) {
+    const container = document.getElementById("viewattachedfile-container-pdf");
+    const output = document.getElementById("output-pdffile");
+
+    container.style.display = "flex";
+    container.style.animation = animations.fadeIn.container;
+    output.style.animation = animations.fadeIn.content;
+
+    try {
+        const pdf = await pdfjsLib.getDocument(fileUrl).promise;
+        output.innerHTML = ""; // Clear previous content
+
+        for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+            const page = await pdf.getPage(pageNumber);
+            renderPdfPage(page, output);
+        }
+    } catch (error) {
+        console.error("Error rendering PDF file:", error);
+    }
+    addTouchClose(container, output, animations);
+
+}
+function renderPdfPage(page, container) {
+    const viewport = page.getViewport({ scale: 1 });
+    const scale = Math.min(
+        container.offsetWidth / viewport.width,
+        container.offsetHeight / viewport.height
+    );
+    const scaledViewport = page.getViewport({ scale });
+
+    const canvas = document.createElement("canvas");
+    const context = canvas.getContext("2d");
+
+    canvas.width = scaledViewport.width * window.devicePixelRatio;
+    canvas.height = scaledViewport.height * window.devicePixelRatio;
+    canvas.style.width = `${scaledViewport.width}px`;
+    canvas.style.height = `${scaledViewport.height}px`;
+    context.scale(window.devicePixelRatio, window.devicePixelRatio);
+
+    page.render({ canvasContext: context, viewport: scaledViewport }).promise.then(() => {
+        container.appendChild(canvas);
+    });
+}
+function addTouchClose(container, content, animations) {
+    let startY = 0, endY = 0;
+    container.addEventListener("touchstart", (event) => {
+        startY = event.touches[0].clientY;
+    });
+    container.addEventListener("touchend", (event) => {
+        endY = event.changedTouches[0].clientY;
+        const dragDistance = endY - startY;
+        if (dragDistance > 400) {
+            content.style.animation = animations.fadeOut.content;
+            container.style.animation = animations.fadeOut.container;
+            setTimeout(() => {
+                container.style.display = "none";
+            }, 500);
+        }
+    });
+}
+
 
 
 function getCurrentDateTime() {

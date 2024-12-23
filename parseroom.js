@@ -840,71 +840,70 @@ async function getAssignments() {
         for (const assignmentKey in assignments) {
           const assignment = assignments[assignmentKey];
           const assignment_title = assignment.header;
-          const assignment_date = assignment.date;
-          const assignment_duedate = assignment.duedate;
+          if (assignment_title !== undefined) {
+            const assignment_date = assignment.date;
+            const assignment_duedate = assignment.duedate;
+            let assignment_status = '';
+            const wrapper = document.createElement("div");
+            const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentKey}/completed/${user_parser}`);
+            const snapshot = await get(usernameRef);
+            if (snapshot.exists()) {
+              assignment_status = 'completed';
+            }
+            else {
+              assignment_status = 'incomplete';
+            }
 
-          let assignment_status = '';
-          const wrapper = document.createElement("div");
-          const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentKey}/completed/${user_parser}`);
-          const snapshot = await get(usernameRef);
-          if (snapshot.exists()) {
-            assignment_status = 'completed';
-          }
-          else {
-            assignment_status = 'incomplete';
-          }
+            wrapper.className = assignment_status === "completed" ? "assignment-done-wrapper" : "assignment-notdone-wrapper";
+            wrapper.addEventListener("click", (event) => {
+              window.location.href = `viewassignment.html?assignment=${assignmentKey}`;
+            });
 
-          wrapper.className = assignment_status === "completed" ? "assignment-done-wrapper" : "assignment-notdone-wrapper";
-          wrapper.addEventListener("click", (event) => {
-            window.location.href = `viewassignment.html?assignment=${assignmentKey}`;
-          });
+            const iconSection = document.createElement("section");
+            iconSection.className = "assignment-icon";
 
-          const iconSection = document.createElement("section");
-          iconSection.className = "assignment-icon";
+            const iconImg = document.createElement("img");
+            iconImg.src = "assets/icons/clipboard.png";
+            iconImg.className =
+              assignment_status === "incomplete"
+                ? "assignment-img"
+                : "done-assignment-img";
 
-          const iconImg = document.createElement("img");
-          iconImg.src = "assets/icons/clipboard.png";
-          iconImg.className =
-            assignment_status === "incomplete"
-              ? "assignment-img"
-              : "done-assignment-img";
+            iconSection.appendChild(iconImg);
 
-          iconSection.appendChild(iconImg);
+            const detailsSection = document.createElement("section");
+            detailsSection.className = "assignment-details";
 
-          const detailsSection = document.createElement("section");
-          detailsSection.className = "assignment-details";
+            const titleLabel = document.createElement("label");
+            titleLabel.className = "assignment-title";
+            titleLabel.textContent = assignment_title;
 
-          const titleLabel = document.createElement("label");
-          titleLabel.className = "assignment-title";
-          titleLabel.textContent = assignment_title;
+            const dateLabel = document.createElement("label");
+            dateLabel.className = "assignment-date";
+            dateLabel.textContent = `${formatDateTime(assignment_date)}`;
 
-          const dateLabel = document.createElement("label");
-          dateLabel.className = "assignment-date";
-          dateLabel.textContent = `${formatDateTime(assignment_date)}`;
+            const dueLabel = document.createElement("label");
+            dueLabel.className = "assignment-due";
+            if (Due(assignment_duedate)) {
+              dueLabel.textContent = `${formatDateTime(assignment_duedate)} Missing`;
+            }
+            else {
+              dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+            }
 
-          const dueLabel = document.createElement("label");
-          dueLabel.className = "assignment-due";
-          if (Due(assignment_duedate)) {
-            dueLabel.textContent = `${formatDateTime(assignment_duedate)} Missing`;
-          }
-          else {
-            dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
-          }
+            detailsSection.appendChild(titleLabel);
+            detailsSection.appendChild(dateLabel);
+            detailsSection.appendChild(dueLabel);
 
+            wrapper.appendChild(iconSection);
+            wrapper.appendChild(detailsSection);
 
-
-          detailsSection.appendChild(titleLabel);
-          detailsSection.appendChild(dateLabel);
-          detailsSection.appendChild(dueLabel);
-
-          wrapper.appendChild(iconSection);
-          wrapper.appendChild(detailsSection);
-
-          if (assignment_status === "incomplete") {
-            containerNotDone.appendChild(wrapper);
-          } else {
-            containerDone.appendChild(wrapper);
-            dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+            if (assignment_status === "incomplete") {
+              containerNotDone.appendChild(wrapper);
+            } else {
+              containerDone.appendChild(wrapper);
+              dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+            }
           }
         }
       } else {

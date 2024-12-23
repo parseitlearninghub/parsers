@@ -116,6 +116,7 @@ body {
   font-size: 20px;
   background-color: transparent;
   width: 100%;
+  margin-bottom: 10px;
 }
 
 .header-due {
@@ -199,4 +200,128 @@ body {
   margin-left: 5px;
   filter: invert(83%) sepia(7%) saturate(9%) hue-rotate(340deg) brightness(90%)
     contrast(86%);
+}
+
+.viewattachedfile-container {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(53, 53, 53, 0.623);
+  z-index: 300;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  overflow-y: scroll;
+  padding-bottom: 40px;
+}
+.viewattachedfile-cont {
+  width: 75%;
+  object-fit: contain;
+  border-radius: 7px;
+  overflow: scroll;
+  scrollbar-width: none;
+  background-color: #fefefe;
+  padding: 10px;
+  font-size: 12px;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+.viewattachedfile-container-docs {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(53, 53, 53, 0.623);
+  z-index: 300;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+.viewattachedfile-cont-docs {
+  width: 65%;
+  height: 75%;
+  object-fit: contain;
+  border-radius: 7px;
+  overflow: scroll;
+  scrollbar-width: none;
+  background-color: #fefefe;
+  padding: 40px;
+  font-size: 12px;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+}
+
+@keyframes fadeScaleDown {
+  0% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+    z-index: -100;
+  }
+}
+
+@keyframes fadeScaleUp {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(50px);
+    z-index: -100;
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes fadeScaleDown-bg {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    z-index: -100;
+  }
+}
+
+@keyframes fadeScaleUp-bg {
+  0% {
+    opacity: 0;
+    z-index: -100;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.viewattachedfile-container-pdf {
+  position: fixed;
+  height: 100%;
+  width: 100%;
+  background-color: rgba(53, 53, 53, 0.623);
+  z-index: 300;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+.viewattachedfile-cont-pdf {
+  width: 90%;
+  height: 65%;
+  object-fit: contain;
+  border-radius: 7px;
+  overflow: scroll;
+  scrollbar-width: none;
+  background-color: #fefefe;
+  font-size: 12px;
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+    rgba(50, 50, 93, 0.25) 0px 50px 100px -20px,
+    rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
 }
