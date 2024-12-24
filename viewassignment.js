@@ -379,8 +379,12 @@ function Due(date) {
 }
 
 document.getElementById('download-pdf-btn').addEventListener('click', () => {
-    const a = document.createElement('a');
-    a.href = 'https://raw.githubusercontent.com/parseitlearninghub/parseitlearninghub-storage/main/PARSEIT/storage/0000001/4B-Laravel/AP%206/1734963334555/Module-1.docx';
-    a.download = '';
-    a.click();
+    navigator.clipboard.writeText('https://raw.githubusercontent.com/parseitlearninghub/parseitlearninghub-storage/main/PARSEIT/storage/0000001/4B-Laravel/AP%206/1734963334555/Module-1.docx')
+        .then(() => {
+            alert("Link copied to clipboard!");
+        })
+        .catch(err => {
+            console.error("Failed to copy text: ", err);
+            alert("Failed to copy link.");
+        });
 });
