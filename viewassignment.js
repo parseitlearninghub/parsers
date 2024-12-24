@@ -80,6 +80,7 @@ function renderAssignmentUI() {
                 const assignment_date = assignment.date;
                 const assignment_duedate = assignment.duedate;
                 const assignment_instruction = assignment.instructions;
+                const assignment_repository = assignment.repository;
 
 
                 const cancelButton = document.createElement('button');
@@ -203,14 +204,47 @@ function renderAssignmentUI() {
                 myWorkLabel.textContent = 'My Work';
                 assignment_cont.appendChild(myWorkLabel);
 
+                const grade = document.createElement('span');
+                grade.className = 'assignment-instruction-details';
+                grade.textContent = 'Score: 98/100';
+                assignment_cont.appendChild(grade);
+
                 const myWorkSection = document.createElement('section');
                 myWorkSection.className = 'assignment-file-wrapper';
                 assignment_cont.appendChild(myWorkSection);
 
+
                 const attachButton = document.createElement('button');
                 attachButton.className = 'mywork-btn';
                 attachButton.textContent = 'Attach Assignment';
-                assignment_cont.appendChild(attachButton);
+
+                if (assignment_repository === true) {
+                    console.log("True");
+                    console.log(Due(assignment_duedate));
+                    if (Due(assignment_duedate)) {
+                        attachButton.remove();
+
+                        const late = document.createElement('span');
+                        late.className = 'assignment-late';
+                        late.textContent = 'Submission of assignment is disabled.';
+                        assignment_cont.appendChild(late);
+                    }
+                    else {
+                        assignment_cont.appendChild(attachButton);
+                    }
+                }
+                else {
+                    console.log("False");
+                    console.log(Due(assignment_duedate));
+                    assignment_cont.appendChild(attachButton);
+                }
+
+
+
+                const fillers = document.createElement('section');
+                fillers.className = 'fillers';
+                assignment_cont.appendChild(fillers);
+
             }
         });
     }
@@ -343,3 +377,10 @@ function Due(date) {
         return false;
     }
 }
+
+document.getElementById('download-pdf-btn').addEventListener('click', () => {
+    const a = document.createElement('a');
+    a.href = 'https://raw.githubusercontent.com/parseitlearninghub/parseitlearninghub-storage/main/PARSEIT/storage/0000001/4B-Laravel/AP%206/1735000602485/register.png';
+    a.download = '';
+    a.click();
+});

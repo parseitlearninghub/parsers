@@ -226,7 +226,79 @@ document.getElementById("attach-document-btn").addEventListener("click", () => {
 
 
 
+async function getApikey() {
+    const apikeyRef = child(dbRef, "PARSEIT/administration/apikeys/");
+    const snapshot = await get(apikeyRef);
+    if (snapshot.exists()) {
+        const currentData = snapshot.val().githubtoken;
+        return currentData;
+    } else {
+        return null;
+    }
+}
+async function addAttachment(filepath) {
+    const acadref = localStorage.getItem("parseroom-acadref");
+    const yearlvl = localStorage.getItem("parseroom-yearlvl");
+    const sem = localStorage.getItem("parseroom-sem");
+    const subject = localStorage.getItem("parseroom-code");
+    const section = localStorage.getItem("parseroom-section");
+    const attachmentcode = Date.now().toString();
 
+
+    await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/attachedfile/${attachmentcode}/`), {
+        filepath: filepath,
+    });
+
+}
+async function deleteFileGitHub(token, owner, repo, filePath, fileSha) {
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+    const data = {
+        message: "delete file",
+        sha: fileSha,
+    };
+    try {
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/vnd.github.v3+json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            console.error("Error deleting file:", responseData);
+            return;
+        }
+
+        // Handle successful deletion
+        console.log("File deleted successfully:", responseData);
+
+    } catch (error) {
+        console.error("Error deleting file:", error);
+    }
+
+
+}
+async function getSha(filePath) {
+    const token = await getApikey();
+    const owner = "parseitlearninghub";
+    const repo = "parseitlearninghub-storage";
+
+    const fileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}/`;
+    const response = await fetch(fileUrl, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Accept": "application/vnd.github.v3+json",
+        },
+    });
+
+    const fileDetails = await response.json();
+    const fileSha = fileDetails.sha;
+    return fileSha;
+}
 document.getElementById('fileInput').addEventListener('change', handleFileInput);
 async function handleFileInput(event) {
     document.getElementById("assigment-attachedfile-container").style.display = "block";
@@ -255,8 +327,6 @@ async function handleFileInput(event) {
     }
     reader.readAsDataURL(file);
 }
-
-
 async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, filename) {
     const attachmentid = 'file-' + Date.now().toString();
     const container = document.createElement('section');
@@ -375,6 +445,7 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
     }
 }
 
+
 async function handleImage(fileUrl, animations) {
     const imgElement = document.getElementById("viewattachedfile-img");
     const container = document.getElementById("viewattachedfile-container");
@@ -467,80 +538,6 @@ function addTouchClose(container, content, animations) {
         }
     });
 }
-async function getApikey() {
-    const apikeyRef = child(dbRef, "PARSEIT/administration/apikeys/");
-    const snapshot = await get(apikeyRef);
-    if (snapshot.exists()) {
-        const currentData = snapshot.val().githubtoken;
-        return currentData;
-    } else {
-        return null;
-    }
-}
 
 
-async function addAttachment(filepath) {
-    const acadref = localStorage.getItem("parseroom-acadref");
-    const yearlvl = localStorage.getItem("parseroom-yearlvl");
-    const sem = localStorage.getItem("parseroom-sem");
-    const subject = localStorage.getItem("parseroom-code");
-    const section = localStorage.getItem("parseroom-section");
-    const attachmentcode = Date.now().toString();
 
-
-    await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/attachedfile/${attachmentcode}/`), {
-        filepath: filepath,
-    });
-
-}
-
-async function deleteFileGitHub(token, owner, repo, filePath, fileSha) {
-    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-    const data = {
-        message: "delete file",
-        sha: fileSha,
-    };
-    try {
-        const response = await fetch(url, {
-            method: "DELETE",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Accept": "application/vnd.github.v3+json",
-            },
-            body: JSON.stringify(data),
-        });
-
-        const responseData = await response.json();
-
-        if (!response.ok) {
-            console.error("Error deleting file:", responseData);
-            return;
-        }
-
-        // Handle successful deletion
-        console.log("File deleted successfully:", responseData);
-
-    } catch (error) {
-        console.error("Error deleting file:", error);
-    }
-
-
-}
-
-async function getSha(filePath) {
-    const token = await getApikey();
-    const owner = "parseitlearninghub";
-    const repo = "parseitlearninghub-storage";
-
-    const fileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}/`;
-    const response = await fetch(fileUrl, {
-        headers: {
-            "Authorization": `Bearer ${token}`,
-            "Accept": "application/vnd.github.v3+json",
-        },
-    });
-
-    const fileDetails = await response.json();
-    const fileSha = fileDetails.sha;
-    return fileSha;
-} 

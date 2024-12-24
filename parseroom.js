@@ -33,7 +33,7 @@ let parseroom_username = localStorage.getItem("parser-username");
 let active_profile = "";
 let user_parser_type = localStorage.getItem("type-parser");
 loadCensoredWords();
-getAssignments();
+
 let censoredWordsArray = [];
 
 //listeners
@@ -741,8 +741,8 @@ async function getTeacherData(id) {
 
 
 
-document.getElementById("check_bulletin").addEventListener("click", (event) => {
-
+document.getElementById("check_bulletin").addEventListener("click", async (event) => {
+  await getAssignments();
   document.getElementById("bulletin-div").style.display = "flex";
   document.getElementById("bulletin-div").style.animation =
     "opacity_bg 0.25s ease-in-out forwards";
