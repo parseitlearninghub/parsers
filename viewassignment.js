@@ -380,7 +380,7 @@ function Due(date) {
 
 document.getElementById('download-pdf-btn').addEventListener('click', () => {
     const a = document.createElement('a');
-    a.href = 'https://raw.githubusercontent.com/parseitlearninghub/parseitlearninghub-storage/main/PARSEIT/storage/0000001/4B-Laravel/AP%206/1735000602485/register.png';
+    a.href = 'https://raw.githubusercontent.com/parseitlearninghub/parseitlearninghub-storage/main/PARSEIT/storage/0000001/4B-Laravel/AP%206/1734963334555/Module-1.docx';
     a.download = '';
     a.click();
 });
