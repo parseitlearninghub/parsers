@@ -165,21 +165,27 @@ function renderAssignmentUI() {
                             imgType.src = 'assets/icons/image-solid.svg';
                             assignmentFileWrapper.appendChild(imgType);
                             assignmentFileWrapper.addEventListener("click", async (event) => {
+                                document.getElementById('download-img-btn').setAttribute('value', filePath);
                                 await fileHandlers.image(filePath, animations);
+
                             });
 
                         } else if (['doc', 'docx'].includes(fileExtension)) {
                             imgType.src = 'assets/icons/file-word-solid.svg';
                             assignmentFileWrapper.appendChild(imgType);
                             assignmentFileWrapper.addEventListener("click", async (event) => {
+                                document.getElementById('download-word-btn').setAttribute('value', filePath);
                                 await fileHandlers.docx(filePath, animations);
+
                             });
                         } else if (['pdf'].includes(fileExtension)) {
                             imgType.className = 'img-type-pdf';
                             imgType.src = 'assets/icons/file-pdf-solid.svg';
                             assignmentFileWrapper.appendChild(imgType);
                             assignmentFileWrapper.addEventListener("click", async (event) => {
+                                document.getElementById('download-pdf-btn').setAttribute('value', filePath);
                                 await fileHandlers.pdf(filePath, animations);
+
                             });
                         } else {
                             console.warn("Unsupported file type.");
@@ -379,12 +385,52 @@ function Due(date) {
 }
 
 document.getElementById('download-pdf-btn').addEventListener('click', () => {
-    navigator.clipboard.writeText('https://raw.githubusercontent.com/parseitlearninghub/parseitlearninghub-storage/main/PARSEIT/storage/0000001/4B-Laravel/AP%206/1734963334555/Module-1.docx')
+    const url = document.getElementById('download-pdf-btn').getAttribute('value');
+    navigator.clipboard.writeText(url)
         .then(() => {
-            alert("Link copied to clipboard!");
+            document.getElementById('download-pdf-btn').innerText = 'Copied! Paste url in browser to download.';
+            setTimeout(() => {
+                document.getElementById('download-pdf-btn').innerText = 'Copy Link';
+            }, 3500);
         })
         .catch(err => {
-            console.error("Failed to copy text: ", err);
-            alert("Failed to copy link.");
+            document.getElementById('download-pdf-btn').innerText = 'Try again.';
+            setTimeout(() => {
+                document.getElementById('download-pdf-btn').innerText = 'Copy Link';
+            }, 3500);
+        });
+});
+
+document.getElementById('download-word-btn').addEventListener('click', () => {
+    const url = document.getElementById('download-word-btn').getAttribute('value');
+    navigator.clipboard.writeText(url)
+        .then(() => {
+            document.getElementById('download-word-btn').innerText = 'Copied! Paste url in browser to download.';
+            setTimeout(() => {
+                document.getElementById('download-word-btn').innerText = 'Copy Link';
+            }, 3500);
+        })
+        .catch(err => {
+            document.getElementById('download-word-btn').innerText = 'Try again.';
+            setTimeout(() => {
+                document.getElementById('download-word-btn').innerText = 'Copy Link';
+            }, 3500);
+        });
+});
+
+document.getElementById('download-img-btn').addEventListener('click', () => {
+    const url = document.getElementById('download-img-btn').getAttribute('value');
+    navigator.clipboard.writeText(url)
+        .then(() => {
+            document.getElementById('download-img-btn').innerText = 'Copied! Paste url in browser to download.';
+            setTimeout(() => {
+                document.getElementById('download-img-btn').innerText = 'Copy Link';
+            }, 3500);
+        })
+        .catch(err => {
+            document.getElementById('download-img-btn').innerText = 'Try again.';
+            setTimeout(() => {
+                document.getElementById('download-img-btn').innerText = 'Copy Link';
+            }, 3500);
         });
 });
