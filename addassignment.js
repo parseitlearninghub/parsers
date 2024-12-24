@@ -352,11 +352,7 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
     removeImg.className = 'remove-attachedfile-img';
     removeSection.appendChild(removeImg);
 
-    removeSection.addEventListener('click', async (event) => {
-        container.remove();
-        const fileSha = await getSha(filePath);
-        await deleteFileGitHub(token, owner, repo, filePath, fileSha);
-    });
+
 
     container.appendChild(progressBarWrapper);
     container.appendChild(removeSection);
@@ -381,6 +377,15 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
         });
 
         const responseData = await response.json();
+
+        const attachmentcode = Date.now().toString();
+        removeSection.addEventListener('click', async (event) => {
+            container.remove();
+            const fileSha = await getSha(filePath);
+            await deleteFileGitHub(token, owner, repo, filePath, fileSha);
+
+
+        });
 
         progressBarWrapper.addEventListener("click", async (event) => {
             const fileUrl = responseData.content.download_url;
@@ -416,6 +421,8 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
             } catch (error) {
                 console.error("Error handling file:", error);
             }
+
+
         });
         const progressBarFill = document.getElementById(attachmentid);
         let progress = 0;
@@ -439,7 +446,11 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
             }
 
         }, 100);
-        await addAttachment(responseData.content.download_url);
+
+        await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/attachedfile/${attachmentcode}/`), {
+            filepath: filePath,
+        });
+
     } catch (error) {
         console.error("Error uploading file:", error);
     }

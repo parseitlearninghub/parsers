@@ -36,7 +36,7 @@ const appAdmin = initializeApp(firebaseConfigAdmin, "ParseITAdmin");
 const databaseAdmin = getDatabase(appAdmin);
 const dbRefAdmin = ref(databaseAdmin);
 
-let admin_id = localStorage.getItem("user-parser-admin");
+let admin_id = localStorage.getItem("user-parser");
 
 
 //preloads
@@ -50,7 +50,9 @@ function setScreenSize(width, height) {
     document.body.style.height = height + "px";
     document.documentElement.style.height = height + "px";
 }
-
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const assignmentcode = urlParams.get('assignment');
 function renderAssignmentUI() {
 
     const type = localStorage.getItem("type-parser");
@@ -61,9 +63,7 @@ function renderAssignmentUI() {
     const section = localStorage.getItem("parseroom-section");
     const studentid = localStorage.getItem("user-parser");
 
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const assignmentcode = urlParams.get('assignment');
+
     if (type === "student") {
         const assignmentRef = ref(
             database,
@@ -99,13 +99,18 @@ function renderAssignmentUI() {
                 missingLabel.className = "missing-title";
                 missingLabel.textContent = "Missing";
 
+
                 const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${studentid}`);
                 const myworkSnapshot = await get(usernameRef);
                 if (!myworkSnapshot.exists()) {
                     if (Due(assignment_duedate)) {
                         assignment_cont.appendChild(missingLabel);
                     }
+
                 }
+
+
+
                 const headerSection = document.createElement('section');
                 headerSection.className = 'header-title-wrapper';
 
@@ -210,23 +215,67 @@ function renderAssignmentUI() {
                 myWorkLabel.textContent = 'My Work';
                 assignment_cont.appendChild(myWorkLabel);
 
-                const grade = document.createElement('span');
-                grade.className = 'assignment-instruction-details';
-                grade.textContent = 'Score: 98/100';
-                assignment_cont.appendChild(grade);
+                if (myworkSnapshot.exists()) {
+                    if (myworkSnapshot.val().score !== undefined) {
+                        const grade = document.createElement('span');
+                        grade.className = 'assignment-instruction-details';
+
+                        grade.textContent = `Score: ${myworkSnapshot.val().score}/${assignment.totalscore}`;
+                        if (parseInt(myworkSnapshot.val().score) === parseInt(assignment.totalscore)) {
+                            grade.textContent = `Score: ${myworkSnapshot.val().score}/${assignment.totalscore} ⭐⭐⭐`;
+                        }
+                        assignment_cont.appendChild(grade);
+                    }
+
+                }
+
 
                 const myWorkSection = document.createElement('section');
                 myWorkSection.className = 'assignment-file-wrapper';
-                assignment_cont.appendChild(myWorkSection);
+                //assignment_cont.appendChild(myWorkSection);
 
 
                 const attachButton = document.createElement('button');
                 attachButton.className = 'mywork-btn';
                 attachButton.textContent = 'Attach Assignment';
 
+                attachButton.addEventListener('click', () => {
+                    document.getElementById('fileInput').click();
+                    document.getElementById('fileInput').addEventListener('change', () => {
+                        document.getElementById("assigment-attachedfile-container").style.display = "block";
+                        const subject = localStorage.getItem("parseroom-code");
+                        const section = localStorage.getItem("parseroom-section");
+
+                        const file = document.getElementById('fileInput').files[0];
+                        if (!file) {
+                            console.error("No file selected.");
+                            return;
+                        }
+                        const reader = new FileReader();
+                        reader.onloadend = async () => {
+                            const base64FileContent = reader.result.split(",")[1];
+                            const token = await getApikey();
+                            const owner = "parseitlearninghub";
+                            const repo = "parseitlearninghub-storage";
+                            const filePath = `PARSEIT/storage/${admin_id}/${section}/${subject}/${assignmentcode}/mywork/${file.name}`;
+                            await uploadFileToGitHub(token, owner, repo, filePath, base64FileContent, file.name, myWorkSection);
+                        };
+
+                        reader.onerror = () => {
+                        }
+                        reader.readAsDataURL(file);
+                    });
+
+                });
+
+                const inputElement = document.createElement('input');
+                inputElement.className = 'attach-mywork';
+                inputElement.type = 'file';
+                inputElement.id = 'fileInput';
+                inputElement.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*';
+
+
                 if (assignment_repository === true) {
-                    console.log("True");
-                    console.log(Due(assignment_duedate));
                     if (Due(assignment_duedate)) {
                         attachButton.remove();
 
@@ -240,13 +289,11 @@ function renderAssignmentUI() {
                     }
                 }
                 else {
-                    console.log("False");
-                    console.log(Due(assignment_duedate));
                     assignment_cont.appendChild(attachButton);
                 }
 
 
-
+                assignment_cont.appendChild(inputElement);
                 const fillers = document.createElement('section');
                 fillers.className = 'fillers';
                 assignment_cont.appendChild(fillers);
@@ -256,8 +303,6 @@ function renderAssignmentUI() {
     }
 }
 renderAssignmentUI();
-
-
 async function handleImage(fileUrl, animations) {
     const imgElement = document.getElementById("viewattachedfile-img");
     const container = document.getElementById("viewattachedfile-container");
@@ -268,7 +313,6 @@ async function handleImage(fileUrl, animations) {
     imgElement.style.animation = animations.fadeIn.content;
 
     addTouchClose(container, imgElement, animations);
-
 }
 async function handleDocx(fileUrl, animations) {
     const container = document.getElementById("viewattachedfile-container-docx");
@@ -310,7 +354,6 @@ async function handlePdf(fileUrl, animations) {
         console.error("Error rendering PDF file:", error);
     }
     addTouchClose(container, output, animations);
-
 }
 function renderPdfPage(page, container) {
     const viewport = page.getViewport({ scale: 1 });
@@ -350,9 +393,6 @@ function addTouchClose(container, content, animations) {
         }
     });
 }
-
-
-
 function getCurrentDateTime() {
     const now = new Date();
     const year = now.getFullYear();
@@ -362,7 +402,6 @@ function getCurrentDateTime() {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
-
 function formatDateTime(datetime) {
     const date = new Date(datetime);
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -373,7 +412,6 @@ function formatDateTime(datetime) {
     const formattedTime = `${hours % 12 || 12}:${minutes} ${ampm}`;
     return `${formattedDate} (${formattedTime})`;
 }
-
 function Due(date) {
     const currentDate = new Date();
     const targetDate = new Date(date);
@@ -383,7 +421,6 @@ function Due(date) {
         return false;
     }
 }
-
 document.getElementById('download-pdf-btn').addEventListener('click', () => {
     const url = document.getElementById('download-pdf-btn').getAttribute('value');
     navigator.clipboard.writeText(url)
@@ -400,7 +437,6 @@ document.getElementById('download-pdf-btn').addEventListener('click', () => {
             }, 3500);
         });
 });
-
 document.getElementById('download-word-btn').addEventListener('click', () => {
     const url = document.getElementById('download-word-btn').getAttribute('value');
     navigator.clipboard.writeText(url)
@@ -417,7 +453,6 @@ document.getElementById('download-word-btn').addEventListener('click', () => {
             }, 3500);
         });
 });
-
 document.getElementById('download-img-btn').addEventListener('click', () => {
     const url = document.getElementById('download-img-btn').getAttribute('value');
     navigator.clipboard.writeText(url)
@@ -434,3 +469,191 @@ document.getElementById('download-img-btn').addEventListener('click', () => {
             }, 3500);
         });
 });
+async function getApikey() {
+    const apikeyRef = child(dbRef, "PARSEIT/administration/apikeys/");
+    const snapshot = await get(apikeyRef);
+    if (snapshot.exists()) {
+        const currentData = snapshot.val().githubtoken;
+        return currentData;
+    } else {
+        return null;
+    }
+}
+async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, filename, myWorkSection) {
+    const attachmentid = 'file-' + Date.now().toString();
+    const container = document.createElement('section');
+    container.className = 'attachedfile-container';
+    container.id = 'attachedfile-container';
+    const progressBarWrapper = document.createElement('section');
+    progressBarWrapper.className = 'progress-bar-wrapper';
+    progressBarWrapper.id = 'view' + attachmentid;
+    const progressBarFill = document.createElement('div');
+    progressBarFill.className = 'progress-bar-fill';
+    progressBarFill.id = attachmentid;
+    const label = document.createElement('label');
+    label.className = 'sticky-attached';
+    label.htmlFor = '';
+    label.textContent = filename;
+    progressBarWrapper.appendChild(progressBarFill);
+    progressBarWrapper.appendChild(label);
+    const removeSection = document.createElement('section');
+    removeSection.className = 'remove-attachedfile';
+    const removeImg = document.createElement('img');
+    removeImg.src = 'assets/icons/xmark-solid.svg';
+    removeImg.alt = '';
+    removeImg.className = 'remove-attachedfile-img';
+    removeSection.appendChild(removeImg);
+
+    removeSection.addEventListener('click', async (event) => {
+        container.remove();
+        const fileSha = await getSha(filePath);
+        await deleteFileGitHub(token, owner, repo, filePath, fileSha);
+    });
+
+    container.appendChild(progressBarWrapper);
+    container.appendChild(removeSection);
+    myWorkSection.appendChild(container);
+
+
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+    const data = {
+        message: "assignment attachment " + admin_id,
+        content: fileContent,
+    };
+
+    try {
+        const response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/vnd.github.v3+json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+
+        progressBarWrapper.addEventListener("click", async (event) => {
+            const fileUrl = responseData.content.download_url;
+            const fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+            const fileHandlers = {
+                image: handleImage,
+                docx: handleDocx,
+                pdf: handlePdf,
+            };
+
+            const animations = {
+                fadeIn: {
+                    container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
+                    content: "fadeScaleUp 0.25s ease-in-out forwards",
+                },
+                fadeOut: {
+                    container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
+                    content: "fadeScaleDown 0.25s ease-in-out forwards",
+                },
+            };
+
+            try {
+                if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                    await fileHandlers.image(fileUrl, animations);
+                } else if (['doc', 'docx'].includes(fileExtension)) {
+                    await fileHandlers.docx(fileUrl, animations);
+                } else if (['pdf'].includes(fileExtension)) {
+                    await fileHandlers.pdf(fileUrl, animations);
+                } else {
+                    console.warn("Unsupported file type.");
+                }
+            } catch (error) {
+                console.error("Error handling file:", error);
+            }
+        });
+        const progressBarFill = document.getElementById(attachmentid);
+        let progress = 0;
+        const interval = setInterval(async () => {
+            if (progress < 100) {
+                progress += 1;
+                progressBarFill.style.width = `${progress}%`;
+            } else {
+                clearInterval(interval);
+            }
+
+            if (!response.ok) {
+                document.getElementById("attachedfile-container").style.display = "none";
+                return;
+            }
+            if (response.ok) {
+                progressBarFill.style.width = `100%`;
+                document.getElementById('fileInput').value = '';
+
+                return responseData;
+            }
+
+        }, 100);
+        await addAttachment(responseData.content.download_url);
+    } catch (error) {
+        console.error("Error uploading file:", error);
+    }
+}
+async function getSha(filePath) {
+    const token = await getApikey();
+    const owner = "parseitlearninghub";
+    const repo = "parseitlearninghub-storage";
+
+    const fileUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}/`;
+    const response = await fetch(fileUrl, {
+        headers: {
+            "Authorization": `Bearer ${token}`,
+            "Accept": "application/vnd.github.v3+json",
+        },
+    });
+
+    const fileDetails = await response.json();
+    const fileSha = fileDetails.sha;
+    return fileSha;
+}
+async function addAttachment(filepath) {
+    const acadref = localStorage.getItem("parseroom-acadref");
+    const yearlvl = localStorage.getItem("parseroom-yearlvl");
+    const sem = localStorage.getItem("parseroom-sem");
+    const subject = localStorage.getItem("parseroom-code");
+    const section = localStorage.getItem("parseroom-section");
+    await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${admin_id}/`), {
+        mywork: {
+            filepath: filepath,
+        },
+    });
+
+}
+async function deleteFileGitHub(token, owner, repo, filePath, fileSha) {
+    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+    const data = {
+        message: "delete file",
+        sha: fileSha,
+    };
+    try {
+        const response = await fetch(url, {
+            method: "DELETE",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Accept": "application/vnd.github.v3+json",
+            },
+            body: JSON.stringify(data),
+        });
+
+        const responseData = await response.json();
+
+        if (!response.ok) {
+            console.error("Error deleting file:", responseData);
+            return;
+        }
+
+        // Handle successful deletion
+        console.log("File deleted successfully:", responseData);
+
+    } catch (error) {
+        console.error("Error deleting file:", error);
+    }
+
+
+}
