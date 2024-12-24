@@ -69,8 +69,6 @@ form.addEventListener('change', function (event) {
         document.getElementById('setduedate-btn').style.color = '#cccccc';
     }
 });
-
-
 function getCurrentDateTime() {
     const now = new Date();
     const year = now.getFullYear();
@@ -80,7 +78,6 @@ function getCurrentDateTime() {
     const minutes = String(now.getMinutes()).padStart(2, '0');
     return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
-
 function formatDateTime(datetime) {
     const date = new Date(datetime);
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -91,7 +88,6 @@ function formatDateTime(datetime) {
     const formattedTime = `${hours % 12 || 12}:${minutes} ${ampm}`;
     return `${formattedDate} (${formattedTime})`;
 }
-
 function showWidget() {
     document.getElementById("attachedfile-container-wrapper").style.display = "block";
 
@@ -118,9 +114,6 @@ function hideWidget() {
         }, index * 100);
     });
 }
-
-
-
 document.getElementById("createassignment-btn").addEventListener("click", async () => {
     const acadref = localStorage.getItem("parseroom-acadref");
     const yearlvl = localStorage.getItem("parseroom-yearlvl");
@@ -186,17 +179,14 @@ document.getElementById("createassignment-btn").addEventListener("click", async 
         }, 1800);
     });
 });
-
 document.getElementById("createassigment-totalscore").addEventListener("input", (event) => {
     const value = event.target.value;
     event.target.value = value.replace(/\D/g, "");
 });
-
 document.getElementById("createassigment-pointsontime").addEventListener("input", (event) => {
     const value = event.target.value;
     event.target.value = value.replace(/\D/g, "");
 });
-
 document.getElementById("createassigment-pointsontime").addEventListener("click", () => {
     if (document.getElementById("createassigment-totalscore").value === "") {
 
@@ -209,23 +199,16 @@ document.getElementById("createassigment-pointsontime").addEventListener("click"
         }, 1000);
     }
 });
-
 function errorElement(element) {
     document.getElementById(element).style.border = "0.4px solid #f30505";
     setTimeout(() => {
         document.getElementById(element).style.border = "0.4px solid #dcdcdc";
     }, 1000);
 }
-
-
-
 document.getElementById("attach-document-btn").addEventListener("click", () => {
     // accept = "image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     document.getElementById("fileInput").click();
 });
-
-
-
 async function getApikey() {
     const apikeyRef = child(dbRef, "PARSEIT/administration/apikeys/");
     const snapshot = await get(apikeyRef);
@@ -328,6 +311,12 @@ async function handleFileInput(event) {
     reader.readAsDataURL(file);
 }
 async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, filename) {
+    const acadref = localStorage.getItem("parseroom-acadref");
+    const yearlvl = localStorage.getItem("parseroom-yearlvl");
+    const sem = localStorage.getItem("parseroom-sem");
+    const subject = localStorage.getItem("parseroom-code");
+    const section = localStorage.getItem("parseroom-section");
+
     const attachmentid = 'file-' + Date.now().toString();
     const container = document.createElement('section');
     container.className = 'attachedfile-container';
@@ -384,9 +373,11 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
             const fileSha = await getSha(filePath);
             await deleteFileGitHub(token, owner, repo, filePath, fileSha);
 
+            await remove(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/attachedfile/${attachmentcode}/`));
 
         });
 
+        let updateDBFileUrl = responseData.content.download_url;
         progressBarWrapper.addEventListener("click", async (event) => {
             const fileUrl = responseData.content.download_url;
             const fileExtension = fileUrl.split('.').pop().toLowerCase();
@@ -447,16 +438,15 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
 
         }, 100);
 
+
         await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/attachedfile/${attachmentcode}/`), {
-            filepath: filePath,
+            filepath: updateDBFileUrl,
         });
 
     } catch (error) {
         console.error("Error uploading file:", error);
     }
 }
-
-
 async function handleImage(fileUrl, animations) {
     const imgElement = document.getElementById("viewattachedfile-img");
     const container = document.getElementById("viewattachedfile-container");

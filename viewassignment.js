@@ -54,7 +54,6 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const assignmentcode = urlParams.get('assignment');
 function renderAssignmentUI() {
-
     const type = localStorage.getItem("type-parser");
     const acadref = localStorage.getItem("parseroom-acadref");
     const yearlvl = localStorage.getItem("parseroom-yearlvl");
@@ -62,6 +61,7 @@ function renderAssignmentUI() {
     const subject = localStorage.getItem("parseroom-code");
     const section = localStorage.getItem("parseroom-section");
     const studentid = localStorage.getItem("user-parser");
+
 
 
     if (type === "student") {
@@ -81,7 +81,6 @@ function renderAssignmentUI() {
                 const assignment_duedate = assignment.duedate;
                 const assignment_instruction = assignment.instructions;
                 const assignment_repository = assignment.repository;
-
 
                 const cancelButton = document.createElement('button');
                 cancelButton.id = 'canceladdchatbot-btn';
@@ -239,34 +238,34 @@ function renderAssignmentUI() {
                 attachButton.className = 'mywork-btn';
                 attachButton.textContent = 'Attach Assignment';
 
-                attachButton.addEventListener('click', () => {
-                    document.getElementById('fileInput').click();
-                    document.getElementById('fileInput').addEventListener('change', () => {
-                        document.getElementById("assigment-attachedfile-container").style.display = "block";
-                        const subject = localStorage.getItem("parseroom-code");
-                        const section = localStorage.getItem("parseroom-section");
+                // attachButton.addEventListener('click', () => {
+                //     document.getElementById('fileInput').click();
+                //     document.getElementById('fileInput').addEventListener('change', () => {
+                //         document.getElementById("assigment-attachedfile-container").style.display = "block";
+                //         const subject = localStorage.getItem("parseroom-code");
+                //         const section = localStorage.getItem("parseroom-section");
 
-                        const file = document.getElementById('fileInput').files[0];
-                        if (!file) {
-                            console.error("No file selected.");
-                            return;
-                        }
-                        const reader = new FileReader();
-                        reader.onloadend = async () => {
-                            const base64FileContent = reader.result.split(",")[1];
-                            const token = await getApikey();
-                            const owner = "parseitlearninghub";
-                            const repo = "parseitlearninghub-storage";
-                            const filePath = `PARSEIT/storage/${admin_id}/${section}/${subject}/${assignmentcode}/mywork/${file.name}`;
-                            await uploadFileToGitHub(token, owner, repo, filePath, base64FileContent, file.name, myWorkSection);
-                        };
+                //         const file = document.getElementById('fileInput').files[0];
+                //         if (!file) {
+                //             console.error("No file selected.");
+                //             return;
+                //         }
+                //         const reader = new FileReader();
+                //         reader.onloadend = async () => {
+                //             const base64FileContent = reader.result.split(",")[1];
+                //             const token = await getApikey();
+                //             const owner = "parseitlearninghub";
+                //             const repo = "parseitlearninghub-storage";
+                //             const filePath = `PARSEIT/storage/${studentid}/${section}/${subject}/${assignmentcode}/mywork/${file.name}`;
+                //             await uploadFileToGitHub(token, owner, repo, filePath, base64FileContent, file.name, myWorkSection);
+                //         };
 
-                        reader.onerror = () => {
-                        }
-                        reader.readAsDataURL(file);
-                    });
+                //         reader.onerror = () => {
+                //         }
+                //         reader.readAsDataURL(file);
+                //     });
 
-                });
+                // });
 
                 const inputElement = document.createElement('input');
                 inputElement.className = 'attach-mywork';
@@ -315,6 +314,7 @@ async function handleImage(fileUrl, animations) {
     addTouchClose(container, imgElement, animations);
 }
 async function handleDocx(fileUrl, animations) {
+    console.log(fileUrl);
     const container = document.getElementById("viewattachedfile-container-docx");
     const output = document.getElementById("output-wordfile");
 
@@ -393,15 +393,7 @@ function addTouchClose(container, content, animations) {
         }
     });
 }
-function getCurrentDateTime() {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, '0');
-    const day = String(now.getDate()).padStart(2, '0');
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    return `${year}-${month}-${day}T${hours}:${minutes}`;
-}
+
 function formatDateTime(datetime) {
     const date = new Date(datetime);
     const options = { year: 'numeric', month: 'short', day: 'numeric' };
@@ -479,122 +471,122 @@ async function getApikey() {
         return null;
     }
 }
-async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, filename, myWorkSection) {
-    const attachmentid = 'file-' + Date.now().toString();
-    const container = document.createElement('section');
-    container.className = 'attachedfile-container';
-    container.id = 'attachedfile-container';
-    const progressBarWrapper = document.createElement('section');
-    progressBarWrapper.className = 'progress-bar-wrapper';
-    progressBarWrapper.id = 'view' + attachmentid;
-    const progressBarFill = document.createElement('div');
-    progressBarFill.className = 'progress-bar-fill';
-    progressBarFill.id = attachmentid;
-    const label = document.createElement('label');
-    label.className = 'sticky-attached';
-    label.htmlFor = '';
-    label.textContent = filename;
-    progressBarWrapper.appendChild(progressBarFill);
-    progressBarWrapper.appendChild(label);
-    const removeSection = document.createElement('section');
-    removeSection.className = 'remove-attachedfile';
-    const removeImg = document.createElement('img');
-    removeImg.src = 'assets/icons/xmark-solid.svg';
-    removeImg.alt = '';
-    removeImg.className = 'remove-attachedfile-img';
-    removeSection.appendChild(removeImg);
+// async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, filename, myWorkSection) {
+//     const attachmentid = 'file-' + Date.now().toString();
+//     const container = document.createElement('section');
+//     container.className = 'attachedfile-container';
+//     container.id = 'attachedfile-container';
+//     const progressBarWrapper = document.createElement('section');
+//     progressBarWrapper.className = 'progress-bar-wrapper';
+//     progressBarWrapper.id = 'view' + attachmentid;
+//     const progressBarFill = document.createElement('div');
+//     progressBarFill.className = 'progress-bar-fill';
+//     progressBarFill.id = attachmentid;
+//     const label = document.createElement('label');
+//     label.className = 'sticky-attached';
+//     label.htmlFor = '';
+//     label.textContent = filename;
+//     progressBarWrapper.appendChild(progressBarFill);
+//     progressBarWrapper.appendChild(label);
+//     const removeSection = document.createElement('section');
+//     removeSection.className = 'remove-attachedfile';
+//     const removeImg = document.createElement('img');
+//     removeImg.src = 'assets/icons/xmark-solid.svg';
+//     removeImg.alt = '';
+//     removeImg.className = 'remove-attachedfile-img';
+//     removeSection.appendChild(removeImg);
 
-    removeSection.addEventListener('click', async (event) => {
-        container.remove();
-        const fileSha = await getSha(filePath);
-        await deleteFileGitHub(token, owner, repo, filePath, fileSha);
-    });
+//     removeSection.addEventListener('click', async (event) => {
+//         container.remove();
+//         const fileSha = await getSha(filePath);
+//         await deleteFileGitHub(token, owner, repo, filePath, fileSha);
+//     });
 
-    container.appendChild(progressBarWrapper);
-    container.appendChild(removeSection);
-    myWorkSection.appendChild(container);
+//     container.appendChild(progressBarWrapper);
+//     container.appendChild(removeSection);
+//     myWorkSection.appendChild(container);
 
 
-    const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-    const data = {
-        message: "assignment attachment " + admin_id,
-        content: fileContent,
-    };
+//     const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+//     const data = {
+//         message: "assignment attachment " + admin_id,
+//         content: fileContent,
+//     };
 
-    try {
-        const response = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Authorization": `Bearer ${token}`,
-                "Accept": "application/vnd.github.v3+json",
-            },
-            body: JSON.stringify(data),
-        });
+//     try {
+//         const response = await fetch(url, {
+//             method: "PUT",
+//             headers: {
+//                 "Authorization": `Bearer ${token}`,
+//                 "Accept": "application/vnd.github.v3+json",
+//             },
+//             body: JSON.stringify(data),
+//         });
 
-        const responseData = await response.json();
+//         const responseData = await response.json();
 
-        progressBarWrapper.addEventListener("click", async (event) => {
-            const fileUrl = responseData.content.download_url;
-            const fileExtension = fileUrl.split('.').pop().toLowerCase();
+//         // progressBarWrapper.addEventListener("click", async (event) => {
+//         //     const fileUrl = responseData.content.download_url;
+//         //     const fileExtension = fileUrl.split('.').pop().toLowerCase();
 
-            const fileHandlers = {
-                image: handleImage,
-                docx: handleDocx,
-                pdf: handlePdf,
-            };
+//         //     const fileHandlers = {
+//         //         image: handleImage,
+//         //         docx: handleDocx,
+//         //         pdf: handlePdf,
+//         //     };
 
-            const animations = {
-                fadeIn: {
-                    container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
-                    content: "fadeScaleUp 0.25s ease-in-out forwards",
-                },
-                fadeOut: {
-                    container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
-                    content: "fadeScaleDown 0.25s ease-in-out forwards",
-                },
-            };
+//         //     const animations = {
+//         //         fadeIn: {
+//         //             container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
+//         //             content: "fadeScaleUp 0.25s ease-in-out forwards",
+//         //         },
+//         //         fadeOut: {
+//         //             container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
+//         //             content: "fadeScaleDown 0.25s ease-in-out forwards",
+//         //         },
+//         //     };
 
-            try {
-                if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
-                    await fileHandlers.image(fileUrl, animations);
-                } else if (['doc', 'docx'].includes(fileExtension)) {
-                    await fileHandlers.docx(fileUrl, animations);
-                } else if (['pdf'].includes(fileExtension)) {
-                    await fileHandlers.pdf(fileUrl, animations);
-                } else {
-                    console.warn("Unsupported file type.");
-                }
-            } catch (error) {
-                console.error("Error handling file:", error);
-            }
-        });
-        const progressBarFill = document.getElementById(attachmentid);
-        let progress = 0;
-        const interval = setInterval(async () => {
-            if (progress < 100) {
-                progress += 1;
-                progressBarFill.style.width = `${progress}%`;
-            } else {
-                clearInterval(interval);
-            }
+//         //     try {
+//         //         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+//         //             await fileHandlers.image(fileUrl, animations);
+//         //         } else if (['doc', 'docx'].includes(fileExtension)) {
+//         //             await fileHandlers.docx(fileUrl, animations);
+//         //         } else if (['pdf'].includes(fileExtension)) {
+//         //             await fileHandlers.pdf(fileUrl, animations);
+//         //         } else {
+//         //             console.warn("Unsupported file type.");
+//         //         }
+//         //     } catch (error) {
+//         //         console.error("Error handling file:", error);
+//         //     }
+//         // });
+//         const progressBarFill = document.getElementById(attachmentid);
+//         let progress = 0;
+//         const interval = setInterval(async () => {
+//             if (progress < 100) {
+//                 progress += 1;
+//                 progressBarFill.style.width = `${progress}%`;
+//             } else {
+//                 clearInterval(interval);
+//             }
 
-            if (!response.ok) {
-                document.getElementById("attachedfile-container").style.display = "none";
-                return;
-            }
-            if (response.ok) {
-                progressBarFill.style.width = `100%`;
-                document.getElementById('fileInput').value = '';
+//             if (!response.ok) {
+//                 document.getElementById("attachedfile-container").style.display = "none";
+//                 return;
+//             }
+//             if (response.ok) {
+//                 progressBarFill.style.width = `100%`;
+//                 document.getElementById('fileInput').value = '';
 
-                return responseData;
-            }
+//                 return responseData;
+//             }
 
-        }, 100);
-        await addAttachment(responseData.content.download_url);
-    } catch (error) {
-        console.error("Error uploading file:", error);
-    }
-}
+//         }, 100);
+//         await addAttachment(responseData.content.download_url);
+//     } catch (error) {
+//         console.error("Error uploading file:", error);
+//     }
+// }
 async function getSha(filePath) {
     const token = await getApikey();
     const owner = "parseitlearninghub";
@@ -656,4 +648,13 @@ async function deleteFileGitHub(token, owner, repo, filePath, fileSha) {
     }
 
 
+}
+function getCurrentDateTime() {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day}T${hours}:${minutes}`;
 }
