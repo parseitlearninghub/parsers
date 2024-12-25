@@ -122,7 +122,7 @@ document.getElementById("createassignment-btn").addEventListener("click", async 
     const section = localStorage.getItem("parseroom-section");
 
     const header = document.getElementById("header-title").value;
-    const instructions = document.getElementById("createassigment-instructions").value;
+    let instructions = document.getElementById("createassigment-instructions").value;
     const totalscore = document.getElementById("createassigment-totalscore").value;
     const pointsontime = document.getElementById("createassigment-pointsontime").value;
     let repository = false;
