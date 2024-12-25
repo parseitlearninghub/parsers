@@ -139,8 +139,7 @@ document.getElementById("createassignment-btn").addEventListener("click", async 
     }
 
     if (instructions === "") {
-        errorElement("createassigment-instructions");
-        return;
+        instructions = 'none';
     }
 
     if (totalscore === "") {
