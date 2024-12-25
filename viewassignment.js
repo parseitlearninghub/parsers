@@ -325,6 +325,14 @@ async function renderAssignmentUI() {
                     inputElement.id = 'fileInput';
                     inputElement.accept = 'image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*';
                     assignment_cont.appendChild(inputElement);
+
+                    const fillers = document.createElement('div');
+                    fillers.className = 'fillers';
+                    assignment_cont.appendChild(fillers);
+                    assignment_cont.appendChild(fillers);
+                    assignment_cont.appendChild(fillers);
+                    assignment_cont.appendChild(fillers);
+
                 }
             }
         });
