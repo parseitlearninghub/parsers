@@ -389,7 +389,7 @@ body {
   visibility: hidden;
 }
 #datetime {
-  visibility: visible;
+  visibility: hidden;
 }
 
 .viewattachedfile-container {
