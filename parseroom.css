@@ -15,6 +15,9 @@
   font-family: "Inter-Medium";
   src: url("assets/fonts/Inter-Medium.otf");
 }
+* {
+  scrollbar-width: none;
+}
 
 body {
   margin: 0;

@@ -845,8 +845,9 @@ async function getAssignments() {
             const assignment_duedate = assignment.duedate;
             let assignment_status = '';
             const wrapper = document.createElement("div");
-            const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentKey}/completed/${user_parser}`);
+            const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentKey}/completed/${user_parser}/submitted/`);
             const snapshot = await get(usernameRef);
+
             if (snapshot.exists()) {
               assignment_status = 'completed';
             }
@@ -885,7 +886,7 @@ async function getAssignments() {
             const dueLabel = document.createElement("label");
             dueLabel.className = "assignment-due";
             if (Due(assignment_duedate)) {
-              dueLabel.textContent = `${formatDateTime(assignment_duedate)} Missing`;
+              dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)} Missing`;
             }
             else {
               dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
@@ -902,7 +903,13 @@ async function getAssignments() {
               containerNotDone.appendChild(wrapper);
             } else {
               containerDone.appendChild(wrapper);
+              const submission_date = new Date(snapshot.val());
+              const assignment_duedate = new Date(assignment.duedate);
               dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+              if (submission_date > assignment_duedate) {
+                dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)} Late`;
+              }
+
             }
           }
         }

@@ -312,6 +312,25 @@ function renderAssignmentUI() {
                 submitButton.textContent = 'Submit';
                 assignment_cont.appendChild(submitButton);
 
+                submitButton.addEventListener('click', async () => {
+
+                    const acadref = localStorage.getItem("parseroom-acadref");
+                    const yearlvl = localStorage.getItem("parseroom-yearlvl");
+                    const sem = localStorage.getItem("parseroom-sem");
+                    const subject = localStorage.getItem("parseroom-code");
+                    const section = localStorage.getItem("parseroom-section");
+                    const submitted = getCurrentDateTime();
+
+                    if (comment.value === '') {
+                        comment.value = 'none';
+                    }
+
+                    await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${admin_id}/`), {
+                        submitted: submitted,
+                        comment: comment.value,
+                    });
+                });
+
                 assignment_cont.appendChild(inputElement);
                 const fillers = document.createElement('section');
                 fillers.className = 'fillers';
@@ -743,3 +762,4 @@ async function getAssigmentWork() {
 
 
 }
+
