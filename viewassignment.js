@@ -253,7 +253,7 @@ async function renderAssignmentUI() {
             commentElement.placeholder = 'Add a comment';
 
 
-            if (submitted !== undefined) {
+            if (submitted !== undefined && submitted !== '') {
                 if (comment !== '' && comment !== 'none') {
                     commentElement.disabled = true;
                     assignment_cont.appendChild(myWorkLabel);
@@ -297,8 +297,6 @@ async function renderAssignmentUI() {
                         });
                     });
                     assignment_cont.appendChild(attachButton);
-
-
 
                     const submitButton = document.createElement('button');
                     submitButton.className = 'submitassignment-btn';
