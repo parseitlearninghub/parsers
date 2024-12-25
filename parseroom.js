@@ -829,15 +829,18 @@ async function getAssignments() {
     );
 
     onValue(assignmentRef, async (snapshot) => {
-      const containerNotDone = document.getElementById("notdone-assignment");
-      const containerDone = document.getElementById("done-assignment");
 
-      containerNotDone.innerHTML = "";
-      containerDone.innerHTML = "";
 
       if (snapshot.exists()) {
+
+
         const assignments = snapshot.val();
         for (const assignmentKey in assignments) {
+          const containerNotDone = document.getElementById("notdone-assignment");
+          const containerDone = document.getElementById("done-assignment");
+          containerNotDone.innerHTML = "";
+          containerDone.innerHTML = "";
+
           const assignment = assignments[assignmentKey];
           const assignment_title = assignment.header;
           if (assignment_title !== undefined) {
