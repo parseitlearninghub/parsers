@@ -177,6 +177,16 @@ body {
   margin-bottom: 15px;
 }
 
+.assignment-instruction-details-none {
+  font-family: Inter-Light;
+  font-size: 14px;
+  background-color: transparent;
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  font-style: italic;
+}
+
 .assignment-late {
   font-family: Inter-Light;
   font-size: 14px;
@@ -203,10 +213,36 @@ body {
 }
 
 .missing-title {
-  font-family: Inter-Light;
+  font-family: Inter-Bold;
   font-size: 14px;
   color: #f30505;
+  margin-bottom: 5px;
 }
+
+.late-title {
+  font-family: Inter-Light;
+  font-size: 14px;
+  color: gray;
+  margin-bottom: 5px;
+
+  font-style: italic;
+}
+
+.warning-title {
+  font-family: Inter-Light;
+  font-size: 14px;
+  color: #eed202;
+  margin-bottom: 5px;
+  font-style: italic;
+}
+
+.ontime-title {
+  font-family: Inter-Light;
+  font-size: 14px;
+  color: green;
+  margin-bottom: 5px;
+}
+
 .img-type {
   width: 20px;
   filter: invert(83%) sepia(7%) saturate(9%) hue-rotate(340deg) brightness(90%)
@@ -480,7 +516,7 @@ body {
   pointer-events: all;
   padding-left: 15px;
   padding-right: 15px;
-  display: flex;
+  display: none;
   flex-direction: column;
   transition: 0.3s ease-in-out;
 }
