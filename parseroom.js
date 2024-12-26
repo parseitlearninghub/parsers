@@ -64,7 +64,6 @@ window.addEventListener("load", async function () {
     localStorage.getItem("parseroom-code"),
     localStorage.getItem("parseroom-section")
   );
-
   const userRef = ref(database, `PARSEIT/administration/students/${user_parser}/activity`);
   update(userRef, {
     status: 'online',
@@ -130,13 +129,11 @@ document.getElementById("header-left").addEventListener("click", (event) => {
   scrollToBottom();
   hideWhisperTheme();
   localStorage.removeItem("active-whisper-id");
-
   const userRef = ref(database, `PARSEIT/administration/students/${user_parser}/activity`);
-  update(userRef, {
+  onDisconnect(userRef).set({
     status: 'offline',
     lastactive: serverTimestamp()
   });
-
 });
 document
   .getElementById("parsermessage-txt")
@@ -1065,7 +1062,7 @@ function activestatus() {
     let inactivityTimer;
     const INACTIVITY_TIMEOUT = 20 * 1000;
     const userRef = ref(database, `PARSEIT/administration/students/${user_parser}/activity`);
-    onDisconnect(userRef, {
+    onDisconnect(userRef).set({
       status: 'offline',
       lastactive: serverTimestamp()
     });
@@ -1084,4 +1081,5 @@ function activestatus() {
     }
     document.addEventListener("touchend", resetInactivityTimer);
   }
+
 }
