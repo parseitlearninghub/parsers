@@ -1,0 +1,206 @@
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(assets/fonts/Inter-Bold.otf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(assets/fonts/Inter-Medium.otf);
+}
+
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(assets/fonts/Inter-Regular.otf);
+}
+
+@font-face {
+  font-family: "Inter-Light";
+  src: url(assets/fonts/Inter-Light.otf);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+}
+
+#home_div {
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  display: none;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+#loading_animation_div {
+  height: 100%;
+  width: 100%;
+  background-color: #fefefe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1000;
+  position: fixed;
+}
+
+#loading_animation_gif {
+  height: 50px;
+  width: 50px;
+}
+
+#parsing_lbl {
+  font-family: Inter-Regular;
+  color: #f30505;
+  margin-top: 15px;
+  font-size: 12px;
+}
+
+#home_trainchatbot {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trainchatbot-wrapper {
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+#canceladdchatbot-btn {
+  border: none;
+  background-color: #fefefe;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.canceladdcluster-btn {
+  width: 15px;
+  margin-top: 10px;
+}
+
+.fillers {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 15px;
+  background-color: transparent;
+}
+.header-title-wrapper {
+  height: 40px;
+}
+.header-title {
+  font-family: Inter-Bold;
+  font-size: 20px;
+  background-color: transparent;
+  width: 100%;
+  height: 150px;
+}
+
+.chatbot-data-wrapper {
+  width: 100%;
+  background-color: transparent;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.student-assignment-wrapper-completed {
+  height: 60px;
+  width: 100%;
+  background-color: #fafafa;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 0px -1px,
+    rgba(0, 0, 0, 0.3) 0px 1px 0px -1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.top-menu-assignment {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family: Inter-Regular;
+  font-size: 14px;
+}
+
+.bottom-menu-assignment {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-family: Inter-Regular;
+  font-size: 14px;
+}
+
+.student-id {
+  padding-left: 10px;
+  opacity: 0.5;
+  font-family: Inter-Light;
+}
+.student-name {
+  padding-left: 10px;
+  font-family: Inter-Bold;
+}
+
+.student-status-red {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.student-status-gray {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: gainsboro;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.student-status-green {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: greenyellow;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.student-score {
+  padding-right: 10px;
+}

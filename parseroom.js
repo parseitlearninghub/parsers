@@ -943,7 +943,7 @@ async function getAssignments() {
 
             wrapper.className = "assignment-notdone-wrapper";
             wrapper.addEventListener("click", (event) => {
-              window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentKey}`;
+              window.location.href = `manageassignment.html?assignmentcode=${assignmentKey}`;
             });
 
             const iconSection = document.createElement("section");
