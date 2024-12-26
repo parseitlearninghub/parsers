@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Train chatbot</title>
+    <link rel="stylesheet" href="viewassignment.css" />
+  </head>
+  <body>
+    <div id="loading_animation_div">
+      <img id="loading_animation_gif" src="assets/loading_animation.gif" />
+      <h1 id="parsing_lbl">Parsing...</h1>
+    </div>
+
+    <section class="viewattachedfile-container" id="viewattachedfile-container">
+      <img
+        src=""
+        alt="Image from the link"
+        id="viewattachedfile-img"
+        class="viewattachedfile-cont"
+      />
+      <button class="download-attach-btn" id="download-img-btn">
+        Copy Link
+      </button>
+    </section>
+
+    <section
+      class="viewattachedfile-container-docs"
+      id="viewattachedfile-container-docx"
+    >
+      <div id="output-wordfile" class="viewattachedfile-cont-docs"></div>
+      <button class="download-attach-btn" id="download-word-btn">
+        Copy Link
+      </button>
+    </section>
+
+    <section
+      class="viewattachedfile-container-pdf"
+      id="viewattachedfile-container-pdf"
+    >
+      <div id="output-pdffile" class="viewattachedfile-cont-pdf"></div>
+      <button class="download-attach-btn" id="download-pdf-btn">
+        Copy Link
+      </button>
+    </section>
+
+    <section class="student-attachment-div" id="student-attachment-div">
+      <section
+        class="student-attachment-wrapper"
+        id="student-attachment-wrapper"
+      >
+        <label for="" class="student-attachment-lbl" id="student-attachment-lbl"
+          >My Works (0)</label
+        >
+        <section id="mywork-file-wrapper"></section>
+      </section>
+    </section>
+
+    <id id="home_trainchatbot">
+      <section class="trainchatbot-wrapper" id="trainchatbot-wrapper">
+        <!-- <button id="canceladdchatbot-btn">
+          <img
+            class="canceladdcluster-btn"
+            src="assets/icons/arrow-left-solid.svg"
+          />
+        </button> -->
+
+        <!-- <section class="header-title-wrapper">
+          <label class="header-due">Due Jan 6, 2024 (8:00 AM)</label>
+          <label class="header-title">Week SAS 12 to 16 Learning Journey</label>
+          <label class="header-date">Posted Dec 25, 2024 (8:00 AM)</label>
+        </section>
+        <section class="chatbot-data-wrapper">
+          <section class="assignment-file-wrapper"></section>
+          <section class="assignment-file-wrapper"></section>
+        </section>
+        <label class="assignment-instruction">Instructions</label>
+        <span class="assignment-instruction-details"
+          >Change the filename of your pdf as follows:
+          anuada_activity_1.pdf</span
+        >
+        <label class="assignment-instruction">My Work</label>
+        <section class="assignment-file-wrapper"></section>
+        <button class="mywork-btn">Attach Assignment</button> -->
+        <!-- <section class="fillers"></section>
+        <section class="fillers"></section>
+        <section class="fillers"></section>
+        <section class="fillers"></section> -->
+      </section>
+    </id>
+    <script type="module" src="viewassignment.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+  </body>
+</html>
