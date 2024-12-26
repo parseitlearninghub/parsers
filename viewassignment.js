@@ -124,7 +124,8 @@ async function renderAssignmentUI() {
             headerSection.className = 'header-title-wrapper';
 
             const missingLabel = document.createElement("label");
-            if (hasAttachment && submitted !== undefined) {
+
+            if (hasAttachment && submitted !== undefined && submitted !== '') {
                 if (new Date(submitted) > new Date(assignment_duedate)) {
                     missingLabel.className = "late-title";
                     missingLabel.textContent = "Turned in late";
@@ -133,21 +134,25 @@ async function renderAssignmentUI() {
                     missingLabel.textContent = "Turned in on time";
                 }
             } else {
-                if (!hasAttachment && submitted !== undefined) {
-                    if (!(new Date(submitted) > new Date(assignment_duedate))) {
-                        missingLabel.className = "ontime-title";
-                        missingLabel.textContent = "Turned in on time";
-                    }
-                }
-
                 if (Due(assignment_duedate)) {
                     missingLabel.className = "missing-title";
                     missingLabel.textContent = "Missing";
+                    if (submitted !== undefined && submitted !== '') {
+                        missingLabel.className = "late-title";
+                        missingLabel.textContent = "Turned in late";
+                    }
+
                 }
                 else {
                     if (assignment_repository === true) {
                         missingLabel.className = "warning-title";
                         missingLabel.textContent = "Repository disables after due";
+                    }
+                }
+                if (!hasAttachment && submitted !== undefined && submitted !== '') {
+                    if (!(new Date(submitted) > new Date(assignment_duedate))) {
+                        missingLabel.className = "ontime-title";
+                        missingLabel.textContent = "Turned in on time";
                     }
                 }
             }
