@@ -23,24 +23,11 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const dbRef = ref(database);
 
-const firebaseConfigAdmin = {
-    apiKey: "AIzaSyCoIfQLbAq5gPil3COSauqfHNlv5P5tYXc",
-    authDomain: "parseitadmin.firebaseapp.com",
-    databaseURL: "https://parseitadmin-default-rtdb.asia-southeast1.firebasedatabase.app",
-    projectId: "parseitadmin",
-    storageBucket: "parseitadmin.firebasestorage.app",
-    messagingSenderId: "1009498274532",
-    appId: "1:1009498274532:web:69083f905357ae31b74af1"
-};
-const appAdmin = initializeApp(firebaseConfigAdmin, "ParseITAdmin");
-const databaseAdmin = getDatabase(appAdmin);
-const dbRefAdmin = ref(databaseAdmin);
-let admin_id = localStorage.getItem("user-parser");
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const assignmentcode = urlParams.get('assignmentcode');
-
+const studentid = urlParams.get('studentid');
 
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
@@ -119,7 +106,7 @@ async function renderAssignmentUI() {
             cancelButton.appendChild(imgElement);
             assignment_cont.appendChild(cancelButton);
             cancelButton.addEventListener('click', (event) => {
-                window.location.href = 'parseroom.html';
+                window.location.href = `manageassignment.html?assignmentcode=${assignmentcode}`;
             });
 
             const headerSection = document.createElement('section');
