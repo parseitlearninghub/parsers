@@ -827,20 +827,14 @@ async function getAssignments() {
       database,
       `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/`
     );
-
     onValue(assignmentRef, async (snapshot) => {
-
-
       if (snapshot.exists()) {
-
-
         const assignments = snapshot.val();
+        const containerNotDone = document.getElementById("notdone-assignment");
+        const containerDone = document.getElementById("done-assignment");
+        containerNotDone.innerHTML = "";
+        containerDone.innerHTML = "";
         for (const assignmentKey in assignments) {
-          const containerNotDone = document.getElementById("notdone-assignment");
-          const containerDone = document.getElementById("done-assignment");
-          containerNotDone.innerHTML = "";
-          containerDone.innerHTML = "";
-
           const assignment = assignments[assignmentKey];
           const assignment_title = assignment.header;
           if (assignment_title !== undefined) {
@@ -914,6 +908,83 @@ async function getAssignments() {
               }
 
             }
+          }
+        }
+      } else {
+        //console.log("No Assignments");
+      }
+    });
+  }
+
+  if (type === "teacher") {
+    const assignmentRef = ref(
+      database,
+      `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/`
+    );
+    onValue(assignmentRef, async (snapshot) => {
+      if (snapshot.exists()) {
+        const assignments = snapshot.val();
+        const containerNotDone = document.getElementById("notdone-assignment");
+        const containerDone = document.getElementById("done-assignment");
+        containerNotDone.innerHTML = "";
+        containerDone.innerHTML = "";
+        for (const assignmentKey in assignments) {
+
+
+          const assignment = assignments[assignmentKey];
+          const assignment_title = assignment.header;
+          if (assignment_title !== undefined) {
+            const assignment_date = assignment.date;
+            const assignment_duedate = assignment.duedate;
+            let assignment_status = '';
+            const wrapper = document.createElement("div");
+            const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentKey}/completed/${user_parser}/submitted/`);
+            const snapshot = await get(usernameRef);
+
+            wrapper.className = "assignment-notdone-wrapper";
+            wrapper.addEventListener("click", (event) => {
+              window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentKey}`;
+            });
+
+            const iconSection = document.createElement("section");
+            iconSection.className = "assignment-icon";
+
+            const iconImg = document.createElement("img");
+            iconImg.src = "assets/icons/clipboard.png";
+            iconImg.className = "assignment-img";
+
+
+            iconSection.appendChild(iconImg);
+
+            const detailsSection = document.createElement("section");
+            detailsSection.className = "assignment-details";
+
+            const titleLabel = document.createElement("label");
+            titleLabel.className = "assignment-title";
+            titleLabel.textContent = assignment_title;
+
+            const dateLabel = document.createElement("label");
+            dateLabel.className = "assignment-date";
+            dateLabel.textContent = `${formatDateTime(assignment_date)}`;
+
+            const dueLabel = document.createElement("label");
+            dueLabel.className = "assignment-due";
+            dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+
+
+            detailsSection.appendChild(titleLabel);
+            detailsSection.appendChild(dateLabel);
+            detailsSection.appendChild(dueLabel);
+
+            wrapper.appendChild(iconSection);
+            wrapper.appendChild(detailsSection);
+
+
+            containerDone.appendChild(wrapper);
+            const submission_date = new Date(snapshot.val());
+            dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+
+
           }
         }
       } else {

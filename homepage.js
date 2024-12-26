@@ -1499,9 +1499,9 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
 
   const userInputLower = userInput.toLowerCase();
 
-  if (await interpretInput(userInputLower, siti_brain) !== null) {
-    const response = await interpretInput(userInputLower, siti_brain);
-    await getResponse(response)
+  const response = await interpretInput(userInputLower, siti_brain);
+  if (response !== null) {
+    await getResponse(response);
   }
   else {
     console.log("No response found");
@@ -1554,28 +1554,41 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
 
 async function getTriggerInputs() {
   const refPath = ref(database, 'PARSEIT/siti_chatbot/');
-  await onValue(refPath, (snapshot) => {
-    siti_brain = [];
-    if (snapshot.exists()) {
-      const chat_id = snapshot.val();
-      for (const id in chat_id) {
-        const chat = chat_id[id];
-        if (chat.trigger_input) {
-          if (Array.isArray(chat.trigger_input)) {
-            chat.trigger_input.forEach((item) => siti_brain.push(item));
-          } else {
-            siti_brain.push(chat.trigger_input);
+  await onValue(
+    refPath,
+    (snapshot) => {
+      siti_brain = [];
+      if (snapshot.exists()) {
+        const chatbotData = snapshot.val(); // All chatbot data
+
+        for (const chatbotId in chatbotData) {
+          const chatbot = chatbotData[chatbotId];
+
+          if (chatbot.trigger_input) {
+            const triggerInput = chatbot.trigger_input;
+
+            if (typeof triggerInput === "object" && !Array.isArray(triggerInput)) {
+              for (const key in triggerInput) {
+                siti_brain.push(triggerInput[key]);
+              }
+            } else if (Array.isArray(triggerInput)) {
+              triggerInput.forEach((item) => siti_brain.push(item));
+            } else if (typeof triggerInput === "string") {
+              siti_brain.push(triggerInput);
+            }
           }
         }
 
+      } else {
+        //console.log("No data available");
       }
-    } else {
-      //console.log('No data available');
+    },
+    (error) => {
+      //console.error("Error fetching data:", error);
     }
-  }, (error) => {
-    //console.error('Error fetching data:', error);
-  });
+  );
 }
+
 async function interpretInput(text, search) {
   text = text.replace(/\s/g, "").toLowerCase();
 
