@@ -35,7 +35,7 @@ let parseroom_username = localStorage.getItem("parser-username");
 let active_profile = "";
 let user_parser_type = localStorage.getItem("type-parser");
 loadCensoredWords();
-activestatus();
+
 let censoredWordsArray = [];
 
 //listeners
@@ -64,11 +64,6 @@ window.addEventListener("load", async function () {
     localStorage.getItem("parseroom-code"),
     localStorage.getItem("parseroom-section")
   );
-  const userRef = ref(database, `PARSEIT/administration/students/${user_parser}/activity`);
-  update(userRef, {
-    status: 'online',
-    lastactive: serverTimestamp()
-  });
 });
 
 document.getElementById("game-2").addEventListener("click", (event) => {
@@ -129,11 +124,6 @@ document.getElementById("header-left").addEventListener("click", (event) => {
   scrollToBottom();
   hideWhisperTheme();
   localStorage.removeItem("active-whisper-id");
-  const userRef = ref(database, `PARSEIT/administration/students/${user_parser}/activity`);
-  onDisconnect(userRef).set({
-    status: 'offline',
-    lastactive: serverTimestamp()
-  });
 });
 document
   .getElementById("parsermessage-txt")
@@ -1056,30 +1046,30 @@ document.getElementById("widget-texteditor").addEventListener("click", () => {
 
 // } previousPage();
 
+// activestatus();
+// function activestatus() {
+//   if (user_parser_type === "student") {
+//     let inactivityTimer;
+//     const INACTIVITY_TIMEOUT = 20 * 1000;
+//     const userRef = ref(database, `PARSEIT/administration/students/${user_parser}/activity`);
+//     onDisconnect(userRef).set({
+//       status: 'offline',
+//       lastactive: serverTimestamp()
+//     });
+//     function resetInactivityTimer() {
+//       clearTimeout(inactivityTimer);
+//       update(userRef, {
+//         status: 'online',
+//         lastactive: serverTimestamp()
+//       });
+//       inactivityTimer = setTimeout(() => {
+//         update(userRef, {
+//           status: 'offline',
+//           lastactive: serverTimestamp()
+//         });
+//       }, INACTIVITY_TIMEOUT);
+//     }
+//     document.addEventListener("touchend", resetInactivityTimer);
+//   }
 
-function activestatus() {
-  if (user_parser_type === "student") {
-    let inactivityTimer;
-    const INACTIVITY_TIMEOUT = 20 * 1000;
-    const userRef = ref(database, `PARSEIT/administration/students/${user_parser}/activity`);
-    onDisconnect(userRef).set({
-      status: 'offline',
-      lastactive: serverTimestamp()
-    });
-    function resetInactivityTimer() {
-      clearTimeout(inactivityTimer);
-      update(userRef, {
-        status: 'online',
-        lastactive: serverTimestamp()
-      });
-      inactivityTimer = setTimeout(() => {
-        update(userRef, {
-          status: 'offline',
-          lastactive: serverTimestamp()
-        });
-      }, INACTIVITY_TIMEOUT);
-    }
-    document.addEventListener("touchend", resetInactivityTimer);
-  }
-
-}
+// }

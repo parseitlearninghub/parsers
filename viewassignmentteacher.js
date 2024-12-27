@@ -28,7 +28,8 @@ const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const assignmentcode = urlParams.get('assignmentcode');
 const studentid = urlParams.get('studentid');
-
+const due = urlParams.get('due');
+let assignment_repository = urlParams.get('repository');
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
 window.addEventListener("load", async function () {
@@ -50,11 +51,10 @@ async function renderAssignmentUI() {
     const sem = localStorage.getItem("parseroom-sem");
     const subject = localStorage.getItem("parseroom-code");
     const section = localStorage.getItem("parseroom-section");
-    const studentid = localStorage.getItem("user-parser");
     if (type === "teacher") {
         const assignmentRef = ref(
             database,
-            `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}`
+            `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${studentid}/`
         );
         await onValue(assignmentRef, async (snapshot) => {
 
@@ -63,11 +63,7 @@ async function renderAssignmentUI() {
 
             //assignmentcode
             let assignment = '';
-            let assignment_title = '';
-            let assignment_date = '';
-            let assignment_duedate = '';
-            let assignment_instruction = '';
-            let assignment_repository = '';
+
             let pointsontime = '';
             let totalscore = '';
 
@@ -75,28 +71,6 @@ async function renderAssignmentUI() {
             let comment = '';
             let submitted = '';
             let hasAttachment = false;
-
-
-            if (snapshot.exists()) {
-                assignment = snapshot.val();
-                assignment_title = snapshot.val().header;
-                assignment_date = snapshot.val().date;
-                assignment_duedate = snapshot.val().duedate;
-                assignment_instruction = snapshot.val().instructions;
-                assignment_repository = snapshot.val().repository;
-                pointsontime = snapshot.val().pointsontime;
-                totalscore = snapshot.val().totalscore;
-
-                const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${studentid}`);
-                const myworkSnapshot = await get(usernameRef);
-                if (myworkSnapshot.exists()) {
-                    comment = myworkSnapshot.val().comment;
-                    submitted = myworkSnapshot.val().submitted;
-                    if (myworkSnapshot.val().attachment) {
-                        hasAttachment = true;
-                    }
-                }
-            }
 
             const cancelButton = document.createElement('button');
             cancelButton.id = 'canceladdchatbot-btn';
@@ -109,170 +83,144 @@ async function renderAssignmentUI() {
                 window.location.href = `manageassignment.html?assignmentcode=${assignmentcode}`;
             });
 
-            const headerSection = document.createElement('section');
-            headerSection.className = 'header-title-wrapper';
+            if (snapshot.exists()) {
+                comment = snapshot.val().comment;
+                submitted = snapshot.val().submitted;
 
-            const missingLabel = document.createElement("label");
-
-            if (hasAttachment && submitted !== undefined && submitted !== '') {
-                if (new Date(submitted) > new Date(assignment_duedate)) {
-                    missingLabel.className = "late-title";
-                    missingLabel.textContent = "Turned in late";
-                } else {
-                    missingLabel.className = "ontime-title";
-                    missingLabel.textContent = "Turned in on time";
+                if (snapshot.val().attachment) {
+                    hasAttachment = true;
                 }
-            } else {
-                if (Due(assignment_duedate)) {
-                    missingLabel.className = "missing-title";
-                    missingLabel.textContent = "Missing";
-                    if (submitted !== undefined && submitted !== '') {
+
+                const headerSection = document.createElement('section');
+                headerSection.className = 'header-title-wrapper';
+                const missingLabel = document.createElement("label");
+                if (submitted !== undefined && submitted !== '') {
+                    if (new Date(submitted) > due) {
                         missingLabel.className = "late-title";
                         missingLabel.textContent = "Turned in late";
-                    }
-
-                }
-                else {
-                    if (assignment_repository === true) {
-                        missingLabel.className = "warning-title";
-                        missingLabel.textContent = "Repository disables after due";
-                    }
-                }
-                if (!hasAttachment && submitted !== undefined && submitted !== '') {
-                    if (!(new Date(submitted) > new Date(assignment_duedate))) {
+                    } else {
                         missingLabel.className = "ontime-title";
                         missingLabel.textContent = "Turned in on time";
                     }
-                }
-            }
-            headerSection.appendChild(missingLabel);
-
-            const dueLabel = document.createElement('label');
-            dueLabel.className = 'header-due';
-            dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
-            headerSection.appendChild(dueLabel);
-
-            const titleLabel = document.createElement('label');
-            titleLabel.className = 'header-title';
-            titleLabel.textContent = assignment_title;
-            headerSection.appendChild(titleLabel);
-
-            const postedDateLabel = document.createElement('label');
-            postedDateLabel.className = 'header-date';
-            postedDateLabel.textContent = `Posted ${formatDateTime(assignment_date)}`;
-            headerSection.appendChild(postedDateLabel);
-
-            assignment_cont.appendChild(headerSection);
-
-            const chatbotSection = document.createElement('section');
-            chatbotSection.className = 'chatbot-data-wrapper';
-            for (const file in assignment.attachedfile) {
-                const attachmentid = Date.now().toString();
-                const assignmentFileWrapper = document.createElement('section');
-                assignmentFileWrapper.className = 'assignment-file-wrapper';
-                assignmentFileWrapper.id = 'viewassignment-attachment-btn' + attachmentid;
-                chatbotSection.appendChild(assignmentFileWrapper);
-                const imgType = document.createElement('img');
-                imgType.className = 'img-type';
-
-                if (assignment.attachedfile.hasOwnProperty(file)) {
-                    const fileDetails = assignment.attachedfile[file];
-                    const filePath = fileDetails.filepath;
-                    const fileExtension = filePath.split('.').pop().toLowerCase();
-                    const fileHandlers = {
-                        image: handleImage,
-                        docx: handleDocx,
-                        pdf: handlePdf,
-                    };
-                    const animations = {
-                        fadeIn: {
-                            container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
-                            content: "fadeScaleUp 0.25s ease-in-out forwards",
-                        },
-                        fadeOut: {
-                            container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
-                            content: "fadeScaleDown 0.25s ease-in-out forwards",
-                        },
-                    };
-                    if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
-                        imgType.src = 'assets/icons/image-solid.svg';
-                        assignmentFileWrapper.appendChild(imgType);
-                        assignmentFileWrapper.addEventListener("click", async (event) => {
-                            document.getElementById('download-img-btn').setAttribute('value', filePath);
-                            await fileHandlers.image(filePath, animations);
-
-                        });
-                    } else if (['doc', 'docx'].includes(fileExtension)) {
-                        imgType.src = 'assets/icons/file-word-solid.svg';
-                        assignmentFileWrapper.appendChild(imgType);
-                        assignmentFileWrapper.addEventListener("click", async (event) => {
-                            document.getElementById('download-word-btn').setAttribute('value', filePath);
-                            await fileHandlers.docx(filePath, animations);
-                        });
-                    } else if (['pdf'].includes(fileExtension)) {
-                        imgType.className = 'img-type-pdf';
-                        imgType.src = 'assets/icons/file-pdf-solid.svg';
-                        assignmentFileWrapper.appendChild(imgType);
-                        assignmentFileWrapper.addEventListener("click", async (event) => {
-                            document.getElementById('download-pdf-btn').setAttribute('value', filePath);
-                            await fileHandlers.pdf(filePath, animations);
-                        });
-                    } else {
-
+                } else {
+                    if (Due(due)) {
+                        missingLabel.className = "missing-title";
+                        missingLabel.textContent = "Missing";
+                        if (submitted !== undefined && submitted !== '') {
+                            missingLabel.className = "late-title";
+                            missingLabel.textContent = "Turned in late";
+                        }
+                    }
+                    else {
+                        if (assignment_repository === true) {
+                            missingLabel.className = "warning-title";
+                            missingLabel.textContent = "Repository disables after due";
+                        }
+                    }
+                    if (!hasAttachment && submitted !== undefined && submitted !== '') {
+                        if (!(new Date(submitted) > due)) {
+                            missingLabel.className = "ontime-title";
+                            missingLabel.textContent = "Turned in on time";
+                        }
                     }
                 }
-            }
-            assignment_cont.appendChild(chatbotSection);
-
-            const instructionsLabel = document.createElement('label');
-            instructionsLabel.className = 'assignment-instruction';
-            instructionsLabel.textContent = 'Instructions';
-            assignment_cont.appendChild(instructionsLabel);
-
-            const instructionDetails = document.createElement('span');
-            instructionDetails.className = 'assignment-instruction-details';
-            instructionDetails.textContent = assignment_instruction;
-            if (assignment_instruction === 'none') {
-                instructionDetails.className = 'assignment-instruction-details-none';
-                instructionDetails.textContent = 'No instructions provided.';
-            }
-            assignment_cont.appendChild(instructionDetails);
-
-            const myWorkLabel = document.createElement('label');
-            myWorkLabel.className = 'assignment-instruction';
-            myWorkLabel.textContent = 'Comment';
-
-            const commentElement = document.createElement('textarea');
-            commentElement.className = 'comment-textarea';
-            commentElement.placeholder = 'Add a comment';
+                headerSection.appendChild(missingLabel);
 
 
-            if (submitted !== undefined && submitted !== '') {
-                if (comment !== '' && comment !== 'none') {
-                    commentElement.disabled = true;
-                    assignment_cont.appendChild(myWorkLabel);
-                    assignment_cont.appendChild(commentElement);
-                    commentElement.value = comment;
+
+
+
+                if (submitted !== undefined && submitted !== '') {
+                    const dueLabel = document.createElement('label');
+                    dueLabel.className = 'header-due';
+                    dueLabel.textContent = `Submitted ${submitted}`;
+                    headerSection.appendChild(dueLabel);
+                    assignment_cont.appendChild(headerSection);
                 }
+                const chatbotSection = document.createElement('section');
+                chatbotSection.className = 'chatbot-data-wrapper';
+                if (hasAttachment) {
+                    for (const file in snapshot.val().attachment) {
+                        const attachmentid = Date.now().toString();
+                        const assignmentFileWrapper = document.createElement('section');
+                        assignmentFileWrapper.className = 'assignment-file-wrapper';
+                        assignmentFileWrapper.id = 'viewassignment-attachment-btn' + attachmentid;
+                        chatbotSection.appendChild(assignmentFileWrapper);
+                        const imgType = document.createElement('img');
+                        imgType.className = 'img-type';
+
+                        if (snapshot.val().attachment.hasOwnProperty(file)) {
+                            const fileDetails = snapshot.val().attachment[file];
+                            const filePath = fileDetails.fileUrl;
+                            const fileExtension = filePath.split('.').pop().toLowerCase();
+                            const fileHandlers = {
+                                image: handleImage,
+                                docx: handleDocx,
+                                pdf: handlePdf,
+                            };
+                            const animations = {
+                                fadeIn: {
+                                    container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
+                                    content: "fadeScaleUp 0.25s ease-in-out forwards",
+                                },
+                                fadeOut: {
+                                    container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
+                                    content: "fadeScaleDown 0.25s ease-in-out forwards",
+                                },
+                            };
+                            if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                                imgType.src = 'assets/icons/image-solid.svg';
+                                assignmentFileWrapper.appendChild(imgType);
+                                assignmentFileWrapper.addEventListener("click", async (event) => {
+                                    document.getElementById('download-img-btn').setAttribute('value', filePath);
+                                    await fileHandlers.image(filePath, animations);
+
+                                });
+                            } else if (['doc', 'docx'].includes(fileExtension)) {
+                                imgType.src = 'assets/icons/file-word-solid.svg';
+                                assignmentFileWrapper.appendChild(imgType);
+                                assignmentFileWrapper.addEventListener("click", async (event) => {
+                                    document.getElementById('download-word-btn').setAttribute('value', filePath);
+                                    await fileHandlers.docx(filePath, animations);
+                                });
+                            } else if (['pdf'].includes(fileExtension)) {
+                                imgType.className = 'img-type-pdf';
+                                imgType.src = 'assets/icons/file-pdf-solid.svg';
+                                assignmentFileWrapper.appendChild(imgType);
+                                assignmentFileWrapper.addEventListener("click", async (event) => {
+                                    document.getElementById('download-pdf-btn').setAttribute('value', filePath);
+                                    await fileHandlers.pdf(filePath, animations);
+                                });
+                            } else {
+
+                            }
+                        }
+                    }
+                    assignment_cont.appendChild(chatbotSection);
+                }
+                if (comment !== 'none' && comment !== '' && comment !== undefined) {
+                    const instructionsLabel = document.createElement('label');
+                    instructionsLabel.className = 'assignment-instruction';
+                    instructionsLabel.textContent = 'Comment';
+                    assignment_cont.appendChild(instructionsLabel);
+
+                    const commentElement = document.createElement('textarea');
+                    commentElement.className = 'comment-textarea';
+                    commentElement.placeholder = 'Add a comment';
+                    commentElement.value = comment;
+                    commentElement.disabled = true;
+                    assignment_cont.appendChild(commentElement);
+                }
+
+                const fillers = document.createElement('div');
+                fillers.className = 'fillers';
+                assignment_cont.appendChild(fillers);
+                assignment_cont.appendChild(fillers);
+                assignment_cont.appendChild(fillers);
+                assignment_cont.appendChild(fillers);
             }
             else {
-                if (!(assignment_repository === true && Due(assignment_duedate))) {
-                    commentElement.disabled = false;
-                    assignment_cont.appendChild(myWorkLabel);
-                    assignment_cont.appendChild(commentElement);
-                    commentElement.addEventListener('input', autoResizeTextarea);
-
-
-
-
-                    const fillers = document.createElement('div');
-                    fillers.className = 'fillers';
-                    assignment_cont.appendChild(fillers);
-                    assignment_cont.appendChild(fillers);
-                    assignment_cont.appendChild(fillers);
-                    assignment_cont.appendChild(fillers);
-
-                }
+                console.log('not yet submitted');
             }
         });
     }
@@ -381,8 +329,7 @@ function formatDateTime(datetime) {
 }
 function Due(date) {
     const currentDate = new Date();
-    const targetDate = new Date(date);
-    if (currentDate > targetDate) {
+    if (currentDate > date) {
         return true;
     } else {
         return false;
