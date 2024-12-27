@@ -314,13 +314,18 @@ async function renderAssignmentUI() {
                         const subject = localStorage.getItem("parseroom-code");
                         const section = localStorage.getItem("parseroom-section");
                         const submitted = getCurrentDateTime();
+                        let score = 0;
+                        if (new Date(submitted) < new Date(assignment_duedate)) {
+                            score = pointsontime;
 
+                        }
                         if (commentElement.value === '') {
                             commentElement.value = 'none';
                         }
                         await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${admin_id}/`), {
                             submitted: submitted,
                             comment: commentElement.value,
+                            score: score,
                         });
                     });
                     assignment_cont.appendChild(submitButton);

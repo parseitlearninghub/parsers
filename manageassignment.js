@@ -108,10 +108,15 @@ async function getSubmissions() {
                         assignmentWrapper.appendChild(topMenu);
                         const bottomMenu = document.createElement("section");
                         bottomMenu.className = "bottom-menu-assignment";
-                        bottomMenu.innerHTML = `
-                            <span class="student-name">${fullname}</span>
-                            <span class="student-score">0/${totalscore}</span>
-                        `;
+
+                        const test = assignmentSnapshot.val()?.completed?.[studentid];
+                        if (test?.score) {
+                            bottomMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score">${test.score}/${totalscore}</span>`;
+                        }
+                        else {
+                            bottomMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score">0/${totalscore}</span>`;
+                        }
+
                         assignmentWrapper.addEventListener("click", async (event) => {
                             window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentcode}&studentid=${studentid}&due=${assignmentSnapshot.val().duedate}&repository=${repository}`;
                         });
