@@ -1304,8 +1304,8 @@ body {
 
 .bookmark-bubble {
   position: fixed;
-  top: 10px;
-  right: 10px;
+  bottom: 75px;
+  right: 25px;
   width: 60px;
   height: 60px;
   background-color: #f30505;
@@ -1325,8 +1325,8 @@ body {
 }
 
 .bubble-icon {
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   filter: invert(1);
 }
 
@@ -1363,6 +1363,13 @@ body {
   font-family: Inter-Bold;
   font-size: 26px;
   color: #fefefe;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-assignment {
+  font-family: Inter-Light;
+  font-size: 16px;
 }
 
 .bookmark-wrapper-body {
@@ -1380,4 +1387,37 @@ body {
   border-radius: 10px;
   backdrop-filter: blur(10px);
   margin-bottom: 10px;
+  color: #fefefe;
+  font-size: 14px;
+  font-family: Inter-Regular;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.assignment-title {
+  width: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: space-between;
+}
+
+.assign-top {
+  font-size: 18px;
+  font-family: Inter-Bold;
+  padding-left: 15px;
+  padding-right: 15px;
+  white-space: nowrap;
+}
+.activity-title {
+  width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.assign-bot {
+  padding-left: 15px;
+  padding-right: 15px;
+  font-style: italic;
 }

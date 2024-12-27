@@ -1698,6 +1698,41 @@ function bookmarkBubble() {
     let isDragging = false;
     let offsetX, offsetY;
     chatBubble.addEventListener('click', (e) => {
+      document.getElementById('bookmark-wrapper-body').innerHTML = '';
+      const bookmarkWrapper = document.createElement('section');
+      bookmarkWrapper.className = 'bookmark-wrapper';
+      const titleSection = document.createElement('section');
+      titleSection.className = 'assignment-title';
+
+      const activityTitleSpan = document.createElement('span');
+      activityTitleSpan.className = 'assign-top activity-title';
+      activityTitleSpan.textContent = 'activityTitle';
+
+      const subjectCodeSpan = document.createElement('span');
+      subjectCodeSpan.className = 'assign-top';
+      subjectCodeSpan.textContent = 'subjectCode';
+
+      titleSection.appendChild(activityTitleSpan);
+      titleSection.appendChild(subjectCodeSpan);
+
+      const datesSection = document.createElement('section');
+      datesSection.className = 'assignment-title';
+
+      const postedDateSpan = document.createElement('span');
+      postedDateSpan.className = 'assign-bot';
+      postedDateSpan.textContent = 'postedDate';
+
+      const dueDateSpan = document.createElement('span');
+      dueDateSpan.className = 'assign-bot';
+      dueDateSpan.textContent = 'dueDate';
+
+      datesSection.appendChild(postedDateSpan);
+      datesSection.appendChild(dueDateSpan);
+
+      bookmarkWrapper.appendChild(titleSection);
+      bookmarkWrapper.appendChild(datesSection);
+
+      document.getElementById('bookmark-wrapper-body').appendChild(bookmarkWrapper);
       document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
     });
 
@@ -1724,8 +1759,8 @@ function bookmarkBubble() {
         // Constrain the bubble to the screen
         const screenHeight = window.innerHeight;
         const bubbleHeight = chatBubble.offsetHeight;
-        const minY = 10; // Top constraint
-        const maxY = screenHeight - bubbleHeight - 10; // Bottom constraint (20px from bottom)
+        const minY = 25; // Top constraint
+        const maxY = screenHeight - bubbleHeight - 25; // Bottom constraint (20px from bottom)
 
         // Set the new position
         chatBubble.style.left = `${newX}px`;
@@ -1744,10 +1779,10 @@ function bookmarkBubble() {
 
       if (bubbleRect.left < screenWidth / 2) {
         // Stick to the left side
-        chatBubble.style.left = '10px';
+        chatBubble.style.left = '25px';
       } else {
         // Stick to the right side
-        chatBubble.style.left = `${screenWidth - bubbleRect.width - 10}px`;
+        chatBubble.style.left = `${screenWidth - bubbleRect.width - 25}px`;
       }
 
       // Re-enable transition after dragging stops for smooth movement
@@ -1758,4 +1793,5 @@ function bookmarkBubble() {
 
 document.getElementById('book-assignments-header').addEventListener('click', (e) => {
   document.getElementById('bookmark-assignments-container').style.transform = 'translateY(100%)';
+
 });
