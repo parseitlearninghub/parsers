@@ -198,6 +198,12 @@ async function renderAssignmentUI() {
                     }
                     assignment_cont.appendChild(chatbotSection);
                 }
+                else {
+                    const attachmentMissing = document.createElement('div');
+                    attachmentMissing.className = 'nothing-data-label';
+                    attachmentMissing.textContent = 'No attachments submitted.';
+                    assignment_cont.appendChild(attachmentMissing);
+                }
                 if (comment !== 'none' && comment !== '' && comment !== undefined) {
                     const instructionsLabel = document.createElement('label');
                     instructionsLabel.className = 'assignment-instruction';
@@ -211,6 +217,12 @@ async function renderAssignmentUI() {
                     commentElement.disabled = true;
                     assignment_cont.appendChild(commentElement);
                 }
+                else {
+                    const commentMissing = document.createElement('div');
+                    commentMissing.className = 'nothing-data-label';
+                    commentMissing.textContent = 'No comments added.';
+                    assignment_cont.appendChild(commentMissing);
+                }
 
                 const fillers = document.createElement('div');
                 fillers.className = 'fillers';
@@ -220,7 +232,13 @@ async function renderAssignmentUI() {
                 assignment_cont.appendChild(fillers);
             }
             else {
-                console.log('not yet submitted');
+                const missingSection = document.createElement('section');
+                missingSection.className = 'missing-data-wrapper';
+                const instructionsMissing = document.createElement('label');
+                instructionsMissing.className = 'missing-data-label';
+                instructionsMissing.textContent = 'This student has not submitted any work yet.';
+                missingSection.appendChild(instructionsMissing);
+                assignment_cont.appendChild(missingSection);
             }
         });
     }

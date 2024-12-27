@@ -538,3 +538,32 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.missing-data-wrapper {
+  background-color: transparent;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.missing-data-label {
+  font-family: Inter-Regular;
+  font-size: 16px;
+  font-style: italic;
+  color: #adadad;
+  text-align: center;
+  margin-top: 10%;
+  width: 80%;
+}
+
+.nothing-data-label {
+  font-family: Inter-Regular;
+  font-size: 14px;
+  font-style: italic;
+  color: #adadad;
+  text-align: center;
+  margin-top: 10px;
+  width: 100%;
+}
