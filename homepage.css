@@ -1301,3 +1301,30 @@ body {
 .highlight {
   display: flex;
 }
+
+.bookmark-bubble {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 60px;
+  height: 60px;
+  background-color: #ff5722;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  transition: left 0.5s ease, top 0.5s ease; /* Smooth transition for left and top */
+}
+
+.bookmark-bubble:hover {
+  transform: scale(1.1);
+}
+
+.bubble-icon {
+  width: 30px;
+  height: 30px;
+  filter: invert(1);
+}
