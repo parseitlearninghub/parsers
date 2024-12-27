@@ -109,8 +109,10 @@ async function getSubmissions() {
                         const bottomMenu = document.createElement("section");
                         bottomMenu.className = "bottom-menu-assignment";
 
+                        let currentscore = 0;
                         const test = assignmentSnapshot.val()?.completed?.[studentid];
                         if (test?.score) {
+                            currentscore = test.score;
                             bottomMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score">${test.score}/${totalscore}</span>`;
                         }
                         else {
@@ -118,7 +120,7 @@ async function getSubmissions() {
                         }
 
                         assignmentWrapper.addEventListener("click", async (event) => {
-                            window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentcode}&studentid=${studentid}&due=${assignmentSnapshot.val().duedate}&repository=${repository}`;
+                            window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentcode}&studentid=${studentid}&due=${assignmentSnapshot.val().duedate}&repository=${repository}&score=${currentscore}`;
                         });
                         assignmentWrapper.appendChild(bottomMenu);
                         container.appendChild(assignmentWrapper);
