@@ -1317,6 +1317,7 @@ body {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   z-index: 1000;
   transition: left 0.5s ease, top 0.5s ease; /* Smooth transition for left and top */
+  -webkit-tap-highlight-color: transparent;
 }
 
 .bookmark-bubble:hover {
