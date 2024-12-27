@@ -66,13 +66,16 @@ async function getSubmissions() {
             onValue(membersRef, async (membersRefSnapshot) => {
                 const container = document.getElementById("assignment-container");
                 container.innerHTML = "";
+
                 if (membersRefSnapshot.exists()) {
                     const members = [];
+                    let totalstudents = 0;
+                    let completedstudents = 0;
                     for (const studentid in membersRefSnapshot.val()) {
                         const fullname = await getFullname(studentid);
                         members.push({ studentid, fullname });
+                        totalstudents++;
                     }
-
                     members.sort((a, b) => a.fullname.localeCompare(b.fullname));
 
 
@@ -91,10 +94,13 @@ async function getSubmissions() {
                             const submitted = new Date(completedData.submitted);
                             if (submitted > due) {
                                 color = 'gray';
+
                             }
                             else {
                                 color = 'green'
+
                             }
+                            completedstudents++;
                         } else {
                             if (!Due(assignmentSnapshot.val().duedate)) {
                                 color = 'yellow';
@@ -104,6 +110,25 @@ async function getSubmissions() {
                                 color = 'red';
                             }
                         }
+
+                        let percentage = 0;
+
+                        if (parseInt(totalstudents) !== 0) {
+                            percentage = parseInt(completedstudents) / parseInt(totalstudents) * 100;
+                        }
+
+
+                        const progressSpan = document.getElementById('counter-progress-wrapper');
+                        progressSpan.textContent = `${completedstudents} out of ${totalstudents} completed`;
+                        const progressCircle = document.querySelector('.progress-circle .progress');
+                        const radius = progressCircle.getAttribute('r');
+                        const totalLength = 2 * Math.PI * radius;
+                        progressCircle.style.strokeDasharray = totalLength;
+                        progressCircle.style.strokeDashoffset = totalLength - (totalLength * percentage) / 100;
+                        document.getElementById('bg-prograss-circle').style.stroke = '#e6e6e6';
+                        document.querySelector('.progress-circle .percentage').textContent = `${Math.round(percentage)}%`;
+
+
                         topMenu.innerHTML += `<span class="student-status-${color}"></span>`;
                         assignmentWrapper.appendChild(topMenu);
                         const bottomMenu = document.createElement("section");
@@ -163,3 +188,5 @@ document.getElementById("canceladdchatbot-btn").addEventListener("click", () => 
     console.log("clicked");
     window.location.href = `parseroom.html`;
 });
+
+
