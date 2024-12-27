@@ -61,6 +61,7 @@ let siti_brain = [];
 
 setScreenSize(window.innerWidth, window.innerHeight);
 window.addEventListener("load", async function () {
+  bookmarkBubble();
   document.getElementById("loading_animation_div").style.display = "none";
   username = await getparser_username(user_parser);
   await getUser(user_parser).then(async () => {
@@ -1690,60 +1691,62 @@ function typeWriterEffect(element, text, speed) {
 
 
 
-const chatBubble = document.querySelector('.bookmark-bubble');
+function bookmarkBubble() {
+  const chatBubble = document.querySelector('.bookmark-bubble');
+  let isDragging = false;
+  let offsetX, offsetY;
 
-let isDragging = false;
-let offsetX, offsetY;
+  // For touch events, use touchstart, touchmove, touchend
+  chatBubble.addEventListener('touchstart', (e) => {
+    // Use touchstart to begin dragging
+    isDragging = true;
 
-// For touch events, use touchstart, touchmove, touchend
-chatBubble.addEventListener('touchstart', (e) => {
-  // Use touchstart to begin dragging
-  isDragging = true;
+    // Get the position of the first touch point
+    offsetX = e.touches[0].clientX - chatBubble.getBoundingClientRect().left;
+    offsetY = e.touches[0].clientY - chatBubble.getBoundingClientRect().top;
 
-  // Get the position of the first touch point
-  offsetX = e.touches[0].clientX - chatBubble.getBoundingClientRect().left;
-  offsetY = e.touches[0].clientY - chatBubble.getBoundingClientRect().top;
+    // Disable transition during dragging for smoother experience
+    chatBubble.style.transition = 'none';
+  });
 
-  // Disable transition during dragging for smoother experience
-  chatBubble.style.transition = 'none';
-});
+  // Handle the touch move
+  document.addEventListener('touchmove', (e) => {
+    if (isDragging) {
+      // Get the new position of the bubble
+      const newX = e.touches[0].clientX - offsetX;
+      const newY = e.touches[0].clientY - offsetY;
 
-// Handle the touch move
-document.addEventListener('touchmove', (e) => {
-  if (isDragging) {
-    // Get the new position of the bubble
-    const newX = e.touches[0].clientX - offsetX;
-    const newY = e.touches[0].clientY - offsetY;
+      // Constrain the bubble to the screen
+      const screenHeight = window.innerHeight;
+      const bubbleHeight = chatBubble.offsetHeight;
+      const minY = 0; // Top constraint
+      const maxY = screenHeight - bubbleHeight - 20; // Bottom constraint (20px from bottom)
 
-    // Constrain the bubble to the screen
-    const screenHeight = window.innerHeight;
-    const bubbleHeight = chatBubble.offsetHeight;
-    const minY = 0; // Top constraint
-    const maxY = screenHeight - bubbleHeight - 20; // Bottom constraint (20px from bottom)
+      // Set the new position
+      chatBubble.style.left = `${newX}px`;
+      chatBubble.style.top = `${Math.max(minY, Math.min(newY, maxY))}px`;  // Ensure top doesn't go out of bounds
+      chatBubble.style.position = 'fixed';  // Ensure it stays fixed relative to the viewport
+    }
+  });
 
-    // Set the new position
-    chatBubble.style.left = `${newX}px`;
-    chatBubble.style.top = `${Math.max(minY, Math.min(newY, maxY))}px`;  // Ensure top doesn't go out of bounds
-    chatBubble.style.position = 'fixed';  // Ensure it stays fixed relative to the viewport
-  }
-});
+  // Handle touch end (drag stop)
+  document.addEventListener('touchend', () => {
+    isDragging = false;
 
-// Handle touch end (drag stop)
-document.addEventListener('touchend', () => {
-  isDragging = false;
+    // Snap to the closest side with a smooth transition
+    const screenWidth = window.innerWidth;
+    const bubbleRect = chatBubble.getBoundingClientRect();
 
-  // Snap to the closest side with a smooth transition
-  const screenWidth = window.innerWidth;
-  const bubbleRect = chatBubble.getBoundingClientRect();
+    if (bubbleRect.left < screenWidth / 2) {
+      // Stick to the left side
+      chatBubble.style.left = '20px';
+    } else {
+      // Stick to the right side
+      chatBubble.style.left = `${screenWidth - bubbleRect.width - 20}px`;
+    }
 
-  if (bubbleRect.left < screenWidth / 2) {
-    // Stick to the left side
-    chatBubble.style.left = '20px';
-  } else {
-    // Stick to the right side
-    chatBubble.style.left = `${screenWidth - bubbleRect.width - 20}px`;
-  }
+    // Re-enable transition after dragging stops for smooth movement
+    chatBubble.style.transition = 'left 0.5s ease, top 0.5s ease';  // Transition for left and top properties
+  });
 
-  // Re-enable transition after dragging stops for smooth movement
-  chatBubble.style.transition = 'left 0.5s ease, top 0.5s ease';  // Transition for left and top properties
-});
+}
