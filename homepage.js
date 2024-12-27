@@ -1698,7 +1698,7 @@ function bookmarkBubble() {
     let isDragging = false;
     let offsetX, offsetY;
     chatBubble.addEventListener('click', (e) => {
-
+      document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
     });
 
     // For touch events, use touchstart, touchmove, touchend
@@ -1755,3 +1755,7 @@ function bookmarkBubble() {
     });
   }
 }
+
+document.getElementById('book-assignments-header').addEventListener('click', (e) => {
+  document.getElementById('bookmark-assignments-container').style.transform = 'translateY(100%)';
+});
