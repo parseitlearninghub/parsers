@@ -57,6 +57,7 @@ async function getSubmissions() {
     const assignmentRef = ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/`);
     onValue(assignmentRef, async (assignmentSnapshot) => {
         if (assignmentSnapshot.exists()) {
+
             const due = new Date(assignmentSnapshot.val().duedate);
             const totalscore = assignmentSnapshot.val().totalscore;
             const repository = assignmentSnapshot.val().repository;
@@ -112,7 +113,7 @@ async function getSubmissions() {
                             <span class="student-score">0/${totalscore}</span>
                         `;
                         assignmentWrapper.addEventListener("click", async (event) => {
-                            window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentcode}&studentid=${studentid}&due=${due}&repository=${repository}`;
+                            window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentcode}&studentid=${studentid}&due=${assignmentSnapshot.val().duedate}&repository=${repository}`;
                         });
                         assignmentWrapper.appendChild(bottomMenu);
                         container.appendChild(assignmentWrapper);

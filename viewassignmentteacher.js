@@ -94,8 +94,11 @@ async function renderAssignmentUI() {
                 const headerSection = document.createElement('section');
                 headerSection.className = 'header-title-wrapper';
                 const missingLabel = document.createElement("label");
+
+
                 if (submitted !== undefined && submitted !== '') {
-                    if (new Date(submitted) > due) {
+
+                    if (new Date(submitted) > new Date(due)) {
                         missingLabel.className = "late-title";
                         missingLabel.textContent = "Turned in late";
                     } else {
@@ -127,13 +130,10 @@ async function renderAssignmentUI() {
                 headerSection.appendChild(missingLabel);
 
 
-
-
-
                 if (submitted !== undefined && submitted !== '') {
                     const dueLabel = document.createElement('label');
                     dueLabel.className = 'header-due';
-                    dueLabel.textContent = `Submitted ${submitted}`;
+                    dueLabel.textContent = `Submitted ${formatDateTime(submitted)}`;
                     headerSection.appendChild(dueLabel);
                     assignment_cont.appendChild(headerSection);
                 }
@@ -347,7 +347,7 @@ function formatDateTime(datetime) {
 }
 function Due(date) {
     const currentDate = new Date();
-    if (currentDate > date) {
+    if (currentDate > new Date(date)) {
         return true;
     } else {
         return false;
