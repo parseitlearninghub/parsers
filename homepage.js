@@ -1695,7 +1695,9 @@ function bookmarkBubble() {
   const chatBubble = document.querySelector('.bookmark-bubble');
   let isDragging = false;
   let offsetX, offsetY;
-
+  chatBubble.addEventListener('click', (e) => {
+    alert('Wait sa, gadali char');
+  });
   // For touch events, use touchstart, touchmove, touchend
   chatBubble.addEventListener('touchstart', (e) => {
     // Use touchstart to begin dragging
