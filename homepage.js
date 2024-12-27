@@ -61,9 +61,9 @@ let siti_brain = [];
 
 setScreenSize(window.innerWidth, window.innerHeight);
 window.addEventListener("load", async function () {
-  bookmarkBubble();
   document.getElementById("loading_animation_div").style.display = "none";
   username = await getparser_username(user_parser);
+  bookmarkBubble();
   await getUser(user_parser).then(async () => {
     if (parser[0].suffix === "none") {
       parser[0].suffix = "";
@@ -1693,11 +1693,13 @@ function typeWriterEffect(element, text, speed) {
 
 function bookmarkBubble() {
   const chatBubble = document.querySelector('.bookmark-bubble');
+  chatBubble.style.display = 'flex';
   let isDragging = false;
   let offsetX, offsetY;
   chatBubble.addEventListener('click', (e) => {
-    alert('Wait sa, gadali char');
+
   });
+
   // For touch events, use touchstart, touchmove, touchend
   chatBubble.addEventListener('touchstart', (e) => {
     // Use touchstart to begin dragging
@@ -1721,8 +1723,8 @@ function bookmarkBubble() {
       // Constrain the bubble to the screen
       const screenHeight = window.innerHeight;
       const bubbleHeight = chatBubble.offsetHeight;
-      const minY = 0; // Top constraint
-      const maxY = screenHeight - bubbleHeight - 20; // Bottom constraint (20px from bottom)
+      const minY = 10; // Top constraint
+      const maxY = screenHeight - bubbleHeight - 10; // Bottom constraint (20px from bottom)
 
       // Set the new position
       chatBubble.style.left = `${newX}px`;
@@ -1741,10 +1743,10 @@ function bookmarkBubble() {
 
     if (bubbleRect.left < screenWidth / 2) {
       // Stick to the left side
-      chatBubble.style.left = '20px';
+      chatBubble.style.left = '10px';
     } else {
       // Stick to the right side
-      chatBubble.style.left = `${screenWidth - bubbleRect.width - 20}px`;
+      chatBubble.style.left = `${screenWidth - bubbleRect.width - 10}px`;
     }
 
     // Re-enable transition after dragging stops for smooth movement
