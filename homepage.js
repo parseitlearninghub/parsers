@@ -1773,7 +1773,7 @@ function bookmarkBubble() {
               });
               bookmarkWrapper.addEventListener('touchend', () => {
                 const deltaX = currentX - startX;
-                if (deltaX < - 250) {
+                if (deltaX < -50) {
                   isSwiped = true;
                   bookmarkWrapper.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
                   bookmarkWrapper.style.transform = 'translateX(-100%)';
@@ -1782,7 +1782,7 @@ function bookmarkBubble() {
                     bookmarkWrapper.remove();
                     await remove(ref(database, `PARSEIT/administration/students/${user_parser}/assignments/${assignment}/`));
                   }, 300);
-                } else {
+                } else if (deltaX !== 0) {
                   bookmarkWrapper.style.transform = `translateX(0)`;
                 }
                 startX = 0;
