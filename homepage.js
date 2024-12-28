@@ -1742,6 +1742,7 @@ function bookmarkBubble() {
               bookmarkWrapper.appendChild(datesSection);
 
               bookmarkWrapper.addEventListener('click', async (event) => {
+                bookmarkWrapper.style.transform = `translateX(0)`;
                 localStorage.setItem('parseroom-acadref', membersRefSnapshot.val()[assignment].acadref);
                 localStorage.setItem('parseroom-sem', membersRefSnapshot.val()[assignment].sem);
                 localStorage.setItem('parseroom-section', membersRefSnapshot.val()[assignment].section);
@@ -1760,6 +1761,8 @@ function bookmarkBubble() {
               let startX = 0;
               let currentX = 0;
               let isSwiped = false;
+
+
               bookmarkWrapper.addEventListener('touchstart', (e) => {
                 startX = e.touches[0].clientX;
                 isSwiped = false;
@@ -1785,9 +1788,6 @@ function bookmarkBubble() {
                 } else {
                   bookmarkWrapper.style.transform = `translateX(0)`;
                 }
-                bookmarkWrapper.addEventListener('click', () => {
-                  bookmarkWrapper.style.transform = `translateX(0)`;
-                });
 
                 bookmarkBubble
                 startX = 0;
