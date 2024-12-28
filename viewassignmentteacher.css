@@ -567,3 +567,47 @@ body {
   margin-bottom: 10px;
   width: 100%;
 }
+
+.grade-student-container {
+  position: fixed;
+  height: 70px;
+  width: 90%;
+  background-color: #fefefe;
+  bottom: 15px;
+  border-radius: 4px;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  box-sizing: border-box;
+}
+.perfect-button {
+  width: 180px;
+  height: 50px;
+  border: none;
+  background-color: #f30505;
+  color: #fefefe;
+  border-radius: 4px;
+  font-family: Inter-Bold;
+  font-size: 14px;
+  margin-left: 10px;
+}
+.finalscore-txt {
+  width: 50px;
+  height: 50px;
+  text-align: center;
+  border: 0.3px solid #dcdcdc;
+  border-radius: 4px;
+  font-size: 14px;
+  font-family: Inter-Regular;
+}
+.finalscore-txt:focus {
+  outline: none;
+}
+.over-score {
+  font-family: Inter-Regular;
+  font-size: 14px;
+  margin-right: 10px;
+  margin-left: -20px;
+}

@@ -145,7 +145,7 @@ async function getSubmissions() {
                         }
 
                         assignmentWrapper.addEventListener("click", async (event) => {
-                            window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentcode}&studentid=${studentid}&due=${assignmentSnapshot.val().duedate}&repository=${repository}&score=${currentscore}`;
+                            window.location.href = `viewassignmentteacher.html?assignmentcode=${assignmentcode}&studentid=${studentid}&due=${assignmentSnapshot.val().duedate}&repository=${repository}&score=${currentscore}&perfect=${totalscore}`;
                         });
                         assignmentWrapper.appendChild(bottomMenu);
                         container.appendChild(assignmentWrapper);

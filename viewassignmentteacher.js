@@ -29,6 +29,8 @@ const urlParams = new URLSearchParams(queryString);
 const assignmentcode = urlParams.get('assignmentcode');
 const studentid = urlParams.get('studentid');
 const due = urlParams.get('due');
+const score = urlParams.get('score');
+const totalscore = urlParams.get('perfect');
 let assignment_repository = urlParams.get('repository');
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
@@ -36,6 +38,8 @@ window.addEventListener("load", async function () {
     document.getElementById("loading_animation_div").style.display = "none";
     await getAssigmentWork();
     table = 'visible';
+
+    document.getElementById('finalscore-txt').value = score;
 
 });
 function setScreenSize(width, height) {
@@ -672,3 +676,42 @@ async function getAssigmentWork() {
 
 }
 
+async function submitFinalScore() {
+    const acadref = localStorage.getItem("parseroom-acadref");
+    const yearlvl = localStorage.getItem("parseroom-yearlvl");
+    const sem = localStorage.getItem("parseroom-sem");
+    const subject = localStorage.getItem("parseroom-code");
+    const section = localStorage.getItem("parseroom-section");
+
+    const finalscore = document.getElementById('finalscore-txt').value;
+
+    await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/completed/${studentid}/`), {
+        score: finalscore,
+    });
+}
+
+document.getElementById('perfect-button').addEventListener('click', async () => {
+    document.getElementById('finalscore-txt').value = totalscore;
+    await submitFinalScore();
+});
+
+document.getElementById('finalscore-txt').addEventListener('input', (event) => {
+    const value = event.target.value;
+    event.target.value = value.replace(/\D/g, "");
+});
+
+document.getElementById('finalscore-txt').addEventListener('blur', async () => {
+    if (parseInt(document.getElementById('finalscore-txt').value) <= parseInt(totalscore)) {
+        await submitFinalScore();
+    }
+    else {
+        errorElement('finalscore-txt');
+    }
+});
+
+function errorElement(element) {
+    document.getElementById(element).style.border = "0.4px solid #f30505";
+    setTimeout(() => {
+        document.getElementById(element).style.border = "0.4px solid #dcdcdc";
+    }, 1000);
+}
