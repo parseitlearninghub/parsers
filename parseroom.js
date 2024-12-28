@@ -138,13 +138,7 @@ document
 //     document.getElementById("nofeature").style.display = "none";
 //   }, 1000);
 // });
-// document.getElementById("see_members").addEventListener("click", (event) => {
-//   event.preventDefault();
-//   document.getElementById("nofeature").style.display = "flex";
-//   setTimeout(() => {
-//     document.getElementById("nofeature").style.display = "none";
-//   }, 1000);
-// });
+
 // document.getElementById("check_discussionroom").addEventListener("click", (event) => {
 //   event.preventDefault();
 //   document.getElementById("nofeature").style.display = "flex";
@@ -152,6 +146,12 @@ document
 //     document.getElementById("nofeature").style.display = "none";
 //   }, 1000);
 // });
+
+
+document.getElementById("see_members").addEventListener("click", () => {
+  window.location.href = "viewmembers.html";
+});
+
 
 
 //functions
@@ -215,7 +215,7 @@ async function getParseroomMessages() {
           } else {
             if (message.to === "everyone") {
               appendMessageHTML += `
-                        <div class="parseroom-message">
+                        <div class="parseroom-message parseroom-message-others">
                         <section class="p-profile">
                         <img id="parser-profile" class="parser-profile" src='${message.sender_profile}' alt="" />
                         </section>
@@ -230,7 +230,7 @@ async function getParseroomMessages() {
             } else {
               if (message.to === user_parser) {
                 appendMessageHTML += `
-                        <div class="parseroom-message" style="display: flex; align-items: center; justify-content: center;">
+                        <div class="parseroom-message parseroom-message-others" style="display: flex; align-items: center; justify-content: center;">
                         <section class="p-profile" style="display: none;">
                         <img id="parser-profile" class="parser-profile" src='${message.sender_profile}' alt="" />
                         </section>
@@ -247,6 +247,54 @@ async function getParseroomMessages() {
           }
         });
         messagecont.innerHTML = appendMessageHTML;
+
+        let startX = 0;
+        let currentX = 0;
+        let isSwiped = false;
+
+        document.querySelectorAll('.parseroom-message-others').forEach(element => {
+          element.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            isSwiped = false;
+          });
+
+          element.addEventListener('touchmove', (e) => {
+            currentX = e.touches[0].clientX;
+            const deltaX = currentX - startX;
+
+            if (deltaX > 0) {
+              element.style.transform = `translateX(${deltaX}px)`;
+            }
+          });
+          element.addEventListener('touchend', () => {
+            const deltaX = currentX - startX;
+            if (deltaX > 300) {
+              isSwiped = true;
+              element.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+              element.style.transform = 'translateX(100%)';
+              setTimeout(async () => {
+                const usernameElement = element.querySelector('.p-username');
+                if (usernameElement) {
+                  const username = usernameElement.textContent.trim();
+                  document.getElementById('parsermessage-txt').value += username;
+                  let username_trim = extractUsername(username);
+                  let id = await getparser_id(username_trim);
+                  if (id !== null) {
+                    localStorage.setItem("active-whisper-id", id);
+                    showPrivateMessages();
+                    showWhisperTheme();
+                  }
+                }
+              }, 300);
+            } else {
+              element.style.transform = `translateX(0)`; // Reset position
+            }
+
+            startX = 0;
+            currentX = 0;
+          });
+        });
+
         scrollToBottom();
       } else {
       }

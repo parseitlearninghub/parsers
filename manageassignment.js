@@ -185,7 +185,6 @@ async function getFullname(studentid) {
 }
 
 document.getElementById("canceladdchatbot-btn").addEventListener("click", () => {
-    console.log("clicked");
     window.location.href = `parseroom.html`;
 });
 

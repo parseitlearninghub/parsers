@@ -163,6 +163,11 @@ body {
 }
 
 .student-id {
+  padding-right: 10px;
+  opacity: 0.5;
+  font-family: Inter-Light;
+}
+.student-id-username {
   padding-left: 10px;
   opacity: 0.5;
   font-family: Inter-Light;
