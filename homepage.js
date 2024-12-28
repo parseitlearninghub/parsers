@@ -1706,93 +1706,99 @@ function bookmarkBubble() {
           document.getElementById('bookmark-wrapper-body').innerHTML = '';
           for (const assignment in membersRefSnapshot.val()) {
             if (status[0].academicref === membersRefSnapshot.val()[assignment].acadref) {
-              const bookmarkWrapper = document.createElement('section');
-              bookmarkWrapper.className = 'bookmark-wrapper';
-              const titleSection = document.createElement('section');
-              titleSection.className = 'assignment-title';
+              const assignmentDetails = ref(database, `PARSEIT/administration/parseclass/${membersRefSnapshot.val()[assignment].acadref}/${membersRefSnapshot.val()[assignment].yearlvl}/${membersRefSnapshot.val()[assignment].sem}/${membersRefSnapshot.val()[assignment].subject}/${membersRefSnapshot.val()[assignment].section}/assignment/${assignment}/`);
+              onValue(assignmentDetails, async (assignmentDetailsSnapshot) => {
 
-              const activityTitleSpan = document.createElement('span');
-              activityTitleSpan.className = 'assign-top activity-title';
-              activityTitleSpan.textContent = membersRefSnapshot.val()[assignment].header;
+                const bookmarkWrapper = document.createElement('section');
+                bookmarkWrapper.className = 'bookmark-wrapper';
+                const titleSection = document.createElement('section');
+                titleSection.className = 'assignment-title';
 
-              const subjectCodeSpan = document.createElement('span');
-              subjectCodeSpan.className = 'assign-code';
-              subjectCodeSpan.textContent = membersRefSnapshot.val()[assignment].subject;
+                const activityTitleSpan = document.createElement('span');
+                activityTitleSpan.className = 'assign-top activity-title';
+                activityTitleSpan.textContent = assignmentDetailsSnapshot.val().header;
 
-              titleSection.appendChild(activityTitleSpan);
+                const subjectCodeSpan = document.createElement('span');
+                subjectCodeSpan.className = 'assign-code';
+                subjectCodeSpan.textContent = membersRefSnapshot.val()[assignment].subject;
 
-
-              const datesSection = document.createElement('section');
-              datesSection.className = 'assignment-title';
-              datesSection.appendChild(subjectCodeSpan);
-
-              const postedDateSpan = document.createElement('span');
-              postedDateSpan.className = 'assign-bot';
-              postedDateSpan.textContent = 'Due ' + formatDateTime(membersRefSnapshot.val()[assignment].duedate);
-
-              const dueDateSpan = document.createElement('span');
-              dueDateSpan.className = 'assign-bot';
-              dueDateSpan.textContent = 'Posted ' + formatDateTime(membersRefSnapshot.val()[assignment].date);
-
-              datesSection.appendChild(postedDateSpan);
-
-              titleSection.appendChild(dueDateSpan);
-
-              bookmarkWrapper.appendChild(titleSection);
-              bookmarkWrapper.appendChild(datesSection);
-
-              bookmarkWrapper.addEventListener('click', async (event) => {
-                bookmarkWrapper.style.transform = `translateX(0)`;
-                localStorage.setItem('parseroom-acadref', membersRefSnapshot.val()[assignment].acadref);
-                localStorage.setItem('parseroom-sem', membersRefSnapshot.val()[assignment].sem);
-                localStorage.setItem('parseroom-section', membersRefSnapshot.val()[assignment].section);
-                localStorage.setItem('parseroom-yearlvl', membersRefSnapshot.val()[assignment].yearlvl);
-                localStorage.setItem('parseroom-code', membersRefSnapshot.val()[assignment].subject);
-                window.location.href = `viewassignment.html?assignment=${assignment}`;
-              });
+                titleSection.appendChild(activityTitleSpan);
 
 
+                const datesSection = document.createElement('section');
+                datesSection.className = 'assignment-title';
+                datesSection.appendChild(subjectCodeSpan);
 
+                const postedDateSpan = document.createElement('span');
+                postedDateSpan.className = 'assign-bot';
+                postedDateSpan.textContent = 'Due ' + formatDateTime(assignmentDetailsSnapshot.val().duedate);
 
-              document.getElementById('bookmark-wrapper-body').appendChild(bookmarkWrapper);
-              document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
+                const dueDateSpan = document.createElement('span');
+                dueDateSpan.className = 'assign-bot';
+                dueDateSpan.textContent = 'Posted ' + formatDateTime(assignmentDetailsSnapshot.val().date);
 
-              //archive
-              let startX = 0;
-              let currentX = 0;
-              let isSwiped = false;
+                datesSection.appendChild(postedDateSpan);
 
+                titleSection.appendChild(dueDateSpan);
 
-              bookmarkWrapper.addEventListener('touchstart', (e) => {
-                startX = e.touches[0].clientX;
-                isSwiped = false;
-              });
-              bookmarkWrapper.addEventListener('touchmove', (e) => {
-                currentX = e.touches[0].clientX;
-                const deltaX = currentX - startX;
-                if (deltaX < 0) {
-                  bookmarkWrapper.style.transform = `translateX(${deltaX}px)`;
-                }
-              });
-              bookmarkWrapper.addEventListener('touchend', () => {
-                const deltaX = currentX - startX;
-                if (deltaX < -300) {
-                  isSwiped = true;
-                  bookmarkWrapper.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-                  bookmarkWrapper.style.transform = 'translateX(-100%)';
-                  bookmarkWrapper.style.opacity = '0';
-                  setTimeout(async () => {
-                    bookmarkWrapper.remove();
-                    await remove(ref(database, `PARSEIT/administration/students/${user_parser}/assignments/${assignment}/`));
-                  }, 300);
-                } else {
+                bookmarkWrapper.appendChild(titleSection);
+                bookmarkWrapper.appendChild(datesSection);
+
+                bookmarkWrapper.addEventListener('click', async (event) => {
                   bookmarkWrapper.style.transform = `translateX(0)`;
-                }
+                  localStorage.setItem('parseroom-acadref', membersRefSnapshot.val()[assignment].acadref);
+                  localStorage.setItem('parseroom-sem', membersRefSnapshot.val()[assignment].sem);
+                  localStorage.setItem('parseroom-section', membersRefSnapshot.val()[assignment].section);
+                  localStorage.setItem('parseroom-yearlvl', membersRefSnapshot.val()[assignment].yearlvl);
+                  localStorage.setItem('parseroom-code', membersRefSnapshot.val()[assignment].subject);
+                  window.location.href = `viewassignment.html?assignment=${assignment}`;
+                });
 
-                bookmarkBubble
-                startX = 0;
-                currentX = 0;
+
+
+
+                document.getElementById('bookmark-wrapper-body').appendChild(bookmarkWrapper);
+                document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
+
+                //archive
+                let startX = 0;
+                let currentX = 0;
+                let isSwiped = false;
+
+
+                bookmarkWrapper.addEventListener('touchstart', (e) => {
+                  startX = e.touches[0].clientX;
+                  isSwiped = false;
+                });
+                bookmarkWrapper.addEventListener('touchmove', (e) => {
+                  currentX = e.touches[0].clientX;
+                  const deltaX = currentX - startX;
+                  if (deltaX < 0) {
+                    bookmarkWrapper.style.transform = `translateX(${deltaX}px)`;
+                  }
+                });
+                bookmarkWrapper.addEventListener('touchend', () => {
+                  const deltaX = currentX - startX;
+                  if (deltaX < -300) {
+                    isSwiped = true;
+                    bookmarkWrapper.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                    bookmarkWrapper.style.transform = 'translateX(-100%)';
+                    bookmarkWrapper.style.opacity = '0';
+                    setTimeout(async () => {
+                      bookmarkWrapper.remove();
+                      await remove(ref(database, `PARSEIT/administration/students/${user_parser}/assignments/${assignment}/`));
+                    }, 300);
+                  } else {
+                    bookmarkWrapper.style.transform = `translateX(0)`;
+                  }
+
+                  bookmarkBubble
+                  startX = 0;
+                  currentX = 0;
+                });
               });
+
+
             }
 
           }
