@@ -1782,9 +1782,14 @@ function bookmarkBubble() {
                     bookmarkWrapper.remove();
                     await remove(ref(database, `PARSEIT/administration/students/${user_parser}/assignments/${assignment}/`));
                   }, 300);
-                } else if (deltaX === 0) {
+                } else {
                   bookmarkWrapper.style.transform = `translateX(0)`;
                 }
+                bookmarkWrapper.addEventListener('click', () => {
+                  bookmarkWrapper.style.transform = `translateX(0)`;
+                });
+
+                bookmarkBubble
                 startX = 0;
                 currentX = 0;
               });
