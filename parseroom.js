@@ -35,8 +35,17 @@ let parseroom_username = localStorage.getItem("parser-username");
 let active_profile = "";
 let user_parser_type = localStorage.getItem("type-parser");
 loadCensoredWords();
-
 let censoredWordsArray = [];
+
+
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+let setusernametxt = urlParams.get('setusernametxt');
+
+if (setusernametxt !== '' && setusernametxt !== null) {
+  document.getElementById('parsermessage-txt').value += '@' + setusernametxt + ' ';
+  setusernametxt = '';
+}
 
 //listeners
 setScreenSize(window.innerWidth, window.innerHeight);

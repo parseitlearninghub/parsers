@@ -27,6 +27,7 @@ let user_parser = localStorage.getItem("user-parser");
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const assignmentcode = urlParams.get('assignmentcode');
+let setusernametxt = '';
 
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
@@ -81,9 +82,18 @@ async function getSubmissions() {
 
                 bottomMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score"></span>`;
 
-
-
                 assignmentWrapper.appendChild(bottomMenu);
+
+
+                assignmentWrapper.addEventListener("click", async (event) => {
+                    setusernametxt = username;
+                    navigator.clipboard.writeText(`@${username}`).then(() => {
+                        assignmentWrapper.style.backgroundColor = '#f1f1f1d8';
+                        setTimeout(() => {
+                            assignmentWrapper.style.backgroundColor = '#fafafa';
+                        }, 1000);
+                    })
+                });
                 container.appendChild(assignmentWrapper);
             });
         }
@@ -118,9 +128,8 @@ async function getUsername(studentid) {
     });
 }
 
-
 document.getElementById("canceladdchatbot-btn").addEventListener("click", () => {
-    window.location.href = `parseroom.html`;
+    window.location.href = `parseroom.html?setusernametxt=${setusernametxt}`;
 });
 
 
