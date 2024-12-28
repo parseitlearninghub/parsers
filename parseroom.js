@@ -268,10 +268,10 @@ async function getParseroomMessages() {
           });
           element.addEventListener('touchend', () => {
             const deltaX = currentX - startX;
-            if (deltaX > 300) {
+            if (deltaX > 100) {
               isSwiped = true;
               element.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-              element.style.transform = 'translateX(100%)';
+              element.style.transform = 'translateX(0%)';
               setTimeout(async () => {
                 const usernameElement = element.querySelector('.p-username');
                 if (usernameElement) {
