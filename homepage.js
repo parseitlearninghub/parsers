@@ -1776,7 +1776,7 @@ function bookmarkBubble() {
               });
               bookmarkWrapper.addEventListener('touchend', () => {
                 const deltaX = currentX - startX;
-                if (deltaX < -50) {
+                if (deltaX < -300) {
                   isSwiped = true;
                   bookmarkWrapper.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
                   bookmarkWrapper.style.transform = 'translateX(-100%)';
