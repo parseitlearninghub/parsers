@@ -276,7 +276,7 @@ async function getParseroomMessages() {
                 const usernameElement = element.querySelector('.p-username');
                 if (usernameElement) {
                   const username = usernameElement.textContent.trim();
-                  document.getElementById('parsermessage-txt').value += username;
+                  document.getElementById('parsermessage-txt').value += username + ' ';
                   let username_trim = extractUsername(username);
                   let id = await getparser_id(username_trim);
                   if (id !== null) {
