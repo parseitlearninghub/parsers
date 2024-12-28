@@ -1395,6 +1395,7 @@ body {
   justify-content: center;
   flex-direction: column;
   gap: 4px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
 .assignment-title {
@@ -1407,6 +1408,14 @@ body {
 .assign-top {
   font-size: 18px;
   font-family: Inter-Bold;
+  padding-left: 15px;
+  padding-right: 15px;
+  white-space: nowrap;
+}
+
+.assign-code {
+  font-size: 18px;
+  font-family: Inter-Regular;
   padding-left: 15px;
   padding-right: 15px;
   white-space: nowrap;

@@ -10,6 +10,7 @@ import {
   limitToLast,
   push,
   set,
+  remove
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
 const firebaseConfig = {
   apiKey: "AIzaSyCFqgbA_t3EBVO21nW70umJOHX3UdRr9MY",
@@ -64,7 +65,7 @@ window.addEventListener("load", async function () {
   document.getElementById("loading_animation_div").style.display = "none";
   username = await getparser_username(user_parser);
   await getUser(user_parser).then(async () => {
-    bookmarkBubble();
+
     if (parser[0].suffix === "none") {
       parser[0].suffix = "";
     }
@@ -73,6 +74,7 @@ window.addEventListener("load", async function () {
     //   parser[0].firstname + " " + parser[0].lastname + " " + parser[0].suffix
     // );
     await getAcadStatus().then(() => {
+      bookmarkBubble();
       document.getElementById("homepage_div").style.display = "flex";
       viewLatestAnnouncement();
       if (parser[0].type === "student") {
@@ -1698,51 +1700,100 @@ function bookmarkBubble() {
     let isDragging = false;
     let offsetX, offsetY;
     chatBubble.addEventListener('click', (e) => {
-
       const membersRef = ref(database, `PARSEIT/administration/students/${user_parser}/assignments/`);
       onValue(membersRef, async (membersRefSnapshot) => {
         if (membersRefSnapshot.exists()) {
           document.getElementById('bookmark-wrapper-body').innerHTML = '';
           for (const assignment in membersRefSnapshot.val()) {
+            if (status[0].academicref === membersRefSnapshot.val()[assignment].acadref) {
+              const bookmarkWrapper = document.createElement('section');
+              bookmarkWrapper.className = 'bookmark-wrapper';
+              const titleSection = document.createElement('section');
+              titleSection.className = 'assignment-title';
 
-            const bookmarkWrapper = document.createElement('section');
-            bookmarkWrapper.className = 'bookmark-wrapper';
-            const titleSection = document.createElement('section');
-            titleSection.className = 'assignment-title';
+              const activityTitleSpan = document.createElement('span');
+              activityTitleSpan.className = 'assign-top activity-title';
+              activityTitleSpan.textContent = membersRefSnapshot.val()[assignment].header;
 
-            const activityTitleSpan = document.createElement('span');
-            activityTitleSpan.className = 'assign-top activity-title';
-            activityTitleSpan.textContent = membersRefSnapshot.val()[assignment].header;
+              const subjectCodeSpan = document.createElement('span');
+              subjectCodeSpan.className = 'assign-code';
+              subjectCodeSpan.textContent = membersRefSnapshot.val()[assignment].subject;
 
-            const subjectCodeSpan = document.createElement('span');
-            subjectCodeSpan.className = 'assign-top';
-            subjectCodeSpan.textContent = membersRefSnapshot.val()[assignment].subject;
-
-            titleSection.appendChild(activityTitleSpan);
+              titleSection.appendChild(activityTitleSpan);
 
 
-            const datesSection = document.createElement('section');
-            datesSection.className = 'assignment-title';
-            datesSection.appendChild(subjectCodeSpan);
+              const datesSection = document.createElement('section');
+              datesSection.className = 'assignment-title';
+              datesSection.appendChild(subjectCodeSpan);
 
-            const postedDateSpan = document.createElement('span');
-            postedDateSpan.className = 'assign-bot';
-            postedDateSpan.textContent = 'Due ' + formatDateTime(membersRefSnapshot.val()[assignment].duedate);
+              const postedDateSpan = document.createElement('span');
+              postedDateSpan.className = 'assign-bot';
+              postedDateSpan.textContent = 'Due ' + formatDateTime(membersRefSnapshot.val()[assignment].duedate);
 
-            const dueDateSpan = document.createElement('span');
-            dueDateSpan.className = 'assign-bot';
-            dueDateSpan.textContent = 'Posted ' + formatDateTime(membersRefSnapshot.val()[assignment].date);
+              const dueDateSpan = document.createElement('span');
+              dueDateSpan.className = 'assign-bot';
+              dueDateSpan.textContent = 'Posted ' + formatDateTime(membersRefSnapshot.val()[assignment].date);
 
-            datesSection.appendChild(postedDateSpan);
+              datesSection.appendChild(postedDateSpan);
 
-            titleSection.appendChild(dueDateSpan);
+              titleSection.appendChild(dueDateSpan);
 
-            bookmarkWrapper.appendChild(titleSection);
-            bookmarkWrapper.appendChild(datesSection);
+              bookmarkWrapper.appendChild(titleSection);
+              bookmarkWrapper.appendChild(datesSection);
 
-            document.getElementById('bookmark-wrapper-body').appendChild(bookmarkWrapper);
-            document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
+              bookmarkWrapper.addEventListener('click', async (event) => {
+                localStorage.setItem('parseroom-acadref', membersRefSnapshot.val()[assignment].acadref);
+                localStorage.setItem('parseroom-sem', membersRefSnapshot.val()[assignment].sem);
+                localStorage.setItem('parseroom-section', membersRefSnapshot.val()[assignment].section);
+                localStorage.setItem('parseroom-yearlvl', membersRefSnapshot.val()[assignment].yearlvl);
+                localStorage.setItem('parseroom-code', membersRefSnapshot.val()[assignment].subject);
+                window.location.href = `viewassignment.html?assignment=${assignment}`;
+              });
+
+
+
+
+              document.getElementById('bookmark-wrapper-body').appendChild(bookmarkWrapper);
+              document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
+
+              //archive
+              let startX = 0;
+              let currentX = 0;
+              let isSwiped = false;
+              bookmarkWrapper.addEventListener('touchstart', (e) => {
+                startX = e.touches[0].clientX;
+                isSwiped = false;
+              });
+              bookmarkWrapper.addEventListener('touchmove', (e) => {
+                currentX = e.touches[0].clientX;
+                const deltaX = currentX - startX;
+                if (deltaX < 0) {
+                  bookmarkWrapper.style.transform = `translateX(${deltaX}px)`;
+                }
+              });
+              bookmarkWrapper.addEventListener('touchend', () => {
+                const deltaX = currentX - startX;
+                if (deltaX < -50) {
+                  isSwiped = true;
+                  bookmarkWrapper.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
+                  bookmarkWrapper.style.transform = 'translateX(-100%)';
+                  bookmarkWrapper.style.opacity = '0';
+                  setTimeout(async () => {
+                    bookmarkWrapper.remove();
+                    await remove(ref(database, `PARSEIT/administration/students/${user_parser}/assignments/${assignment}/`));
+                  }, 300);
+                } else {
+                  bookmarkWrapper.style.transform = `translateX(0)`;
+                }
+                startX = 0;
+                currentX = 0;
+              });
+            }
+
           }
+        }
+        else {
+          document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
         }
       });
     });
@@ -1802,8 +1853,11 @@ function bookmarkBubble() {
   }
 }
 
-document.getElementById('book-assignments-header').addEventListener('click', (e) => {
-  document.getElementById('bookmark-assignments-container').style.transform = 'translateY(100%)';
+document.getElementById('book-assignments-header').addEventListener('click', async (e) => {
+  await getAcadStatus().then(() => {
+    bookmarkBubble();
+    document.getElementById('bookmark-assignments-container').style.transform = 'translateY(100%)';
+  });
 
 });
 function formatDateTime(datetime) {
@@ -1816,3 +1870,5 @@ function formatDateTime(datetime) {
   const formattedTime = `${hours % 12 || 12}:${minutes} ${ampm}`;
   return `${formattedDate}`;
 }
+
+

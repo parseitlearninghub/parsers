@@ -135,6 +135,7 @@ async function renderAssignmentUI() {
                 }
             } else {
                 if (Due(assignment_duedate)) {
+
                     missingLabel.className = "missing-title";
                     missingLabel.textContent = "Missing";
                     if (submitted !== undefined && submitted !== '') {
@@ -327,6 +328,7 @@ async function renderAssignmentUI() {
                             comment: commentElement.value,
                             score: score,
                         });
+                        await remove(ref(database, `PARSEIT/administration/students/${admin_id}/assignments/${assignmentcode}/`));
                     });
                     assignment_cont.appendChild(submitButton);
                     const inputElement = document.createElement('input');
@@ -774,18 +776,6 @@ async function getAssigmentWork() {
     else {
 
     }
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
 
