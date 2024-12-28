@@ -1698,42 +1698,53 @@ function bookmarkBubble() {
     let isDragging = false;
     let offsetX, offsetY;
     chatBubble.addEventListener('click', (e) => {
-      document.getElementById('bookmark-wrapper-body').innerHTML = '';
-      const bookmarkWrapper = document.createElement('section');
-      bookmarkWrapper.className = 'bookmark-wrapper';
-      const titleSection = document.createElement('section');
-      titleSection.className = 'assignment-title';
 
-      const activityTitleSpan = document.createElement('span');
-      activityTitleSpan.className = 'assign-top activity-title';
-      activityTitleSpan.textContent = 'activityTitle';
+      const membersRef = ref(database, `PARSEIT/administration/students/${user_parser}/assignments/`);
+      onValue(membersRef, async (membersRefSnapshot) => {
+        if (membersRefSnapshot.exists()) {
+          document.getElementById('bookmark-wrapper-body').innerHTML = '';
+          for (const assignment in membersRefSnapshot.val()) {
 
-      const subjectCodeSpan = document.createElement('span');
-      subjectCodeSpan.className = 'assign-top';
-      subjectCodeSpan.textContent = 'subjectCode';
+            const bookmarkWrapper = document.createElement('section');
+            bookmarkWrapper.className = 'bookmark-wrapper';
+            const titleSection = document.createElement('section');
+            titleSection.className = 'assignment-title';
 
-      titleSection.appendChild(activityTitleSpan);
-      titleSection.appendChild(subjectCodeSpan);
+            const activityTitleSpan = document.createElement('span');
+            activityTitleSpan.className = 'assign-top activity-title';
+            activityTitleSpan.textContent = membersRefSnapshot.val()[assignment].header;
 
-      const datesSection = document.createElement('section');
-      datesSection.className = 'assignment-title';
+            const subjectCodeSpan = document.createElement('span');
+            subjectCodeSpan.className = 'assign-top';
+            subjectCodeSpan.textContent = membersRefSnapshot.val()[assignment].subject;
 
-      const postedDateSpan = document.createElement('span');
-      postedDateSpan.className = 'assign-bot';
-      postedDateSpan.textContent = 'postedDate';
+            titleSection.appendChild(activityTitleSpan);
 
-      const dueDateSpan = document.createElement('span');
-      dueDateSpan.className = 'assign-bot';
-      dueDateSpan.textContent = 'dueDate';
 
-      datesSection.appendChild(postedDateSpan);
-      datesSection.appendChild(dueDateSpan);
+            const datesSection = document.createElement('section');
+            datesSection.className = 'assignment-title';
+            datesSection.appendChild(subjectCodeSpan);
 
-      bookmarkWrapper.appendChild(titleSection);
-      bookmarkWrapper.appendChild(datesSection);
+            const postedDateSpan = document.createElement('span');
+            postedDateSpan.className = 'assign-bot';
+            postedDateSpan.textContent = 'Due ' + formatDateTime(membersRefSnapshot.val()[assignment].duedate);
 
-      document.getElementById('bookmark-wrapper-body').appendChild(bookmarkWrapper);
-      document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
+            const dueDateSpan = document.createElement('span');
+            dueDateSpan.className = 'assign-bot';
+            dueDateSpan.textContent = 'Posted ' + formatDateTime(membersRefSnapshot.val()[assignment].date);
+
+            datesSection.appendChild(postedDateSpan);
+
+            titleSection.appendChild(dueDateSpan);
+
+            bookmarkWrapper.appendChild(titleSection);
+            bookmarkWrapper.appendChild(datesSection);
+
+            document.getElementById('bookmark-wrapper-body').appendChild(bookmarkWrapper);
+            document.getElementById('bookmark-assignments-container').style.transform = 'translateY(0)';
+          }
+        }
+      });
     });
 
     // For touch events, use touchstart, touchmove, touchend
@@ -1795,3 +1806,13 @@ document.getElementById('book-assignments-header').addEventListener('click', (e)
   document.getElementById('bookmark-assignments-container').style.transform = 'translateY(100%)';
 
 });
+function formatDateTime(datetime) {
+  const date = new Date(datetime);
+  const options = { year: 'numeric', month: 'short', day: 'numeric' };
+  const formattedDate = date.toLocaleDateString('en-US', options);
+  const hours = date.getHours();
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  const ampm = hours >= 12 ? 'PM' : 'AM';
+  const formattedTime = `${hours % 12 || 12}:${minutes} ${ampm}`;
+  return `${formattedDate}`;
+}

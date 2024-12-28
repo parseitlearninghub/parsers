@@ -1420,4 +1420,8 @@ body {
   padding-left: 15px;
   padding-right: 15px;
   font-style: italic;
+  font-size: 12px;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
 }

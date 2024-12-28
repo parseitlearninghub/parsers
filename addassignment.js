@@ -170,13 +170,32 @@ document.getElementById("createassignment-btn").addEventListener("click", async 
         repository: repository,
         duedate: duedate,
         date: date,
-    }).then(() => {
-        document.getElementById("check_animation_div").style.display = "flex";
-        setTimeout(() => {
-            document.getElementById("check_animation_div").style.display = "none";
-            window.location.reload();
-        }, 1800);
-    });
+    })
+    const membersRef = ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members`);
+    onValue(membersRef, async (membersRefSnapshot) => {
+        if (membersRefSnapshot.exists()) {
+            for (const studentid in membersRefSnapshot.val()) {
+                await update(ref(database, `PARSEIT/administration/students/${studentid}/assignments/${assignmentcode}/`), {
+                    header: header,
+                    date: date,
+                    duedate: duedate,
+                    subject: subject,
+                    assignmentcode: assignmentcode,
+                    acadref: acadref,
+                    yearlvl: yearlvl,
+                    sem: sem,
+                    section: section,
+                })
+            }
+        }
+    })
+
+    document.getElementById("check_animation_div").style.display = "flex";
+    setTimeout(() => {
+        document.getElementById("check_animation_div").style.display = "none";
+        window.location.reload();
+    }, 1800);
+
 });
 document.getElementById("createassigment-totalscore").addEventListener("input", (event) => {
     const value = event.target.value;
