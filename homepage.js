@@ -473,11 +473,7 @@ document.getElementById("myProfile_btn").addEventListener("click", (event) => {
 });
 
 document.getElementById("myJourney_btn").addEventListener("click", (event) => {
-  event.preventDefault();
-  document.getElementById("nofeature").style.display = "flex";
-  setTimeout(() => {
-    document.getElementById("nofeature").style.display = "none";
-  }, 1000);
+  window.location.href = "myjourney.html";
 });
 
 document.getElementById("settings_btn").addEventListener("click", (event) => {
