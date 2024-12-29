@@ -131,6 +131,7 @@ window.addEventListener("load", async function () {
         revertNavIcon("homequiz_img");
         revertNavLbl("homequiz_lbl");
       } else {
+        document.getElementById("myJourney_btn").style.display = "none";
         document.getElementById("teacher_nav").style.display = "flex";
         if (status[0].ongoing === "true") {
           document.getElementById("search-parseclass-div").style.display =
