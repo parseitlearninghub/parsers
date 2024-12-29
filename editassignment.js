@@ -635,70 +635,47 @@ async function populateAssignment() {
                     container.remove();
                     const fileSha = await getSha(filePath);
                     await deleteFileGitHub(token, owner, repo, filePath, fileSha);
-
                     await remove(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/attachedfile/${attachmentcode}/`));
+                });
+
+                progressBarWrapper.addEventListener("click", async (event) => {
+                    const fileUrl = assignmentSnapshot.val().attachedfile[attachmentcode].filepath;
+                    const fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+                    const fileHandlers = {
+                        image: handleImage,
+                        docx: handleDocx,
+                        pdf: handlePdf,
+                    };
+
+                    const animations = {
+                        fadeIn: {
+                            container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
+                            content: "fadeScaleUp 0.25s ease-in-out forwards",
+                        },
+                        fadeOut: {
+                            container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
+                            content: "fadeScaleDown 0.25s ease-in-out forwards",
+                        },
+                    };
+                    try {
+                        if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                            await fileHandlers.image(fileUrl, animations);
+                        } else if (['doc', 'docx'].includes(fileExtension)) {
+                            await fileHandlers.docx(fileUrl, animations);
+                        } else if (['pdf'].includes(fileExtension)) {
+                            await fileHandlers.pdf(fileUrl, animations);
+                        } else {
+                            console.warn("Unsupported file type.");
+                        }
+                    } catch (error) {
+                        console.error("Error handling file:", error);
+                    }
 
                 });
 
-                // let updateDBFileUrl = responseData.content.download_url;
-                // progressBarWrapper.addEventListener("click", async (event) => {
-                //     const fileUrl = responseData.content.download_url;
-                //     const fileExtension = fileUrl.split('.').pop().toLowerCase();
 
-                //     const fileHandlers = {
-                //         image: handleImage,
-                //         docx: handleDocx,
-                //         pdf: handlePdf,
-                //     };
 
-                //     const animations = {
-                //         fadeIn: {
-                //             container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
-                //             content: "fadeScaleUp 0.25s ease-in-out forwards",
-                //         },
-                //         fadeOut: {
-                //             container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
-                //             content: "fadeScaleDown 0.25s ease-in-out forwards",
-                //         },
-                //     };
-
-                //     try {
-                //         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
-                //             await fileHandlers.image(fileUrl, animations);
-                //         } else if (['doc', 'docx'].includes(fileExtension)) {
-                //             await fileHandlers.docx(fileUrl, animations);
-                //         } else if (['pdf'].includes(fileExtension)) {
-                //             await fileHandlers.pdf(fileUrl, animations);
-                //         } else {
-                //             console.warn("Unsupported file type.");
-                //         }
-                //     } catch (error) {
-                //         console.error("Error handling file:", error);
-                //     }
-
-                // });
-
-                // const progressBarFill = document.getElementById(attachmentid);
-                // let progress = 0;
-                // const interval = setInterval(async () => {
-                //     if (progress < 100) {
-                //         progress += 1;
-                //         progressBarFill.style.width = `${progress}%`;
-                //     } else {
-                //         clearInterval(interval);
-                //     }
-
-                //     if (!response.ok) {
-                //         document.getElementById("attachedfile-container").style.display = "none";
-                //         return;
-                //     }
-                //     if (response.ok) {
-                //         progressBarFill.style.width = `100%`;
-                //         document.getElementById('fileInput').value = '';
-                //         return responseData;
-                //     }
-
-                // }, 100);
             }
         }
     });
