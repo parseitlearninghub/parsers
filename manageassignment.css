@@ -139,8 +139,6 @@ body {
   align-items: center;
   flex-direction: column;
   overflow: hidden;
-  box-sizing: border-box;
-  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .top-menu-assignment {
@@ -276,4 +274,8 @@ body {
   font-size: 16px;
   color: #4caf50;
   font-family: Inter-Regular;
+}
+
+.student-id {
+  padding-left: 10px;
 }

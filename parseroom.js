@@ -161,6 +161,9 @@ document.getElementById("see_members").addEventListener("click", () => {
   window.location.href = "viewmembers.html";
 });
 
+document.getElementById("monitor-btn").addEventListener("click", () => {
+  window.location.href = "submitfinalgrade.html";
+});
 
 
 //functions

@@ -137,10 +137,6 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
-  overflow: hidden;
-  box-sizing: border-box;
-  transition: cubic-bezier(0.075, 0.82, 0.165, 1);
 }
 
 .top-menu-assignment {
@@ -148,27 +144,36 @@ body {
   height: 100%;
   background-color: transparent;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
+  justify-content: center;
+  align-items: flex-start;
   font-family: Inter-Regular;
   font-size: 14px;
+  flex-direction: column;
 }
 
 .bottom-menu-assignment {
-  width: 100%;
+  width: 80px;
   height: 100%;
   background-color: transparent;
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   font-family: Inter-Regular;
   font-size: 14px;
 }
 
 .student-id {
-  padding-right: 10px;
-  opacity: 0.5;
+  width: 45px;
+  height: 45px;
   font-family: Inter-Light;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 0.3px solid #dcdcdc;
+  text-align: center;
+}
+
+.student-id:focus {
+  outline: none;
 }
 .student-id-username {
   padding-left: 10px;
@@ -178,8 +183,13 @@ body {
 .student-name {
   padding-left: 10px;
   font-family: Inter-Bold;
+  font-size: 15px;
 }
 
+.student-name-id {
+  padding-left: 10px;
+  font-family: Inter-Light;
+}
 .student-status-red {
   margin-right: 15px;
   margin-bottom: 7px;
