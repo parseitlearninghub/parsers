@@ -355,7 +355,7 @@ function previewMyJourney() {
 
 function previewMyJourneySelection(academic, yearlvl, sem) {
     const acadRef = ref(database, `PARSEIT/administration/parseclass/${academic}/${yearlvl}/${sem}/`);
-    onValue(acadRef, (snapshot) => {
+    onValue(acadRef, async (snapshot) => {
         const parentElement = document.getElementById('myjourney-result-container');
         parentElement.innerHTML = ''; // Clear previous content
 
@@ -384,11 +384,11 @@ function previewMyJourneySelection(academic, yearlvl, sem) {
             academicYearDiv.appendChild(studentId);
 
             const studentFullname = document.createElement('span');
-            studentFullname.textContent = 'Student Name: ' + 'John Lyndo Anuada';
+            studentFullname.textContent = 'Student Name: ' + await getFullname(admin_id);
             academicYearDiv.appendChild(studentFullname);
 
             const academicYear = document.createElement('span');
-            academicYear.textContent = 'School Year: ' + academic;
+            academicYear.textContent = 'School Year: ' + await getAcadName(academic);
             academicYearDiv.appendChild(academicYear);
 
 
@@ -492,17 +492,17 @@ function previewMyJourneySelection(academic, yearlvl, sem) {
                 const studentIdTitle = "Student ID:";
                 //const studentId = "7210704";
                 pdf.text(studentIdTitle, 15, pdfHeight + 30);
-                pdf.text('7210704', 45, pdfHeight + 30);
+                pdf.text(admin_id, 45, pdfHeight + 30);
 
                 const studentNameTitle = "Student Name:";
                 //const studentName = "John Lyndo Vero Anuada";
                 pdf.text(studentNameTitle, 15, pdfHeight + 36);
-                pdf.text('John Lyndo Anuada', 45, pdfHeight + 36);
-
+                pdf.text(await getFullname(admin_id), 45, pdfHeight + 36);
+                const acadname = await getAcadName(academic);
                 const academicYearTitle = "School Year:";
                 //const academicYear = "2023/2024 1st Semester";
                 pdf.text(academicYearTitle, 15, pdfHeight + 42);
-                pdf.text(academic, 45, pdfHeight + 42);
+                pdf.text(acadname, 45, pdfHeight + 42);
 
                 pdf.autoTable({
                     html: table,
@@ -537,3 +537,28 @@ function previewMyJourneySelection(academic, yearlvl, sem) {
     });
 }
 
+async function getFullname(studentid) {
+    const dbRef = ref(database);
+    return await get(child(dbRef, "PARSEIT/administration/students/" + studentid)).then((snapshot) => {
+        if (snapshot.exists()) {
+            if (snapshot.val().suffix === "none") {
+                return `${snapshot.val().lastname}, ${snapshot.val().firstname}`
+            }
+            else {
+                return `${snapshot.val().lastname}, ${snapshot.val().firstname} ${snapshot.val().suffix}`
+            }
+        }
+    });
+}
+
+async function getAcadName(acad) {
+    const dbRef = ref(database);
+    return await get(child(dbRef, "PARSEIT/administration/academicyear/BSIT/" + acad)).then((snapshot) => {
+        if (snapshot.exists()) {
+            return snapshot.val().title
+        }
+        else {
+            return console.log('No data available');
+        }
+    });
+}
