@@ -37,7 +37,10 @@ const databaseAdmin = getDatabase(appAdmin);
 const dbRefAdmin = ref(databaseAdmin);
 
 let admin_id = localStorage.getItem("user-parser");
-const assignmentcode = Date.now().toString();
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const assignmentcode = urlParams.get('assignmentcode');
+
 
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
@@ -224,7 +227,6 @@ function errorElement(element) {
     }, 1000);
 }
 document.getElementById("attach-document-btn").addEventListener("click", () => {
-    // accept = "image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     document.getElementById("fileInput").click();
 });
 async function getApikey() {
@@ -560,4 +562,144 @@ function addTouchClose(container, content, animations) {
 }
 
 
+populateAssignment();
+async function populateAssignment() {
+    const acadref = localStorage.getItem("parseroom-acadref");
+    const yearlvl = localStorage.getItem("parseroom-yearlvl");
+    const sem = localStorage.getItem("parseroom-sem");
+    const subject = localStorage.getItem("parseroom-code");
+    const section = localStorage.getItem("parseroom-section");
 
+    const assignmentRef = ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/`);
+    onValue(assignmentRef, async (assignmentSnapshot) => {
+        if (assignmentSnapshot.exists()) {
+            document.getElementById('header-title').value = assignmentSnapshot.val().header;
+            document.getElementById('createassigment-instructions').value = assignmentSnapshot.val().instructions;
+            if (assignmentSnapshot.val().instructions === 'none') {
+                document.getElementById('createassigment-instructions').value = '';
+                document.getElementById('createassigment-instructions').setAttribute('placeholder', 'Edit Instructions');
+            }
+
+            document.getElementById('createassigment-totalscore').value = assignmentSnapshot.val().totalscore;
+            document.getElementById('createassigment-pointsontime').value = assignmentSnapshot.val().pointsontime;
+            document.getElementById('repository-radio').checked = assignmentSnapshot.val().repository;
+            document.getElementById('datetime').value = assignmentSnapshot.val().duedate;
+            document.getElementById('setduedate-btn').innerText = formatDateTime(assignmentSnapshot.val().duedate);
+            document.getElementById('setduedate-btn').style.color = 'black';
+            if (assignmentSnapshot.val().duedate === '') {
+                document.getElementById('setduedate-btn').innerText = 'Set Due Date';
+                document.getElementById('setduedate-btn').style.color = '#cccccc';
+            }
+            const parentElement = document.getElementById('assigment-attachedfile-container');
+            parentElement.innerHTML = '';
+
+            for (const attachmentcode in assignmentSnapshot.val().attachedfile) {
+                //console.log(assignmentSnapshot.val().attachedfile[attachmentcode]);
+                const attachmentid = 'file-' + attachmentcode;
+                const container = document.createElement('section');
+                container.className = 'attachedfile-container';
+                container.id = 'attachedfile-container';
+                const progressBarWrapper = document.createElement('section');
+                progressBarWrapper.className = 'progress-bar-wrapper';
+                progressBarWrapper.id = 'view' + attachmentid;
+                const progressBarFill = document.createElement('div');
+                progressBarFill.className = 'progress-bar-fill';
+                progressBarFill.id = attachmentid;
+                const label = document.createElement('label');
+                label.className = 'sticky-attached';
+                label.htmlFor = '';
+                label.textContent = assignmentSnapshot.val().attachedfile[attachmentcode].filename;
+                progressBarWrapper.appendChild(progressBarFill);
+                progressBarWrapper.appendChild(label);
+                const removeSection = document.createElement('section');
+                removeSection.className = 'remove-attachedfile';
+                const removeImg = document.createElement('img');
+                removeImg.src = 'assets/icons/xmark-solid.svg';
+                removeImg.alt = '';
+                removeImg.className = 'remove-attachedfile-img';
+                removeSection.appendChild(removeImg);
+
+                container.appendChild(progressBarWrapper);
+                container.appendChild(removeSection);
+
+                parentElement.appendChild(container);
+                parentElement.style.display = 'block';
+
+
+                const token = await getApikey();
+                const owner = "parseitlearninghub";
+                const repo = "parseitlearninghub-storage";
+                const filePath = `PARSEIT/storage/${admin_id}/${section}/${subject}/${assignmentcode}/${assignmentSnapshot.val().attachedfile[attachmentcode].filename}`;
+                console.log(filePath);
+                removeSection.addEventListener('click', async (event) => {
+                    container.remove();
+                    const fileSha = await getSha(filePath);
+                    await deleteFileGitHub(token, owner, repo, filePath, fileSha);
+
+                    await remove(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentcode}/attachedfile/${attachmentcode}/`));
+
+                });
+
+                // let updateDBFileUrl = responseData.content.download_url;
+                // progressBarWrapper.addEventListener("click", async (event) => {
+                //     const fileUrl = responseData.content.download_url;
+                //     const fileExtension = fileUrl.split('.').pop().toLowerCase();
+
+                //     const fileHandlers = {
+                //         image: handleImage,
+                //         docx: handleDocx,
+                //         pdf: handlePdf,
+                //     };
+
+                //     const animations = {
+                //         fadeIn: {
+                //             container: "fadeScaleUp-bg 0.25s ease-in-out forwards",
+                //             content: "fadeScaleUp 0.25s ease-in-out forwards",
+                //         },
+                //         fadeOut: {
+                //             container: "fadeScaleDown-bg 0.25s ease-in-out forwards",
+                //             content: "fadeScaleDown 0.25s ease-in-out forwards",
+                //         },
+                //     };
+
+                //     try {
+                //         if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                //             await fileHandlers.image(fileUrl, animations);
+                //         } else if (['doc', 'docx'].includes(fileExtension)) {
+                //             await fileHandlers.docx(fileUrl, animations);
+                //         } else if (['pdf'].includes(fileExtension)) {
+                //             await fileHandlers.pdf(fileUrl, animations);
+                //         } else {
+                //             console.warn("Unsupported file type.");
+                //         }
+                //     } catch (error) {
+                //         console.error("Error handling file:", error);
+                //     }
+
+                // });
+
+                // const progressBarFill = document.getElementById(attachmentid);
+                // let progress = 0;
+                // const interval = setInterval(async () => {
+                //     if (progress < 100) {
+                //         progress += 1;
+                //         progressBarFill.style.width = `${progress}%`;
+                //     } else {
+                //         clearInterval(interval);
+                //     }
+
+                //     if (!response.ok) {
+                //         document.getElementById("attachedfile-container").style.display = "none";
+                //         return;
+                //     }
+                //     if (response.ok) {
+                //         progressBarFill.style.width = `100%`;
+                //         document.getElementById('fileInput').value = '';
+                //         return responseData;
+                //     }
+
+                // }, 100);
+            }
+        }
+    });
+}

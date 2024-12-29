@@ -188,4 +188,10 @@ document.getElementById("canceladdchatbot-btn").addEventListener("click", () => 
     window.location.href = `parseroom.html`;
 });
 
+document.getElementById("edit-assignment-btn").addEventListener("click", () => {
+    window.location.href = `editassignment.html?assignmentcode=${assignmentcode}`;
+});
+
+
+
 
