@@ -199,3 +199,14 @@ body {
   font-family: Inter-Regular;
   border-radius: 4px;
 }
+
+.no-data-available {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-family: Inter-Bold;
+  margin-top: 15px;
+  opacity: 0.5;
+  font-style: italic;
+}

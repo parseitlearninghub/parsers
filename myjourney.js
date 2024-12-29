@@ -40,9 +40,17 @@ let admin_id = localStorage.getItem("user-parser");
 
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
-window.addEventListener("load", function () {
+window.addEventListener("load", async function () {
     document.getElementById("loading_animation_div").style.display = "none";
-    previewMyJourneySelection('1735289349292Pl0r2v', 'year-lvl-4', 'first-sem');
+    await getAcadStatus().then(async (acadStatus) => {
+        const academic = acadStatus.academic_ref;
+        let sem = acadStatus.current_sem;
+        let sem_final = 'first-sem';
+        if (sem === '2') {
+            sem_final = 'second-sem';
+        }
+        previewMyJourneySelection(academic, `year-lvl-4`, sem_final);
+    });
 
 });
 function setScreenSize(width, height) {
@@ -534,6 +542,17 @@ function previewMyJourneySelection(academic, yearlvl, sem) {
             };
 
         }
+        else {
+            const section = document.createElement('section');
+            section.classList.add('myjourney-template');
+            section.id = 'myjourney-template';
+
+            const span = document.createElement('span');
+            span.textContent = 'No data available';
+            span.className = 'no-data-available';
+            section.appendChild(span);
+            parentElement.appendChild(section);
+        }
     });
 }
 
@@ -559,6 +578,15 @@ async function getAcadName(acad) {
         }
         else {
             return console.log('No data available');
+        }
+    });
+}
+
+async function getAcadStatus() {
+    const dbRef = ref(database);
+    return await get(child(dbRef, "PARSEIT/administration/academicyear/status/")).then((snapshot) => {
+        if (snapshot.exists()) {
+            return snapshot.val();
         }
     });
 }
