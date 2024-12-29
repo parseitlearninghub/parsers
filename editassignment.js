@@ -56,7 +56,7 @@ function setScreenSize(width, height) {
 }
 
 document.getElementById('canceladdchatbot-btn').addEventListener('click', () => {
-    window.location.href = 'parseroom.html';
+    window.location.href = `manageassignment.html?assignmentcode=${assignmentcode}`;
     // localStorage.setItem('viewbulletin', 'true');
 });
 
@@ -630,7 +630,6 @@ async function populateAssignment() {
                 const owner = "parseitlearninghub";
                 const repo = "parseitlearninghub-storage";
                 const filePath = `PARSEIT/storage/${admin_id}/${section}/${subject}/${assignmentcode}/${assignmentSnapshot.val().attachedfile[attachmentcode].filename}`;
-                console.log(filePath);
                 removeSection.addEventListener('click', async (event) => {
                     container.remove();
                     const fileSha = await getSha(filePath);
