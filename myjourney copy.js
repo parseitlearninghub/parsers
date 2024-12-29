@@ -38,11 +38,11 @@ const dbRefAdmin = ref(databaseAdmin);
 
 let admin_id = localStorage.getItem("user-parser");
 
+
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
 window.addEventListener("load", function () {
     document.getElementById("loading_animation_div").style.display = "none";
-    previewMyJourneySelection('1735289349292Pl0r2v', 'year-lvl-4', 'first-sem');
 
 });
 function setScreenSize(width, height) {
@@ -54,11 +54,11 @@ function setScreenSize(width, height) {
 
 
 // saveMygradesAsPDF();
-function saveMygradesAsPDF(studentId, studentName, academicYear, tableId, imgId) {
+function saveMygradesAsPDF() {
     const { jsPDF } = window.jspdf;
     const pdf = new jsPDF();
 
-    const imgElement = document.getElementById(imgId);
+    const imgElement = document.getElementById("myjourney-template-header-img");
     const canvas = document.createElement("canvas");
     const ctx = canvas.getContext("2d");
     canvas.width = imgElement.naturalWidth;
@@ -71,21 +71,21 @@ function saveMygradesAsPDF(studentId, studentName, academicYear, tableId, imgId)
 
     pdf.setFontSize(11);
     const studentIdTitle = "Student ID:";
-    //const studentId = "7210704";
+    const studentId = "7210704";
     pdf.text(studentIdTitle, 15, pdfHeight + 30);
     pdf.text(studentId, 45, pdfHeight + 30);
 
     const studentNameTitle = "Student Name:";
-    //const studentName = "John Lyndo Vero Anuada";
+    const studentName = "John Lyndo Vero Anuada";
     pdf.text(studentNameTitle, 15, pdfHeight + 36);
     pdf.text(studentName, 45, pdfHeight + 36);
 
     const academicYearTitle = "School Year:";
-    //const academicYear = "2023/2024 1st Semester";
+    const academicYear = "2023/2024 1st Semester";
     pdf.text(academicYearTitle, 15, pdfHeight + 42);
     pdf.text(academicYear, 45, pdfHeight + 42);
 
-    const table = document.getElementById(tableId);
+    const table = document.getElementById("my-table");
     pdf.autoTable({
         html: table,
         startY: 15 + pdfHeight + 31,
@@ -118,7 +118,7 @@ function saveMygradesAsPDF(studentId, studentName, academicYear, tableId, imgId)
 document.getElementById("canceladdchatbot-btn").addEventListener("click", () => {
     window.location.href = `homepage.html`;
 });
-async function uploadToGitHub(base64PDF, section) {
+async function uploadToGitHub(base64PDF) {
     const token = await getApikey();
     const owner = "parseitlearninghub";
     const repo = "parseitlearninghub-storage";
@@ -141,26 +141,7 @@ async function uploadToGitHub(base64PDF, section) {
         .then(response => response.json())
         .then(data => {
             if (data.content) {
-                const getLink = document.createElement('button');
-                getLink.textContent = 'Get Link';
-                getLink.id = 'download-pdf-btn';
-                getLink.addEventListener('click', (event) => {
-                    navigator.clipboard.writeText(data.content.download_url)
-                        .then(() => {
-                            document.getElementById('download-pdf-btn').innerText = 'Copied! Paste url in browser to download.';
-                            setTimeout(() => {
-                                document.getElementById('download-pdf-btn').innerText = 'Copy Link';
-                            }, 3500);
-                        })
-                        .catch(err => {
-                            document.getElementById('download-pdf-btn').innerText = 'Try again.';
-                            setTimeout(() => {
-                                document.getElementById('download-pdf-btn').innerText = 'Copy Link';
-                            }, 3500);
-                        });
-                });
-                section.appendChild(getLink);
-
+                console.log(data.content.download_url);
             } else {
                 console.error('Error uploading PDF:', data);
             }
@@ -226,6 +207,7 @@ function populateTable() {
     });
 }
 
+previewMyJourney();
 function previewMyJourney() {
     const acadRef = ref(database, `PARSEIT/administration/parseclass/`);
     let academicYears = [];
@@ -294,21 +276,7 @@ function previewMyJourney() {
         }
     });
 
-    const section = document.createElement('section');
-    section.classList.add('myjourney-template');
-    section.id = 'myjourney-template';
 
-    const headerDiv = document.createElement('div');
-    headerDiv.classList.add('myjourney-template-header');
-
-    const headerImg = document.createElement('img');
-    headerImg.src = 'assets/myjourney-header-template.jpg';
-    headerImg.classList.add('myjourney-template-header-img');
-    headerImg.id = 'myjourney-template-header-img';
-    headerImg.setAttribute('crossorigin', 'anonymous');
-
-    headerDiv.appendChild(headerImg);
-    section.appendChild(headerDiv);
 
     const bodyDiv = document.createElement('div');
     bodyDiv.classList.add('myjourney-template-body');
@@ -352,188 +320,3 @@ function previewMyJourney() {
 
 
 }
-
-function previewMyJourneySelection(academic, yearlvl, sem) {
-    const acadRef = ref(database, `PARSEIT/administration/parseclass/${academic}/${yearlvl}/${sem}/`);
-    onValue(acadRef, (snapshot) => {
-        const parentElement = document.getElementById('myjourney-result-container');
-        parentElement.innerHTML = ''; // Clear previous content
-
-        if (snapshot.exists()) {
-            const section = document.createElement('section');
-            section.classList.add('myjourney-template');
-            section.id = 'myjourney-template';
-
-            const headerDiv = document.createElement('div');
-            headerDiv.classList.add('myjourney-template-header');
-
-            const headerImg = document.createElement('img');
-            headerImg.src = 'assets/myjourney-header-template.png';
-            headerImg.classList.add('myjourney-template-header-img');
-            headerImg.id = 'myjourney-template-header-img';
-            headerImg.setAttribute('crossorigin', 'anonymous');
-
-            headerDiv.appendChild(headerImg);
-            section.appendChild(headerDiv);
-
-            const academicYearDiv = document.createElement('div');
-            academicYearDiv.classList.add('myjourney-template-header-year');
-
-            const studentId = document.createElement('span');
-            studentId.textContent = 'Student ID: ' + admin_id;
-            academicYearDiv.appendChild(studentId);
-
-            const studentFullname = document.createElement('span');
-            studentFullname.textContent = 'Student Name: ' + 'John Lyndo Anuada';
-            academicYearDiv.appendChild(studentFullname);
-
-            const academicYear = document.createElement('span');
-            academicYear.textContent = 'School Year: ' + academic;
-            academicYearDiv.appendChild(academicYear);
-
-
-            section.appendChild(academicYearDiv);
-
-            parentElement.appendChild(section);
-
-            const bodyDiv = document.createElement('div');
-            bodyDiv.classList.add('myjourney-template-body');
-
-            const table = document.createElement('table');
-            table.classList.add('myjourney-table-template');
-            table.id = 'my-table';
-            table.setAttribute('border', '1');
-            table.style.borderCollapse = 'collapse';
-            table.style.width = '100%';
-
-            const thead = document.createElement('thead');
-            const trHeader = document.createElement('tr');
-
-            const thSubject = document.createElement('th');
-            thSubject.textContent = 'Subject';
-            const thDescription = document.createElement('th');
-            thDescription.textContent = 'Description';
-            const thUnit = document.createElement('th');
-            thUnit.textContent = 'Unit';
-            const thGrade = document.createElement('th');
-            thGrade.textContent = 'Grade';
-
-            trHeader.appendChild(thSubject);
-            trHeader.appendChild(thDescription);
-            trHeader.appendChild(thUnit);
-            trHeader.appendChild(thGrade);
-            thead.appendChild(trHeader);
-
-            const tbody = document.createElement('tbody');
-            tbody.id = 'tbody';
-
-            table.appendChild(thead);
-            table.appendChild(tbody);
-            bodyDiv.appendChild(table);
-
-            section.appendChild(bodyDiv);
-
-            const data = snapshot.val();
-            for (const subject in data) {
-                for (const section in data[subject]) {
-                    if (typeof data[subject][section] === "object") {
-                        for (const members in data[subject][section].members) {
-                            if (members === admin_id) {
-                                const row = document.createElement("tr");
-
-                                const subjectCell = document.createElement("td");
-                                subjectCell.textContent = subject;
-
-                                const descriptionCell = document.createElement("td");
-                                descriptionCell.textContent = data[subject].name;
-
-                                const unitsCell = document.createElement("td");
-                                unitsCell.textContent = data[subject].unit;
-
-                                const gradeCell = document.createElement("td");
-                                gradeCell.textContent = data[subject][section].members[members].finalgrade;
-
-                                row.appendChild(subjectCell);
-                                row.appendChild(descriptionCell);
-                                row.appendChild(unitsCell);
-                                row.appendChild(gradeCell);
-                                tbody.appendChild(row);
-                            }
-                        }
-                    }
-                }
-            }
-
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF();
-
-            const imgSrc = "assets/myjourney-header-template.png";
-            const canvas = document.createElement("canvas");
-            const ctx = canvas.getContext("2d");
-
-            const imgElement = new Image();
-            imgElement.crossOrigin = "anonymous"; // Ensures cross-origin images are handled properly
-            imgElement.src = imgSrc;
-
-            imgElement.onload = async () => {
-                canvas.width = imgElement.naturalWidth;
-                canvas.height = imgElement.naturalHeight;
-                ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
-
-                // Convert canvas to data URL
-                const imgData = canvas.toDataURL("image/png");
-
-                // Define PDF dimensions
-                const pdfWidth = 190; // Width in PDF units
-                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, pdfHeight);
-
-                pdf.setFontSize(11);
-                const studentIdTitle = "Student ID:";
-                //const studentId = "7210704";
-                pdf.text(studentIdTitle, 15, pdfHeight + 30);
-                pdf.text('7210704', 45, pdfHeight + 30);
-
-                const studentNameTitle = "Student Name:";
-                //const studentName = "John Lyndo Vero Anuada";
-                pdf.text(studentNameTitle, 15, pdfHeight + 36);
-                pdf.text('John Lyndo Anuada', 45, pdfHeight + 36);
-
-                const academicYearTitle = "School Year:";
-                //const academicYear = "2023/2024 1st Semester";
-                pdf.text(academicYearTitle, 15, pdfHeight + 42);
-                pdf.text(academic, 45, pdfHeight + 42);
-
-                pdf.autoTable({
-                    html: table,
-                    startY: 15 + pdfHeight + 31,
-                    theme: "plain",
-                    styles: {
-                        overflow: "linebreak",
-                        fontSize: 10,
-                        overflowColumns: "linebreak",
-                        lineWidth: 0.2,   // Set border width
-                        lineColor: [220, 220, 220],  // Set border color (black in this case)
-                        cellPadding: 2,
-                    },
-                    headStyles: {
-                        lineWidth: 0.2,
-                        lineColor: [243, 5, 5],
-                        fillColor: [243, 5, 5],
-                        textColor: [255, 255, 255],
-                    },
-                });
-
-                const pdfBlob = pdf.output('blob');
-                const reader = new FileReader();
-                reader.onloadend = function () {
-                    const base64PDF = reader.result.split(',')[1];
-                    uploadToGitHub(base64PDF, section);
-                };
-                reader.readAsDataURL(pdfBlob);
-            };
-
-        }
-    });
-}
-
