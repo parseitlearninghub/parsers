@@ -369,6 +369,10 @@ function previewMyJourney() {
 }
 
 async function previewMyJourneySelection(academic, yearlvl, sem) {
+    let semester = 'First Semester'
+    if (sem === 'second-sem') {
+        semester = 'Second Semester';
+    }
     const acadRef = ref(database, `PARSEIT/administration/parseclass/${academic}/${yearlvl}/${sem}/`);
     onValue(acadRef, async (snapshot) => {
         const parentElement = document.getElementById('myjourney-result-container');
@@ -403,7 +407,7 @@ async function previewMyJourneySelection(academic, yearlvl, sem) {
             academicYearDiv.appendChild(studentFullname);
 
             const academicYear = document.createElement('span');
-            academicYear.textContent = 'School Year: ' + await getAcadName(academic);
+            academicYear.textContent = 'School Year: ' + await getAcadName(academic) + " (" + semester + ")";
             academicYearDiv.appendChild(academicYear);
 
 
@@ -472,6 +476,7 @@ async function previewMyJourneySelection(academic, yearlvl, sem) {
 
                 const thead = document.createElement('thead');
                 const trHeader = document.createElement('tr');
+                trHeader.className = 'myjourney-tr-header';
 
                 const thSubject = document.createElement('th');
                 thSubject.textContent = 'Subject';
@@ -524,11 +529,16 @@ async function previewMyJourneySelection(academic, yearlvl, sem) {
                     pdf.text(studentIdTitle, 15, pdfHeight + 30);
                     pdf.text(admin_id, 45, pdfHeight + 30);
 
+                    let semester = 'First Semester'
+                    if (sem === 'second-sem') {
+                        semester = 'Second Semester';
+                    }
+
                     const studentNameTitle = "Student Name:";
                     //const studentName = "John Lyndo Vero Anuada";
                     pdf.text(studentNameTitle, 15, pdfHeight + 36);
                     pdf.text(await getFullname(admin_id), 45, pdfHeight + 36);
-                    const acadname = await getAcadName(academic);
+                    const acadname = await getAcadName(academic) + " (" + semester + ")";
                     const academicYearTitle = "School Year:";
                     //const academicYear = "2023/2024 1st Semester";
                     pdf.text(academicYearTitle, 15, pdfHeight + 42);

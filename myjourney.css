@@ -247,3 +247,9 @@ body {
   opacity: 0.5;
   font-style: italic;
 }
+
+.myjourney-tr-header {
+  background-color: #f30505;
+  color: #fefefe;
+  border: 0.8px solid #f30505;
+}
