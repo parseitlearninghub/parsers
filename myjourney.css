@@ -122,7 +122,44 @@ body {
   width: 100%;
   height: 90px;
   margin-bottom: 15px;
-  background-color: red;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+.myjourney-select-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.myjourney-selection,
+.show-myjourney-btn {
+  width: 100%;
+  height: 40px;
+  background-color: transparent;
+  border: 0.4px solid #dcdcdc;
+  font-family: Inter-Regular;
+  font-size: 12px;
+  padding-left: 5px;
+  padding-right: 5px;
+  border-radius: 4px;
+  accent-color: #f30505;
+}
+
+.myjourney-selection:focus {
+  outline: none;
+}
+
+.show-myjourney-btn {
+  padding: 0;
+  background-color: #f30505;
+  color: #fefefe;
+  font-family: Inter-Bold;
 }
 
 .myjourney-result-container {
