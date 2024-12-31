@@ -127,13 +127,13 @@ body {
   justify-content: center;
   align-items: center;
   gap: 10px;
+  flex-direction: column;
 }
 .myjourney-select-top {
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-direction: column;
   gap: 10px;
 }
 
@@ -252,4 +252,13 @@ body {
   background-color: #f30505;
   color: #fefefe;
   border: 0.8px solid #f30505;
+}
+
+.myjourney-table-div {
+  width: 100%;
+  background-color: transparent;
+}
+
+.myjourney-academic-year-top {
+  margin-top: 10px;
 }

@@ -55,8 +55,8 @@ window.addEventListener("load", async function () {
         }
     });
     populateDropdown("myjourney-select-acad", options_acadref, 'academic');
-    populateDropdown("myjourney-select-yearlvl", options_yearlvl, 'yearlvl');
     populateDropdown("myjourney-select-sem", options_sem, 'sem');
+    previewMyJourney();
 
 
 });
@@ -240,355 +240,6 @@ function populateTable() {
         });
     });
 }
-
-function previewMyJourney() {
-    const acadRef = ref(database, `PARSEIT/administration/parseclass/`);
-    let academicYears = [];
-    onValue(acadRef, async (acadRefSnapshot) => {
-        if (acadRefSnapshot.exists()) {
-            for (const yearlvl in acadRefSnapshot.val()) {
-                let foundStudentinAcademicYear = false;
-                //console.log(acadRefSnapshot.val()[yearlvl]);
-                for (const sem in acadRefSnapshot.val()[yearlvl]) {
-                    let foundStudentinYearlvl = false;
-                    //console.log(acadRefSnapshot.val()[yearlvl][sem]);
-                    for (const subject in acadRefSnapshot.val()[yearlvl][sem]) {
-                        let foundStudentinSem = false;
-                        //console.log(acadRefSnapshot.val()[yearlvl][sem][subject]);
-                        for (const section in acadRefSnapshot.val()[yearlvl][sem][subject]) {
-                            let foundStudentinSubject = false;
-                            //console.log(acadRefSnapshot.val()[yearlvl][sem][subject][section].name);
-                            //console.log(acadRefSnapshot.val()[yearlvl][sem][subject][section]);
-                            for (const members in acadRefSnapshot.val()[yearlvl][sem][subject][section]) {
-                                if (typeof acadRefSnapshot.val()[yearlvl][sem][subject][section][members] === "object") {
-                                    //console.log(acadRefSnapshot.val()[yearlvl][sem][subject][section][members]);
-                                    for (const memberId in acadRefSnapshot.val()[yearlvl][sem][subject][section][members]) {
-
-                                        //console.log(acadRefSnapshot.val()[yearlvl][sem][subject][section][members][memberId]);
-                                        const memberRef = acadRefSnapshot.val()[yearlvl][sem][subject][section][members][memberId];
-                                        if (typeof memberRef === "object") {
-                                            if (memberId === 'members') {
-                                                for (const finalgrade in memberRef) {
-                                                    if (finalgrade === admin_id) {
-                                                        foundStudentinAcademicYear = true;
-                                                        foundStudentinYearlvl = true;
-                                                        foundStudentinSem = true;
-                                                        foundStudentinSubject = true;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            if (foundStudentinSubject) {
-                                //console.log(section);
-                                // console.log(acadRefSnapshot.val()[yearlvl][sem][subject][section].name);
-                                // console.log(acadRefSnapshot.val()[yearlvl][sem][subject][section].unit);
-                            }
-                        }
-                        if (foundStudentinSem) {
-                            //console.log(subject);
-                            //console.log(sem);
-
-                        }
-                    }
-                    if (foundStudentinYearlvl) {
-                        // console.log(yearlvl);
-                        // console.log(sem);
-
-                    }
-                }
-                if (foundStudentinAcademicYear) {
-                    academicYears.push(yearlvl);
-                }
-            }
-        }
-        else {
-            //no academic ref
-        }
-    });
-
-    const section = document.createElement('section');
-    section.classList.add('myjourney-template');
-    section.id = 'myjourney-template';
-
-    const headerDiv = document.createElement('div');
-    headerDiv.classList.add('myjourney-template-header');
-
-    const headerImg = document.createElement('img');
-    headerImg.src = 'assets/myjourney-header-template.jpg';
-    headerImg.classList.add('myjourney-template-header-img');
-    headerImg.id = 'myjourney-template-header-img';
-    headerImg.setAttribute('crossorigin', 'anonymous');
-
-    headerDiv.appendChild(headerImg);
-    section.appendChild(headerDiv);
-
-    const bodyDiv = document.createElement('div');
-    bodyDiv.classList.add('myjourney-template-body');
-
-    const table = document.createElement('table');
-    table.classList.add('myjourney-table-template');
-    table.id = 'my-table';
-    table.setAttribute('border', '1');
-    table.style.borderCollapse = 'collapse';
-    table.style.width = '100%';
-
-    const thead = document.createElement('thead');
-    const trHeader = document.createElement('tr');
-
-    const thSubject = document.createElement('th');
-    thSubject.textContent = 'Subject';
-    const thDescription = document.createElement('th');
-    thDescription.textContent = 'Description';
-    const thUnit = document.createElement('th');
-    thUnit.textContent = 'Unit';
-    const thGrade = document.createElement('th');
-    thGrade.textContent = 'Grade';
-
-    trHeader.appendChild(thSubject);
-    trHeader.appendChild(thDescription);
-    trHeader.appendChild(thUnit);
-    trHeader.appendChild(thGrade);
-    thead.appendChild(trHeader);
-
-    const tbody = document.createElement('tbody');
-    tbody.id = 'tbody';
-
-    table.appendChild(thead);
-    table.appendChild(tbody);
-    bodyDiv.appendChild(table);
-
-    section.appendChild(bodyDiv);
-
-    const parentElement = document.getElementById('myjourney-result-container');
-    parentElement.appendChild(section);
-
-
-}
-
-async function previewMyJourneySelection(academic, yearlvl, sem) {
-    let semester = 'First Semester'
-    if (sem === 'second-sem') {
-        semester = 'Second Semester';
-    }
-    const acadRef = ref(database, `PARSEIT/administration/parseclass/${academic}/${yearlvl}/${sem}/`);
-    onValue(acadRef, async (snapshot) => {
-        const parentElement = document.getElementById('myjourney-result-container');
-        parentElement.innerHTML = ''; // Clear previous content
-
-        if (snapshot.exists()) {
-            const section = document.createElement('section');
-            section.classList.add('myjourney-template');
-            section.id = 'myjourney-template';
-
-            const headerDiv = document.createElement('div');
-            headerDiv.classList.add('myjourney-template-header');
-
-            const headerImg = document.createElement('img');
-            headerImg.src = 'assets/myjourney-header-template.png';
-            headerImg.classList.add('myjourney-template-header-img');
-            headerImg.id = 'myjourney-template-header-img';
-            headerImg.setAttribute('crossorigin', 'anonymous');
-
-            headerDiv.appendChild(headerImg);
-            section.appendChild(headerDiv);
-
-            const academicYearDiv = document.createElement('div');
-            academicYearDiv.classList.add('myjourney-template-header-year');
-
-            const studentId = document.createElement('span');
-            studentId.textContent = 'Student ID: ' + admin_id;
-            academicYearDiv.appendChild(studentId);
-
-            const studentFullname = document.createElement('span');
-            studentFullname.textContent = 'Student Name: ' + await getFullname(admin_id);
-            academicYearDiv.appendChild(studentFullname);
-
-            const academicYear = document.createElement('span');
-            academicYear.textContent = 'School Year: ' + await getAcadName(academic) + " (" + semester + ")";
-            academicYearDiv.appendChild(academicYear);
-
-
-
-            const tbody = document.createElement('tbody');
-            tbody.id = 'tbody';
-
-            const data = snapshot.val();
-            let hasData = false;
-            for (const subject in data) {
-                for (const section in data[subject]) {
-                    if (typeof data[subject][section] === "object") {
-                        for (const members in data[subject][section].members) {
-                            if (members === admin_id) {
-                                const row = document.createElement("tr");
-
-                                const subjectCell = document.createElement("td");
-                                subjectCell.textContent = subject;
-
-                                const descriptionCell = document.createElement("td");
-                                descriptionCell.textContent = data[subject].name;
-
-                                const unitsCell = document.createElement("td");
-                                unitsCell.textContent = data[subject].unit;
-
-                                const gradeCell = document.createElement("td");
-                                gradeCell.textContent = data[subject][section].members[members].finalgrade;
-
-                                row.appendChild(subjectCell);
-                                row.appendChild(descriptionCell);
-                                row.appendChild(unitsCell);
-                                row.appendChild(gradeCell);
-                                tbody.appendChild(row);
-
-                                hasData = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (!hasData) {
-                const section = document.createElement('section');
-                section.classList.add('myjourney-template');
-                section.id = 'myjourney-template';
-
-                const span = document.createElement('span');
-                span.textContent = 'No data available';
-                span.className = 'no-data-available';
-                section.appendChild(span);
-                parentElement.appendChild(section);
-            }
-            else {
-
-                section.appendChild(academicYearDiv);
-                parentElement.appendChild(section);
-                const bodyDiv = document.createElement('div');
-                bodyDiv.classList.add('myjourney-template-body');
-
-                const table = document.createElement('table');
-                table.classList.add('myjourney-table-template');
-                table.id = 'my-table';
-                table.setAttribute('border', '1');
-                table.style.borderCollapse = 'collapse';
-                table.style.width = '100%';
-
-                const thead = document.createElement('thead');
-                const trHeader = document.createElement('tr');
-                trHeader.className = 'myjourney-tr-header';
-
-                const thSubject = document.createElement('th');
-                thSubject.textContent = 'Subject';
-                const thDescription = document.createElement('th');
-                thDescription.textContent = 'Description';
-                const thUnit = document.createElement('th');
-                thUnit.textContent = 'Unit';
-                const thGrade = document.createElement('th');
-                thGrade.textContent = 'Grade';
-
-                trHeader.appendChild(thSubject);
-                trHeader.appendChild(thDescription);
-                trHeader.appendChild(thUnit);
-                trHeader.appendChild(thGrade);
-                thead.appendChild(trHeader);
-                section.appendChild(bodyDiv);
-
-                table.appendChild(thead);
-                table.appendChild(tbody);
-                bodyDiv.appendChild(table);
-
-
-
-                const { jsPDF } = window.jspdf;
-                const pdf = new jsPDF();
-                const imgSrc = "assets/myjourney-header-template.png";
-                const canvas = document.createElement("canvas");
-                const ctx = canvas.getContext("2d");
-
-                const imgElement = new Image();
-                imgElement.crossOrigin = "anonymous"; // Ensures cross-origin images are handled properly
-                imgElement.src = imgSrc;
-
-                imgElement.onload = async () => {
-                    canvas.width = imgElement.naturalWidth;
-                    canvas.height = imgElement.naturalHeight;
-                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
-
-                    // Convert canvas to data URL
-                    const imgData = canvas.toDataURL("image/png");
-
-                    // Define PDF dimensions
-                    const pdfWidth = 190; // Width in PDF units
-                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-                    pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, pdfHeight);
-
-                    pdf.setFontSize(11);
-                    const studentIdTitle = "Student ID:";
-                    //const studentId = "7210704";
-                    pdf.text(studentIdTitle, 15, pdfHeight + 30);
-                    pdf.text(admin_id, 45, pdfHeight + 30);
-
-                    let semester = 'First Semester'
-                    if (sem === 'second-sem') {
-                        semester = 'Second Semester';
-                    }
-
-                    const studentNameTitle = "Student Name:";
-                    //const studentName = "John Lyndo Vero Anuada";
-                    pdf.text(studentNameTitle, 15, pdfHeight + 36);
-                    pdf.text(await getFullname(admin_id), 45, pdfHeight + 36);
-                    const acadname = await getAcadName(academic) + " (" + semester + ")";
-                    const academicYearTitle = "School Year:";
-                    //const academicYear = "2023/2024 1st Semester";
-                    pdf.text(academicYearTitle, 15, pdfHeight + 42);
-                    pdf.text(acadname, 45, pdfHeight + 42);
-
-                    pdf.autoTable({
-                        html: table,
-                        startY: 15 + pdfHeight + 31,
-                        theme: "plain",
-                        styles: {
-                            overflow: "linebreak",
-                            fontSize: 10,
-                            overflowColumns: "linebreak",
-                            lineWidth: 0.2,   // Set border width
-                            lineColor: [220, 220, 220],  // Set border color (black in this case)
-                            cellPadding: 2,
-                        },
-                        headStyles: {
-                            lineWidth: 0.2,
-                            lineColor: [243, 5, 5],
-                            fillColor: [243, 5, 5],
-                            textColor: [255, 255, 255],
-                        },
-                    });
-
-                    const pdfBlob = pdf.output('blob');
-                    const reader = new FileReader();
-                    reader.onloadend = function () {
-                        const base64PDF = reader.result.split(',')[1];
-                        uploadToGitHub(base64PDF, section);
-                    };
-                    reader.readAsDataURL(pdfBlob);
-                };
-            }
-
-        }
-        else {
-            const section = document.createElement('section');
-            section.classList.add('myjourney-template');
-            section.id = 'myjourney-template';
-
-            const span = document.createElement('span');
-            span.textContent = 'No data available';
-            span.className = 'no-data-available';
-            section.appendChild(span);
-            parentElement.appendChild(section);
-        }
-    });
-}
-
 async function getFullname(studentid) {
     const dbRef = ref(database);
     return await get(child(dbRef, "PARSEIT/administration/students/" + studentid)).then((snapshot) => {
@@ -653,15 +304,11 @@ function populateDropdown(dropdownId, options, type) {
 
 document.getElementById("show-myjourney-btn").addEventListener("click", async () => {
     const acadRef = document.getElementById("myjourney-select-acad").value;
-    const yearlvl = document.getElementById("myjourney-select-yearlvl").value;
+    //const yearlvl = document.getElementById("myjourney-select-yearlvl").value;
     const sem = document.getElementById("myjourney-select-sem").value;
 
     if (acadRef === '') {
         errorElement('myjourney-select-acad');
-        return;
-    }
-    if (yearlvl === '') {
-        errorElement('myjourney-select-yearlvl');
         return;
     }
     if (sem === '') {
@@ -669,7 +316,7 @@ document.getElementById("show-myjourney-btn").addEventListener("click", async ()
         return;
     }
     getAcadStatus().then(async () => {
-        await previewMyJourneySelection(acadRef, yearlvl, sem);
+        await previewMyJourneySelection(acadRef, sem);
     });
 
 });
@@ -679,4 +326,310 @@ function errorElement(element) {
     setTimeout(() => {
         document.getElementById(element).style.border = "0.4px solid #dcdcdc";
     }, 1000);
+}
+
+
+async function previewMyJourney() {
+    const acadRef = ref(database, `PARSEIT/administration/parseclass/`);
+    onValue(acadRef, async (acadRefSnapshot) => {
+        const parentElement = document.getElementById('myjourney-result-container');
+        parentElement.innerHTML = ''; // Clear previous content
+
+        if (acadRefSnapshot.exists()) {
+            const updates = {};
+
+            for (const acadref in acadRefSnapshot.val()) {
+                const yearlvlSnapshot = acadRefSnapshot.val()[acadref];
+
+                for (const yearlvl in yearlvlSnapshot) {
+                    const semSnapshot = yearlvlSnapshot[yearlvl];
+
+                    for (const sem in semSnapshot) {
+                        const subjectSnapshot = semSnapshot[sem];
+
+                        for (const subject in subjectSnapshot) {
+                            const sectionSnapshot = subjectSnapshot[subject];
+
+                            for (const key in sectionSnapshot) {
+                                const value = sectionSnapshot[key];
+
+                                if (typeof value === "object" && value !== null) {
+                                    for (const subKey in value) {
+                                        if (typeof value[subKey] === "object" && value[subKey] !== null) {
+                                            for (const studentKey in value[subKey]) {
+                                                if (studentKey === admin_id) {
+
+                                                    if (!updates[acadref]) updates[acadref] = {};
+                                                    if (!updates[acadref][sem]) updates[acadref][sem] = {};
+
+                                                    updates[acadref][sem][subject] = {
+                                                        name: subjectSnapshot[subject].name,
+                                                        finalgrade: value[subKey][studentKey].finalgrade,
+                                                        unit: subjectSnapshot[subject].unit,
+                                                    };
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            await update(ref(database, `PARSEIT/myjourney/${admin_id}`), updates);
+
+            //generate pdf
+            await get(ref(database, `PARSEIT/myjourney/${admin_id}`)).then(async (snapshot) => {
+                const { jsPDF } = window.jspdf;
+
+                // Loop through each academic reference (acadref) in the snapshot
+                for (const acadref in snapshot.val()) {
+                    // Create a new PDF for each academic year
+                    const pdf = new jsPDF();
+                    let yOffset = 80;
+
+                    const columnWidths = {
+                        subject: 40,
+                        description: 120,
+                        unit: 10,
+                        grade: 30,
+                    };
+
+
+                    const imgSrc = "assets/myjourney-header-template.png";
+                    const canvas = document.createElement("canvas");
+                    const ctx = canvas.getContext("2d");
+
+                    const imgElement = new Image();
+                    imgElement.crossOrigin = "anonymous";
+                    imgElement.src = imgSrc;
+
+                    imgElement.onload = async () => {
+                        canvas.width = imgElement.naturalWidth;
+                        canvas.height = imgElement.naturalHeight;
+                        ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+
+                        // Convert canvas to data URL
+                        const imgData = canvas.toDataURL("image/png");
+
+                        // Define PDF dimensions
+                        const pdfWidth = 190; // Width in PDF units
+                        const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                        pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, pdfHeight);
+
+
+                    }
+
+                    pdf.setFontSize(11);
+                    const studentIdTitle = "Student ID:";
+                    //const studentId = "7210704";
+                    pdf.text(studentIdTitle, 15, 60);
+                    pdf.text(admin_id, 45, 60);
+
+                    const studentNameTitle = "Student Name:";
+                    pdf.text(studentNameTitle, 15, 66);
+                    pdf.text(await getFullname(admin_id), 45, 66);
+
+                    for (const semester in snapshot.val()[acadref]) {
+                        // Add the academic year title
+                        let sem_lbl = "First Semester";
+                        if (semester === 'second-sem') {
+                            sem_lbl = "Second Semester";
+                        }
+                        pdf.setFontSize(11);
+                        pdf.text(`School Year: ${await getAcadName(acadref)} (${sem_lbl}) `, 15, yOffset);
+                        yOffset += 8;
+                        // Add table headers with adjusted X-positions to prevent overlap
+                        // Set font size
+                        pdf.setFontSize(11);
+
+                        // Set fill color for all rectangles
+                        pdf.setFillColor(243, 5, 5);
+
+                        // Draw and fill the rectangles with the same red color
+                        pdf.rect(13, yOffset - 4.5, 40, 7, 'F');  // Subject (filled)
+                        pdf.rect(53, yOffset - 4.5, 112, 7, 'F'); // Description (filled)
+                        pdf.rect(165, yOffset - 4.5, 13, 7, 'F'); // Unit (filled)
+                        pdf.rect(178, yOffset - 4.5, 20, 7, 'F'); // Grade (filled)
+
+                        // Set the text color (white text)
+                        pdf.setTextColor(255, 255, 255); // White text
+
+                        // Add text to the filled rectangles
+                        pdf.text('Subject', 15, yOffset);
+                        pdf.text('Description', 55, yOffset);
+                        pdf.text('Unit', 167, yOffset);
+                        pdf.text('Grade', 180, yOffset);
+
+
+
+                        yOffset += 8;
+
+                        // Loop through each subject in the semester and add it to the PDF
+                        pdf.setTextColor(0, 0, 0);
+                        for (const subject in snapshot.val()[acadref][semester]) {
+                            const subjectData = snapshot.val()[acadref][semester][subject];
+
+                            // Split text for word wrapping (only for Description and Subject)
+                            const subjectLines = pdf.splitTextToSize(subject, columnWidths.subject);
+                            const descriptionLines = pdf.splitTextToSize(subjectData.name, columnWidths.description);
+
+                            // Add subject, description, unit, and grade with word wrapping
+                            pdf.text(subjectLines, 15, yOffset);
+                            pdf.rect(13, yOffset - 5.5, 40, 8);
+                            pdf.text(descriptionLines, 55, yOffset);
+                            pdf.rect(53, yOffset - 5.5, 112, 8);
+                            pdf.text(subjectData.unit.toString(), 167, yOffset);
+                            pdf.rect(165, yOffset - 5.5, 13, 8);
+                            pdf.text(subjectData.finalgrade.toString(), 180, yOffset);
+                            pdf.rect(178, yOffset - 5.5, 20, 8);
+
+
+
+                            yOffset += Math.max(subjectLines.length, descriptionLines.length) * 8; // Adjust yOffset based on the number of lines
+
+                            // Add a new page if content exceeds page height
+                            if (yOffset > 280) {
+                                pdf.addPage();
+                                yOffset = 80;
+                                const imgSrc = "assets/myjourney-header-template.png";
+                                const canvas = document.createElement("canvas");
+                                const ctx = canvas.getContext("2d");
+                                const imgElement = new Image();
+                                imgElement.crossOrigin = "anonymous";
+                                imgElement.src = imgSrc;
+                                imgElement.onload = async () => {
+                                    canvas.width = imgElement.naturalWidth;
+                                    canvas.height = imgElement.naturalHeight;
+                                    ctx.drawImage(imgElement, 0, 0, canvas.width, canvas.height);
+
+                                    // Convert canvas to data URL
+                                    const imgData = canvas.toDataURL("image/png");
+
+                                    // Define PDF dimensions
+                                    const pdfWidth = 190; // Width in PDF units
+                                    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                                    pdf.addImage(imgData, "PNG", 10, 10, pdfWidth, pdfHeight);
+                                }
+                            }
+                        }
+                        yOffset += 8;
+                    }
+                    const acadYearName = await getAcadName(acadref);
+                    pdf.save(`${acadYearName}_my_journey_report.pdf`);
+                }
+            });
+
+            //display
+            await get(ref(database, `PARSEIT/myjourney/${admin_id}`)).then(async (snapshot) => {
+
+                for (const acadref in snapshot.val()) {
+                    const section = document.createElement('section');
+                    section.classList.add('myjourney-template');
+                    section.id = 'myjourney-template';
+                    const headerDiv = document.createElement('div');
+                    headerDiv.classList.add('myjourney-template-header');
+                    const headerImg = document.createElement('img');
+                    headerImg.src = 'assets/myjourney-header-template.png';
+                    headerImg.classList.add('myjourney-template-header-img');
+                    headerImg.id = 'myjourney-template-header-img';
+                    headerImg.setAttribute('crossorigin', 'anonymous');
+                    headerDiv.appendChild(headerImg);
+                    section.appendChild(headerDiv);
+
+
+                    const academicYearDiv = document.createElement('div');
+                    academicYearDiv.classList.add('myjourney-template-header-year');
+
+                    const studentId = document.createElement('span');
+                    studentId.textContent = 'Student ID: ' + admin_id;
+                    academicYearDiv.appendChild(studentId);
+
+                    const studentFullname = document.createElement('span');
+                    studentFullname.textContent = 'Student Name: ' + await getFullname(admin_id);
+                    academicYearDiv.appendChild(studentFullname);
+                    section.appendChild(academicYearDiv);
+
+                    for (const semester in snapshot.val()[acadref]) {
+                        const academicYear = document.createElement('span');
+                        academicYear.textContent = 'School Year: ' + await getAcadName(acadref) + " (" + semester + ")";
+                        academicYear.className = 'myjourney-academic-year-top';
+                        academicYearDiv.appendChild(academicYear);
+                        section.appendChild(academicYearDiv);
+                        const tabelDiv = document.createElement('section');
+                        tabelDiv.classList.add('myjourney-table-div');
+
+                        const table = document.createElement('table');
+                        table.classList.add('myjourney-table-template');
+                        table.id = 'my-table';
+                        table.setAttribute('border', '1');
+                        table.style.borderCollapse = 'collapse';
+                        table.style.width = '100%';
+
+                        const thead = document.createElement('thead');
+                        const trHeader = document.createElement('tr');
+                        trHeader.className = 'myjourney-tr-header';
+
+                        const thSubject = document.createElement('th');
+                        thSubject.textContent = 'Subject';
+                        const thDescription = document.createElement('th');
+                        thDescription.textContent = 'Description';
+                        const thUnit = document.createElement('th');
+                        thUnit.textContent = 'Unit';
+                        const thGrade = document.createElement('th');
+                        thGrade.textContent = 'Grade';
+
+                        trHeader.appendChild(thSubject);
+                        trHeader.appendChild(thDescription);
+                        trHeader.appendChild(thUnit);
+                        trHeader.appendChild(thGrade);
+                        thead.appendChild(trHeader);
+                        table.appendChild(thead);
+
+                        const tbody = document.createElement('tbody');
+                        tbody.id = 'tbody';
+
+
+                        for (const subject in snapshot.val()[acadref][semester]) {
+                            const row = document.createElement("tr");
+                            const subjectCell = document.createElement("td");
+                            subjectCell.textContent = subject;
+                            const descriptionCell = document.createElement("td");
+                            descriptionCell.textContent = snapshot.val()[acadref][semester][subject].name;
+                            const unitsCell = document.createElement("td");
+                            unitsCell.textContent = snapshot.val()[acadref][semester][subject].unit;
+                            const gradeCell = document.createElement("td");
+                            gradeCell.textContent = snapshot.val()[acadref][semester][subject].finalgrade;
+                            row.appendChild(subjectCell);
+                            row.appendChild(descriptionCell);
+                            row.appendChild(unitsCell);
+                            row.appendChild(gradeCell);
+                            tbody.appendChild(row);
+                        }
+
+                        table.appendChild(tbody);
+                        tabelDiv.appendChild(table);
+                        academicYearDiv.appendChild(tabelDiv);
+                    }
+
+
+                    parentElement.appendChild(section);
+                }
+            });
+
+
+        }
+        else {
+            const section = document.createElement('section');
+            section.classList.add('myjourney-template');
+            section.id = 'myjourney-template';
+
+            const span = document.createElement('span');
+            span.textContent = 'No data available';
+            span.className = 'no-data-available';
+            section.appendChild(span);
+            parentElement.appendChild(section);
+        }
+    });
 }
