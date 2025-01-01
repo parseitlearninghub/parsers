@@ -225,7 +225,7 @@ body {
   margin-top: 10px;
 }
 
-#download-pdf-btn {
+.download-pdf-btn {
   background-color: transparent;
   border: none;
   background-color: #f30505;
