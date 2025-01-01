@@ -1874,3 +1874,9 @@ function formatDateTime(datetime) {
 }
 
 
+document.querySelectorAll('.yt-vid-wrapper').forEach((element) => {
+  element.addEventListener('click', (event) => {
+    const id = event.currentTarget.getAttribute('data-id');
+    window.location.href = `library.html?id=${id}`;
+  });
+});

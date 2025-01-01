@@ -1488,7 +1488,7 @@ body {
 
 .ytlib-thumbnail {
   width: 100%;
-  height: 150px;
+  height: 180px;
   object-fit: cover;
   border-radius: 5px;
   box-shadow: rgba(0, 0, 0, 0.35) 0px -50px 36px -28px inset;
@@ -1506,5 +1506,5 @@ body {
   gap: 10px;
 }
 .ytlib-title {
-  font-family: Inter-Regular;
+  font-family: Inter-Bold;
 }
