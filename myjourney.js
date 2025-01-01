@@ -243,6 +243,7 @@ async function uploadToGitHub(base64PDF, admin_id, acadref, button) {
                         document.getElementById(button).innerText = 'Copied! Paste url in browser to download.';
                         setTimeout(() => {
                             document.getElementById(button).innerText = 'Copy Link';
+                            window.location.reload();
                         }, 3500);
                     })
                     .catch(err => {
@@ -611,7 +612,6 @@ document.getElementById("show-myjourney-btn").addEventListener("click", async ()
     }
 
 });
-
 
 async function previewMyJourneyByAcad(acad_val) {
     const acadRef = ref(database, `PARSEIT/administration/parseclass/${acad_val}`);

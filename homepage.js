@@ -253,33 +253,27 @@ document.getElementById("homegame_btn").addEventListener("click", function () {
 document
   .getElementById("homelibrary_btn")
   .addEventListener("click", function () {
-    document.getElementById("nofeature").style.display = "flex";
-    setTimeout(() => {
-      document.getElementById("nofeature").style.display = "none";
-    }, 1000);
+    showBodyWrapper("library_student_sec");
+    selectNavIcon("homelibrary_img");
+    selectNavLbl("homelibrary_lbl");
+    changeHomeLbl("lobby_title", "Library");
 
+    //revert
+    hideBodyWrapper("home_all_sec");
+    revertNavIcon("homelobby_img");
+    revertNavLbl("homelobby_lbl");
 
-    // showBodyWrapper("library_student_sec");
-    // selectNavIcon("homelibrary_img");
-    // selectNavLbl("homelibrary_lbl");
-    // changeHomeLbl("lobby_title", "Library");
+    hideBodyWrapper("game_student_sec");
+    revertNavIcon("homegame_img");
+    revertNavLbl("homegame_lbl");
 
-    // //revert
-    // hideBodyWrapper("home_all_sec");
-    // revertNavIcon("homelobby_img");
-    // revertNavLbl("homelobby_lbl");
+    hideBodyWrapper("chatgpt_all_sec");
+    revertNavIcon("homechatbot_img");
+    revertNavLbl("homechatbot_lbl");
 
-    // hideBodyWrapper("game_student_sec");
-    // revertNavIcon("homegame_img");
-    // revertNavLbl("homegame_lbl");
-
-    // hideBodyWrapper("chatgpt_all_sec");
-    // revertNavIcon("homechatbot_img");
-    // revertNavLbl("homechatbot_lbl");
-
-    // hideBodyWrapper("quiz_teacher_sec");
-    // revertNavIcon("homequiz_img");
-    // revertNavLbl("homequiz_lbl");
+    hideBodyWrapper("quiz_teacher_sec");
+    revertNavIcon("homequiz_img");
+    revertNavLbl("homequiz_lbl");
   });
 document
   .getElementById("homechatbot_btn")
