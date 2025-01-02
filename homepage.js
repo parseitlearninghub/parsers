@@ -283,6 +283,10 @@ document
 document
   .getElementById("homechatbot_btn")
   .addEventListener("click", async function () {
+    document.getElementById("chatbot-send-btn").style.display = "block";
+    document.getElementById("chatbot-switchgpt-btn").style.display = "block";
+    document.getElementById("chatbot-gpt-btn").style.display = "none";
+    document.getElementById("chatbot-switch-btn").style.display = "none";
     showBodyWrapper("chatgpt_all_sec");
     document.getElementById("chatgpt_all_sec").style.display = "flex";
     scrollToBottom();
@@ -1482,170 +1486,312 @@ async function getApikey() {
 
 let rejections = ['no', 'not', 'dont', 'stop', 'end', 'quit', 'cancel', 'nevermind', 'sorry', 'nope', 'ayaw', 'nah', 'nay', 'no way', 'no thanks', 'nothing', 'negative', 'dili'];
 let approval = ['sige', 'go', 'yes', 'ok', 'sure', 'yep', 'yeah', 'yay', 'please', 'okay', 'alright', 'go ahead', 'sure thing', 'of course', 'yes please', 'yes sir', 'yes ma\'am', 'yes master', 'yeah sure', 'yep sure', 'yay sure', 'please yes', 'sir yes', 'ma\'am yes', 'master yes', 'aye aye'];
-
+let gptQuestion = false;
 document.getElementById("chatbot-send-btn").addEventListener("click", async function (event) {
-  const userInput = document.getElementById("chatbot-txt").value;
+  let similarWords = [];
+  let currentProfile = 'default_profile.png';
+  const profileStudentRef = ref(database, `PARSEIT/administration/students/${user_parser}/`);
+  const profileStudentSnapshot = await get(profileStudentRef);
 
-  document.getElementById("chatbot-body").innerHTML += `
+  if (profileStudentSnapshot.exists()) {
+    currentProfile = profileStudentSnapshot.val().profile;
+  }
+  const userInput = document.getElementById("chatbot-txt").value;
+  if (userInput === '') {
+    return;
+  }
+
+  if (gptQuestion) {
+
+  }
+  else {
+    document.getElementById("chatbot-body").innerHTML += `
   <section class="chatbot-wrapper chatbot-parser-wrapper">
   <div class="chatbot-parser-message">
   <span>${userInput}</span>
   </div>
-  <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/furina_2.png" alt=""/>
+  <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
   </div>
   </section>`;
-  document.getElementById("chatbot-txt").value = '';
+    document.getElementById("chatbot-txt").value = '';
 
-  const userInputLower = userInput.toLowerCase();
+    const userInputLower = userInput.toLowerCase();
+    for (const trigger_input of siti_brain) {
+      const similarity = cosineSimilarity(trigger_input, userInputLower);
+      if (similarity >= 0.4) {
+        similarWords.push({
+          word: trigger_input,
+          similarity: similarity,
+        });
+      }
+    }
+    similarWords.sort((a, b) => b.similarity - a.similarity);
+    const highestSimilarity = similarWords[0];
 
-  const response = await interpretInput(userInputLower, siti_brain);
-  if (response !== null) {
-    await getResponse(response);
+    if (highestSimilarity === undefined) {
+      gptQuestion = true;
+      document.getElementById("chatbot-send-btn").style.display = "none";
+      document.getElementById("chatbot-gpt-btn").style.display = "block";
+      const response = 'This seems outside my area of expertise. Would you like me to redirect you to ChatGPT?';
+      displayChatbotResponse(response);
+    }
+    else {
+      await getResponse(highestSimilarity.word);
+    }
   }
-  else {
-    console.log("No response found");
-  }
-  // try {
-  //   const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-  //     model: "gpt-4o-mini",
-  //     messages: [
-  //       { "role": "user", "content": userInput },
-  //     ],
-  //   }, {
-  //     headers: {
-  //       'Authorization': `Bearer ${await getApikey()}`,
-  //       'Content-Type': 'application/json',
-  //     }
-  //   });
-  //   //document.getElementById("response").innerHTML = "AI: " + response.data.choices[0].message.content;
-  //   document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
-  //             <div class="chatbot-gpt-profile">
-  //               <img
-  //                 class="chatbot-gpt-img"
-  //                 src="assets/icons/ChatGPT.png"
-  //                 alt=""
-  //               />
-  //             </div>
-  //             <div class="chatbot-gpt-message">
-  //               <span
-  //                 >${response.data.choices[0].message.content}</span
-  //               >
-  //             </div>
-  //           </section>`;
+
+  // if (response !== null) {
+  //   await getResponse(response);
   // }
-  // catch (error) {
-  //   document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
-  //             <div class="chatbot-gpt-profile">
-  //               <img
-  //                 class="chatbot-gpt-img"
-  //                 src="assets/icons/ChatGPT.png"
-  //                 alt=""
-  //               />
-  //             </div>
-  //             <div class="chatbot-gpt-message">
-  //               <span>Can't answer your question right now. Please try again later.</span>
-  //             </div>
-  //           </section>`;
+  // else {
+  //   const response = 'Seems like this question is out of my knowledge base. You want me to send your question to ChatGPT?.';
+  //   const chatbotBody = document.getElementById("chatbot-body");
+
+  //   const chatWrapper = document.createElement('section');
+  //   chatWrapper.classList.add('chatbot-wrapper', 'chatbot-siti-wrapper');
+
+  //   const profileDiv = document.createElement('div');
+  //   profileDiv.classList.add('chatbot-siti-profile');
+
+  //   const img = document.createElement('img');
+  //   img.classList.add('chatbot-siti-img');
+  //   img.src = "assets/icons/siti-icon.png";
+  //   img.alt = "Siti Icon";
+
+  //   profileDiv.appendChild(img);
+
+  //   const messageDiv = document.createElement('div');
+  //   messageDiv.classList.add('chatbot-siti-message');
+
+  //   const messageSpan = document.createElement('span');
+  //   messageDiv.appendChild(messageSpan);
+
+  //   chatWrapper.appendChild(profileDiv);
+  //   chatWrapper.appendChild(messageDiv);
+  //   chatbotBody.appendChild(chatWrapper);
+  //   typeWriterEffect(messageSpan, response, 20);
+
+
+
+
+  //   // try {
+  //   //   const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+  //   //     model: "gpt-4o-mini",
+  //   //     messages: [
+  //   //       { "role": "user", "content": userInput },
+  //   //     ],
+  //   //   }, {
+  //   //     headers: {
+  //   //       'Authorization': `Bearer ${await getApikey()}`,
+  //   //       'Content-Type': 'application/json',
+  //   //     }
+  //   //   });
+  //   //   //document.getElementById("response").innerHTML = "AI: " + response.data.choices[0].message.content;
+  //   //   document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
+  //   //             <div class="chatbot-gpt-profile">
+  //   //               <img
+  //   //                 class="chatbot-gpt-img"
+  //   //                 src="assets/icons/ChatGPT.png"
+  //   //                 alt=""
+  //   //               />
+  //   //             </div>
+  //   //             <div class="chatbot-gpt-message">
+  //   //               <span
+  //   //                 >${response.data.choices[0].message.content}</span
+  //   //               >
+  //   //             </div>
+  //   //           </section>`;
+  //   // }
+  //   // catch (error) {
+  //   //   document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
+  //   //             <div class="chatbot-gpt-profile">
+  //   //               <img
+  //   //                 class="chatbot-gpt-img"
+  //   //                 src="assets/icons/ChatGPT.png"
+  //   //                 alt=""
+  //   //               />
+  //   //             </div>
+  //   //             <div class="chatbot-gpt-message">
+  //   //               <span>Can't answer your question right now. Please try again later.</span>
+  //   //             </div>
+  //   //           </section>`;
+  //   // }
   // }
   scrollToBottom();
 });
+document.getElementById("chatbot-switchgpt-btn").addEventListener("click", async function (event) {
+  document.getElementById("chatbot-send-btn").style.display = "none";
+  document.getElementById("chatbot-switchgpt-btn").style.display = "none";
+  document.getElementById("chatbot-gpt-btn").style.display = "block";
+  document.getElementById("chatbot-switch-btn").style.display = "block";
+});
+
+document.getElementById("chatbot-switch-btn").addEventListener("click", async function (event) {
+  document.getElementById("chatbot-send-btn").style.display = "block";
+  document.getElementById("chatbot-switchgpt-btn").style.display = "block";
+  document.getElementById("chatbot-gpt-btn").style.display = "none";
+  document.getElementById("chatbot-switch-btn").style.display = "none";
+});
 
 
-async function getTriggerInputs() {
-  const refPath = ref(database, 'PARSEIT/siti_chatbot/');
-  await onValue(
-    refPath,
-    (snapshot) => {
-      siti_brain = [];
-      if (snapshot.exists()) {
-        const chatbotData = snapshot.val(); // All chatbot data
-
-        for (const chatbotId in chatbotData) {
-          const chatbot = chatbotData[chatbotId];
-
-          if (chatbot.trigger_input) {
-            const triggerInput = chatbot.trigger_input;
-
-            if (typeof triggerInput === "object" && !Array.isArray(triggerInput)) {
-              for (const key in triggerInput) {
-                siti_brain.push(triggerInput[key]);
-              }
-            } else if (Array.isArray(triggerInput)) {
-              triggerInput.forEach((item) => siti_brain.push(item));
-            } else if (typeof triggerInput === "string") {
-              siti_brain.push(triggerInput);
-            }
-          }
-        }
-
-      } else {
-        //console.log("No data available");
-      }
-    },
-    (error) => {
-      //console.error("Error fetching data:", error);
-    }
-  );
-}
-
-async function interpretInput(text, search) {
-  text = text.replace(/\s/g, "").toLowerCase();
-
-  let bestMatchTerm = null;
-  let bestMatchScore = 0;
-  for (let originalTerm of search) {
-    let term = originalTerm.replace(/\s/g, "").toLowerCase();
-
-    let match_score = 0;
-    let search_position = 0;
-    for (let n = 0; n < text.length; n++) {
-      let text_char = text[n];
-      if (
-        search_position < term.length &&
-        text_char === term[search_position]
-      ) {
-        search_position += 1;
-        match_score += 1;
-      }
-    }
-
-    if (match_score > bestMatchScore) {
-      bestMatchTerm = originalTerm;
-      bestMatchScore = match_score;
-    }
-  }
-  return bestMatchScore > 0 ? bestMatchTerm : null;
-}
 async function getResponse(trigger_input) {
   const refPath = ref(database, 'PARSEIT/siti_chatbot/');
-  await onValue(refPath, (snapshot) => {
-    if (snapshot.exists()) {
-      const chat_id = snapshot.val();
-      for (const id in chat_id) {
-        const chat = chat_id[id];
-        if (chat.trigger_input) {
-          if (Array.isArray(chat.trigger_input)) {
-            chat.trigger_input.forEach((item) => {
-              if (item === trigger_input) {
-                const response = chat.response;
-                displayChatbotResponse(response);
-              }
-            });
-          } else {
-            if (chat.trigger_input === trigger_input) {
-              const response = chat.response;
-              displayChatbotResponse(response);
+  return await onValue(refPath, (snapshot) => {
+    const response_id = snapshot.val();
+    for (const id in response_id) {
+      for (const data in response_id[id]) {
+        if (typeof response_id[id][data] === 'object') {
+          const triggers = response_id[id][data];
+          for (const data in triggers) {
+            if (triggers[data] === trigger_input) {
+              displayChatbotResponse(response_id[id].response);
             }
           }
-        }
+        };
       }
-    } else {
-      console.log('No data available');
     }
-  }, (error) => {
-    console.error('Error fetching data:', error);
+  });
+
+}
+async function getTriggerInputs() {
+  siti_brain = [];
+  const refPath = ref(database, 'PARSEIT/siti_chatbot/');
+  await onValue(refPath, (snapshot) => {
+    const response_id = snapshot.val();
+    for (const id in response_id) {
+      for (const data in response_id[id]) {
+        if (typeof response_id[id][data] === 'object') {
+          const triggers = response_id[id][data];
+          for (const data in triggers) {
+            siti_brain.push(triggers[data]);
+          }
+        };
+      }
+    }
   });
 }
+
+// async function getTriggerInputs() {
+//   const refPath = ref(database, 'PARSEIT/siti_chatbot/');
+//   await onValue(
+//     refPath,
+//     (snapshot) => {
+//       siti_brain = [];
+//       if (snapshot.exists()) {
+//         const chatbotData = snapshot.val(); // All chatbot data
+
+//         for (const chatbotId in chatbotData) {
+//           const chatbot = chatbotData[chatbotId];
+
+//           if (chatbot.trigger_input) {
+//             const triggerInput = chatbot.trigger_input;
+
+//             if (typeof triggerInput === "object" && !Array.isArray(triggerInput)) {
+//               for (const key in triggerInput) {
+//                 siti_brain.push(triggerInput[key]);
+//               }
+//             } else if (Array.isArray(triggerInput)) {
+//               triggerInput.forEach((item) => siti_brain.push(item));
+//             } else if (typeof triggerInput === "string") {
+//               siti_brain.push(triggerInput);
+//             }
+//           }
+//         }
+
+//       } else {
+//         //console.log("No data available");
+//       }
+//     },
+//     (error) => {
+//       //console.error("Error fetching data:", error);
+//     }
+//   );
+// }
+
+// async function interpretInput(text, search) {
+//   text = text.replace(/\s/g, "").toLowerCase();
+
+//   let bestMatchTerm = null;
+//   let bestMatchScore = 0;
+//   for (let originalTerm of search) {
+//     let term = originalTerm.replace(/\s/g, "").toLowerCase();
+
+//     let match_score = 0;
+//     let search_position = 0;
+//     for (let n = 0; n < text.length; n++) {
+//       let text_char = text[n];
+//       if (
+//         search_position < term.length &&
+//         text_char === term[search_position]
+//       ) {
+//         search_position += 1;
+//         match_score += 1;
+//       }
+//     }
+
+//     if (match_score > bestMatchScore) {
+//       bestMatchTerm = originalTerm;
+//       bestMatchScore = match_score;
+//     }
+//   }
+//   return bestMatchScore > 0 ? bestMatchTerm : null;
+// }
+// async function getResponse(trigger_input) {
+//   const refPath = ref(database, 'PARSEIT/siti_chatbot/');
+//   await onValue(refPath, (snapshot) => {
+//     if (snapshot.exists()) {
+//       const chat_id = snapshot.val();
+//       for (const id in chat_id) {
+//         const chat = chat_id[id];
+//         if (chat.trigger_input) {
+//           if (Array.isArray(chat.trigger_input)) {
+//             chat.trigger_input.forEach((item) => {
+//               if (item === trigger_input) {
+//                 const response = chat.response;
+//                 displayChatbotResponse(response);
+//               }
+//             });
+//           } else {
+//             if (chat.trigger_input === trigger_input) {
+//               const response = chat.response;
+//               displayChatbotResponse(response);
+//             }
+//           }
+//         }
+//       }
+//     } else {
+//       const response = 'Seems like this question is out of my knowledge base. You want me to send your question to ChatGPT?.';
+//       const chatbotBody = document.getElementById("chatbot-body");
+
+//       const chatWrapper = document.createElement('section');
+//       chatWrapper.classList.add('chatbot-wrapper', 'chatbot-siti-wrapper');
+
+//       const profileDiv = document.createElement('div');
+//       profileDiv.classList.add('chatbot-siti-profile');
+
+//       const img = document.createElement('img');
+//       img.classList.add('chatbot-siti-img');
+//       img.src = "assets/icons/siti-icon.png";
+//       img.alt = "Siti Icon";
+
+//       profileDiv.appendChild(img);
+
+//       const messageDiv = document.createElement('div');
+//       messageDiv.classList.add('chatbot-siti-message');
+
+//       const messageSpan = document.createElement('span');
+//       messageDiv.appendChild(messageSpan);
+
+//       chatWrapper.appendChild(profileDiv);
+//       chatWrapper.appendChild(messageDiv);
+//       chatbotBody.appendChild(chatWrapper);
+//       typeWriterEffect(messageSpan, response, 20);
+
+//     }
+//   }, (error) => {
+//     console.error('Error fetching data:', error);
+//   });
+// }
 
 function displayChatbotResponse(response) {
   const chatbotBody = document.getElementById("chatbot-body");
@@ -1900,3 +2046,31 @@ async function getMysaves() {
     });
   });
 }
+
+
+
+
+function tokenize(text) {
+  return text.toLowerCase().replace(/[^a-zA-Z0-9\s]/g, '').split(/\s+/);
+}
+
+function cosineSimilarity(str1, str2) {
+  const tokens1 = tokenize(str1);
+  const tokens2 = tokenize(str2);
+
+  const allTokens = Array.from(new Set([...tokens1, ...tokens2]));
+
+  const vector1 = allTokens.map(token => tokens1.filter(t => t === token).length);
+  const vector2 = allTokens.map(token => tokens2.filter(t => t === token).length);
+
+  const dotProduct = vector1.reduce((sum, value, index) => sum + (value * vector2[index]), 0);
+  const magnitude1 = Math.sqrt(vector1.reduce((sum, value) => sum + (value * value), 0));
+  const magnitude2 = Math.sqrt(vector2.reduce((sum, value) => sum + (value * value), 0));
+
+  if (magnitude1 === 0 || magnitude2 === 0) {
+    return 0;
+  }
+
+  return dotProduct / (magnitude1 * magnitude2);
+}
+

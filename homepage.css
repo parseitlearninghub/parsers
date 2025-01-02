@@ -383,6 +383,24 @@ body {
     brightness(97%) contrast(109%);
 }
 
+.chatbot-send-btn {
+  width: 20px;
+  margin-right: 10px;
+  display: none;
+}
+
+.chatbot-gpt-btn {
+  width: 20px;
+  margin-right: 10px;
+  filter: invert(21%) sepia(99%) saturate(2605%) hue-rotate(217deg)
+    brightness(109%) contrast(102%);
+}
+
+.chatbot-gpt-btn {
+  width: 20px;
+  margin-right: 10px;
+  display: none;
+}
 .chatbot-wrapper {
   background-color: transparent;
   width: 100%;
@@ -1304,6 +1322,7 @@ body {
 
 .bookmark-bubble {
   position: fixed;
+
   bottom: 75px;
   right: 25px;
   width: 60px;
@@ -1318,6 +1337,7 @@ body {
   z-index: 1000;
   transition: left 0.5s ease, top 0.5s ease; /* Smooth transition for left and top */
   -webkit-tap-highlight-color: transparent;
+  top: 0;
 }
 
 .bookmark-bubble:hover {
