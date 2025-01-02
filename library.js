@@ -39,6 +39,7 @@ window.addEventListener("load", async function () {
     document.getElementById("ytlib-title").src
     document.getElementById("ytview_main").src = `https://www.youtube.com/embed/${video_id}`;
     await getSaves();
+    await getComments();
 
 
 });
@@ -58,6 +59,7 @@ document.getElementById("savevideo-btn").addEventListener("click", async functio
         [user_parser]: Date.now(),
     });
     await getSaves();
+
 });
 
 document.getElementById("unsavevideo-btn").addEventListener("click", async function () {
@@ -66,11 +68,52 @@ document.getElementById("unsavevideo-btn").addEventListener("click", async funct
     await getSaves();
 });
 
+document.getElementById("sendcomment-btn").addEventListener("click", async function () {
+    const id = video_id;
+    const comment = document.getElementById("comment-textarea").value;
+    await update(ref(database, `PARSEIT/library/videos/${id}/comments/`), {
+        [Date.now()]: {
+            name: await getFullname(user_parser),
+            comment: comment,
+        }
+    });
+    document.getElementById("comment-textarea").value = "";
+    await getComments();
+});
+
+
 async function getComments() {
     await get(ref(database, `PARSEIT/library/videos/${video_id}/comments/`)).then(async (snapshot) => {
         if (snapshot.exists()) {
-            document.getElementById("unsavevideo-btn").style.display = "flex";
-            document.getElementById("savevideo-btn").style.display = "none";
+            const container = document.getElementById("comments-container");
+            container.innerHTML = ``;
+            for (const comment in snapshot.val()) {
+                const name = snapshot.val()[comment].name;
+                const context = snapshot.val()[comment].comment;
+                container.innerHTML += `<section class="comment-box">
+                <div class="comment-wrapper">
+                    <span class="comment-name">${name}</span>
+                    <span class="comment"
+                    >${context}</span
+                    >
+                </div>
+                </section>
+                        `
+
+            }
+        }
+        else {
+            const container = document.getElementById("comments-container");
+            container.innerHTML = ``;
+            container.innerHTML += `<section class="comment-box ">
+                <div class="comment-wrapper nocomment">
+                    
+                    <span class="nocomment"
+                    >No Comment Yet...</span
+                    >
+                </div>
+                </section>
+                        `
         }
     })
 }
@@ -87,4 +130,18 @@ async function getSaves() {
         }
 
     })
+}
+
+async function getFullname(studentid) {
+    const dbRef = ref(database);
+    return await get(child(dbRef, "PARSEIT/administration/students/" + studentid)).then((snapshot) => {
+        if (snapshot.exists()) {
+            if (snapshot.val().suffix === "none") {
+                return `${snapshot.val().firstname} ${snapshot.val().lastname}`
+            }
+            else {
+                return `${snapshot.val().firstname} ${snapshot.val().lastname} ${snapshot.val().suffix}`
+            }
+        }
+    });
 }

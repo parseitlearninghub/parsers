@@ -12,16 +12,16 @@
       <h1 id="parsing_lbl">Parsing...</h1>
     </div>
 
-    <div class="comment-txt-container">
+    <div class="comment-txt-container" id="comment-txt-container">
       <textarea
-        rows="1"
         class="comment-textarea"
         id="comment-textarea"
         placeholder="Add a comment"
+        oninput="this.style.height = '40px'; this.style.height = this.scrollHeight + 'px';"
       ></textarea>
       <img
         id="sendcomment-btn"
-        class="closeprofile-btn"
+        class="sendcomment-img"
         src="assets/icons/paper-plane-regular.svg"
         alt=""
       />
@@ -55,13 +55,17 @@
           Save Video
         </button>
         <button class="savevideo-cont" id="unsavevideo-btn">
-          <img class="savevideo" src="assets/icons/heart-solid.svg" alt="" />
+          <img
+            class="savevideo imgsaved-color"
+            src="assets/icons/heart-solid.svg"
+            alt=""
+          />
           Saved
         </button>
         <span class="ytlib-comment" id="ytlib-title">Comments</span>
       </section>
-      <section class="comments-container">
-        <section class="comment-box">
+      <section class="comments-container" id="comments-container">
+        <!-- <section class="comment-box">
           <div class="comment-wrapper">
             <span class="comment-name">John Lyndo Anuada</span>
             <span class="comment"
@@ -69,52 +73,7 @@
               assignments with this one, kudos</span
             >
           </div>
-        </section>
-        <section class="comment-box">
-          <div class="comment-wrapper">
-            <span class="comment-name">John Lyndo Anuada</span>
-            <span class="comment"
-              >Thank you for this! Very Helpful indeed. I was able to finish my
-              assignments with this one, kudos</span
-            >
-          </div>
-        </section>
-        <section class="comment-box">
-          <div class="comment-wrapper">
-            <span class="comment-name">John Lyndo Anuada</span>
-            <span class="comment"
-              >Thank you for this! Very Helpful indeed. I was able to finish my
-              assignments with this one, kudos</span
-            >
-          </div>
-        </section>
-        <section class="comment-box">
-          <div class="comment-wrapper">
-            <span class="comment-name">John Lyndo Anuada</span>
-            <span class="comment"
-              >Thank you for this! Very Helpful indeed. I was able to finish my
-              assignments with this one, kudos</span
-            >
-          </div>
-        </section>
-        <section class="comment-box">
-          <div class="comment-wrapper">
-            <span class="comment-name">John Lyndo Anuada</span>
-            <span class="comment"
-              >Thank you for this! Very Helpful indeed. I was able to finish my
-              assignments with this one, kudos</span
-            >
-          </div>
-        </section>
-        <section class="comment-box">
-          <div class="comment-wrapper">
-            <span class="comment-name">John Lyndo Anuada</span>
-            <span class="comment"
-              >Thank you for this! Very Helpful indeed. I was able to finish my
-              assignments with this one, kudos</span
-            >
-          </div>
-        </section>
+        </section> -->
         <section class="fillers"></section>
       </section>
     </div>
