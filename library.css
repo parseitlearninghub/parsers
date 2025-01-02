@@ -195,6 +195,7 @@ body {
   resize: none;
   padding: 10px;
   padding-bottom: 0px;
+  border-radius: 4px;
 }
 
 #comment-textarea:focus {

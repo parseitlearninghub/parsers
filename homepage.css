@@ -1508,3 +1508,7 @@ body {
 .ytlib-title {
   font-family: Inter-Bold;
 }
+
+.ytt-icon {
+  margin-left: -10px;
+}

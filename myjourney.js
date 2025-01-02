@@ -608,6 +608,7 @@ document.getElementById("show-myjourney-btn").addEventListener("click", async ()
     }
 
     if (acadRef !== '' && sem !== '') {
+        pdfFiles = [];
         previewMyJourneyByAll(acadRef, sem);
     }
 
