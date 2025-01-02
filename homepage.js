@@ -1909,9 +1909,11 @@ function typeWriterEffect(element, text, speed) {
       element.innerHTML += text.charAt(i);
       i++;
       setTimeout(typeWriter, speed);
+      scrollToBottom();
     }
   }
   typeWriter();
+
 }
 
 
