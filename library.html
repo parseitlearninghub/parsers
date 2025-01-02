@@ -13,12 +13,27 @@
     </div>
 
     <div class="library-main-container">
-      <iframe
-        src="https://www.youtube.com/embed/RdAt9ICDs4k"
-        frameborder="0"
-        allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
-        allowfullscreen
-      ></iframe>
+      <div class="library-header">
+        <img
+          id="closeprofile-btn"
+          class="closeprofile-btn"
+          src="assets/icons/arrow-left-solid.svg"
+          alt=""
+        />
+      </div>
+
+      <div class="ytvideo-wrapper">
+        <iframe
+          src="https://www.youtube.com/embed/"
+          frameborder="0"
+          allow="accelerometer; autoplay; encrypted-media; gyroscope;"
+          class="yt_frame"
+          id="ytview_main"
+        ></iframe>
+        <span class="ytlib-title" id="ytlib-title">
+          >JavaScript Tutorial Full Course - Beginner to Pro (2024)</span
+        >
+      </div>
     </div>
     <script type="module" src="library.js"></script>
   </body>

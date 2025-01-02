@@ -1,4 +1,4 @@
-ce {
+@font-face {
   font-family: "Inter-Bold";
   src: url(assets/fonts/Inter-Bold.otf);
 }
@@ -25,15 +25,6 @@ body {
   z-index: -1;
   width: 100vw;
   height: 100vh;
-}
-
-#home_div {
-  width: 90%;
-  height: 100%;
-  background-color: transparent;
-  display: none;
-  justify-content: space-between;
-  flex-direction: column;
 }
 
 #loading_animation_div {
@@ -70,10 +61,41 @@ body {
   flex-direction: column;
 }
 
+.ytvideo-wrapper {
+  background-color: transparent;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
 .yt_frame {
   background-color: thistle;
   width: 100%;
-  height: 200px;
-  object-fit: contain;
+  height: 100%;
+  object-fit: cover;
   object-position: center;
+}
+
+.library-header {
+  height: 60px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.closeprofile-btn {
+  width: 15px;
+  padding-left: 15px;
+}
+.ytlib-title {
+  font-family: Inter-Bold;
+  font-size: 18px;
+  padding-top: 15px;
+  width: 100%;
+  padding-left: 5%;
+  box-sizing: border-box;
 }

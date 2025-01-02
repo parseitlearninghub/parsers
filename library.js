@@ -23,12 +23,21 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 const dbRef = ref(database);
 
-let user_parser = localStorage.getItem("user-parser-admin");
+let user_parser = localStorage.getItem("user-parser");
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
+const video_id = urlParams.get('id');
+const video_title = urlParams.get('title');
+
+
 
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
 window.addEventListener("load", function () {
     document.getElementById("loading_animation_div").style.display = "none";
+    document.getElementById("ytlib-title").innerText = video_title;
+    document.getElementById("ytlib-title").src
+    document.getElementById("ytview_main").src = `https://www.youtube.com/embed/${video_id}`;
 
 });
 function setScreenSize(width, height) {
@@ -36,3 +45,7 @@ function setScreenSize(width, height) {
     document.body.style.height = height + "px";
     document.documentElement.style.height = height + "px";
 }
+
+document.getElementById("closeprofile-btn").addEventListener("click", function () {
+    window.location.href = "homepage.html";
+});
