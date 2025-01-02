@@ -33,11 +33,13 @@ const video_title = urlParams.get('title');
 
 //preloads
 setScreenSize(window.innerWidth, window.innerHeight);
-window.addEventListener("load", function () {
+window.addEventListener("load", async function () {
     document.getElementById("loading_animation_div").style.display = "none";
     document.getElementById("ytlib-title").innerText = video_title;
     document.getElementById("ytlib-title").src
     document.getElementById("ytview_main").src = `https://www.youtube.com/embed/${video_id}`;
+    await getSaves();
+
 
 });
 function setScreenSize(width, height) {
@@ -49,3 +51,40 @@ function setScreenSize(width, height) {
 document.getElementById("closeprofile-btn").addEventListener("click", function () {
     window.location.href = "homepage.html";
 });
+
+document.getElementById("savevideo-btn").addEventListener("click", async function () {
+    const id = video_id;
+    await update(ref(database, `PARSEIT/library/videos/${id}/saves/`), {
+        [user_parser]: Date.now(),
+    });
+    await getSaves();
+});
+
+document.getElementById("unsavevideo-btn").addEventListener("click", async function () {
+    const id = video_id;
+    await remove(ref(database, `PARSEIT/library/videos/${id}/saves/${user_parser}`));
+    await getSaves();
+});
+
+async function getComments() {
+    await get(ref(database, `PARSEIT/library/videos/${video_id}/comments/`)).then(async (snapshot) => {
+        if (snapshot.exists()) {
+            document.getElementById("unsavevideo-btn").style.display = "flex";
+            document.getElementById("savevideo-btn").style.display = "none";
+        }
+    })
+}
+
+async function getSaves() {
+    await get(ref(database, `PARSEIT/library/videos/${video_id}/saves/${user_parser}`)).then(async (snapshot) => {
+        if (snapshot.exists()) {
+            document.getElementById("unsavevideo-btn").style.display = "flex";
+            document.getElementById("savevideo-btn").style.display = "none";
+        }
+        else {
+            document.getElementById("savevideo-btn").style.display = "flex";
+            document.getElementById("unsavevideo-btn").style.display = "none";
+        }
+
+    })
+}

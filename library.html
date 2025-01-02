@@ -12,6 +12,21 @@
       <h1 id="parsing_lbl">Parsing...</h1>
     </div>
 
+    <div class="comment-txt-container">
+      <textarea
+        rows="1"
+        class="comment-textarea"
+        id="comment-textarea"
+        placeholder="Add a comment"
+      ></textarea>
+      <img
+        id="sendcomment-btn"
+        class="closeprofile-btn"
+        src="assets/icons/paper-plane-regular.svg"
+        alt=""
+      />
+    </div>
+
     <div class="library-main-container">
       <div class="library-header">
         <img
@@ -35,14 +50,13 @@
         >
       </div>
       <section class="savevideo-wrapper">
-        <button class="savevideo-cont">
-          <img
-            id="closeprofile-btn"
-            class="savevideo"
-            src="assets/icons/heart-regular.svg"
-            alt=""
-          />
+        <button class="savevideo-cont" id="savevideo-btn">
+          <img class="savevideo" src="assets/icons/heart-regular.svg" alt="" />
           Save Video
+        </button>
+        <button class="savevideo-cont" id="unsavevideo-btn">
+          <img class="savevideo" src="assets/icons/heart-solid.svg" alt="" />
+          Saved
         </button>
         <span class="ytlib-comment" id="ytlib-title">Comments</span>
       </section>
