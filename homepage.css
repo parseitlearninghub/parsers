@@ -394,6 +394,7 @@ body {
   margin-right: 10px;
   filter: invert(21%) sepia(99%) saturate(2605%) hue-rotate(217deg)
     brightness(109%) contrast(102%);
+  display: none;
 }
 
 .chatbot-gpt-btn {
@@ -1337,7 +1338,6 @@ body {
   z-index: 1000;
   transition: left 0.5s ease, top 0.5s ease; /* Smooth transition for left and top */
   -webkit-tap-highlight-color: transparent;
-  top: 0;
 }
 
 .bookmark-bubble:hover {

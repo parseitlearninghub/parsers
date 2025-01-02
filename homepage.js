@@ -284,9 +284,7 @@ document
   .getElementById("homechatbot_btn")
   .addEventListener("click", async function () {
     document.getElementById("chatbot-send-btn").style.display = "block";
-    document.getElementById("chatbot-switchgpt-btn").style.display = "block";
-    document.getElementById("chatbot-gpt-btn").style.display = "none";
-    document.getElementById("chatbot-switch-btn").style.display = "none";
+    document.getElementById("chatbot-switchgpt-btn").style.display = "none";
     showBodyWrapper("chatgpt_all_sec");
     document.getElementById("chatgpt_all_sec").style.display = "flex";
     scrollToBottom();
@@ -1502,6 +1500,88 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
   }
 
   if (gptQuestion) {
+    document.getElementById("chatbot-body").innerHTML += `
+          <section class="chatbot-wrapper chatbot-parser-wrapper">
+          <div class="chatbot-parser-message">
+          <span>${userInput}</span>
+          </div>
+          <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
+          </div>
+          </section>`;
+    document.getElementById("chatbot-txt").value = '';
+    if (approval.includes(userInput.toLowerCase())) {
+      document.getElementById("chatbot-send-btn").style.display = "none";
+      document.getElementById("chatbot-switchgpt-btn").style.display = "block";
+      displayChatbotResponse('Okay, try sending your question again.');
+      document.getElementById("chatbot-switchgpt-btn").addEventListener("click", async function (event) {
+        try {
+          const question = document.getElementById("chatbot-txt").value;
+          document.getElementById("chatbot-body").innerHTML += `
+          <section class="chatbot-wrapper chatbot-parser-wrapper">
+          <div class="chatbot-parser-message">
+          <span>${question}</span>
+          </div>
+          <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
+          </div>
+          </section>`;
+          document.getElementById("chatbot-txt").value = '';
+          const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: "gpt-4o-mini",
+            messages: [
+              { "role": "user", "content": question },
+            ],
+          }, {
+            headers: {
+              'Authorization': `Bearer ${await getApikey()}`,
+              'Content-Type': 'application/json',
+            }
+          });
+          //document.getElementById("response").innerHTML = "AI: " + response.data.choices[0].message.content;
+          document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
+                      <div class="chatbot-gpt-profile">
+                        <img
+                          class="chatbot-gpt-img"
+                          src="assets/icons/ChatGPT.png"
+                          alt=""
+                        />
+                      </div>
+                      <div class="chatbot-gpt-message">
+                        <span
+                          >${response.data.choices[0].message.content}</span
+                        >
+                      </div>
+                    </section>`;
+          document.getElementById("chatbot-send-btn").style.display = "block";
+          document.getElementById("chatbot-switchgpt-btn").style.display = "none";
+          gptQuestion = false;
+          scrollToBottom();
+        }
+        catch (error) {
+          document.getElementById("chatbot-send-btn").style.display = "block";
+          document.getElementById("chatbot-switchgpt-btn").style.display = "none";
+          gptQuestion = false;
+          document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
+                      <div class="chatbot-gpt-profile">
+                        <img
+                          class="chatbot-gpt-img"
+                          src="assets/icons/ChatGPT.png"
+                          alt=""
+                        />
+                      </div>
+                      <div class="chatbot-gpt-message">
+                        <span>Can't answer your question right now. Please try again later.</span>
+                      </div>
+                    </section>`;
+          scrollToBottom();
+        }
+
+      });;
+    }
+    if (rejections.includes(userInput.toLowerCase())) {
+      gptQuestion = false;
+      displayChatbotResponse('Okay, Just let me know if you have any other questions.');
+      scrollToBottom();
+    }
 
   }
   else {
@@ -1530,8 +1610,6 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
 
     if (highestSimilarity === undefined) {
       gptQuestion = true;
-      document.getElementById("chatbot-send-btn").style.display = "none";
-      document.getElementById("chatbot-gpt-btn").style.display = "block";
       const response = 'This seems outside my area of expertise. Would you like me to redirect you to ChatGPT?';
       displayChatbotResponse(response);
     }
@@ -1618,19 +1696,6 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
   //   // }
   // }
   scrollToBottom();
-});
-document.getElementById("chatbot-switchgpt-btn").addEventListener("click", async function (event) {
-  document.getElementById("chatbot-send-btn").style.display = "none";
-  document.getElementById("chatbot-switchgpt-btn").style.display = "none";
-  document.getElementById("chatbot-gpt-btn").style.display = "block";
-  document.getElementById("chatbot-switch-btn").style.display = "block";
-});
-
-document.getElementById("chatbot-switch-btn").addEventListener("click", async function (event) {
-  document.getElementById("chatbot-send-btn").style.display = "block";
-  document.getElementById("chatbot-switchgpt-btn").style.display = "block";
-  document.getElementById("chatbot-gpt-btn").style.display = "none";
-  document.getElementById("chatbot-switch-btn").style.display = "none";
 });
 
 
