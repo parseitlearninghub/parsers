@@ -320,7 +320,6 @@ async function getPosts() {
             for (const post in reversedData) {
                 const id = reversedData[post].student_id;
                 if (id === user_parser) {
-                    console.log(id);
                     const username = reversedData[post].username;
                     const context = reversedData[post].description;
                     const time = formatTime(reversedData[post].time);
@@ -357,7 +356,7 @@ async function getPosts() {
                     </section>
                     </section>
                     <section class="post-body">${context}</section>
-                    <section class="post-bottom" onclick="window.location.href='answers.html?postID=${post}'">View Answers</section>
+                    <section class="post-bottom" onclick="window.location.href='https://parseitlearninghub.github.io/community/answers.html?postId=${post}'">View Answers</section>
                     </section>`;
 
                 }
