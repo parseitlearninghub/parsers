@@ -1490,54 +1490,64 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
   let currentProfile = 'default_profile.png';
   const profileStudentRef = ref(database, `PARSEIT/administration/students/${user_parser}/`);
   const profileStudentSnapshot = await get(profileStudentRef);
-
   if (profileStudentSnapshot.exists()) {
     currentProfile = profileStudentSnapshot.val().profile;
   }
+
+
   const userInput = document.getElementById("chatbot-txt").value;
+
+
   if (userInput === '') {
     return;
   }
+  else {
+    if (gptQuestion) {
+      document.getElementById("chatbot-body").innerHTML += `
+      <section class="chatbot-wrapper chatbot-parser-wrapper">
+      <div class="chatbot-parser-message">
+      <span>${userInput}</span>
+      </div>
+      <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
+      </div>
+      </section>`;
+      document.getElementById("chatbot-txt").value = '';
 
-  if (gptQuestion) {
-    document.getElementById("chatbot-body").innerHTML += `
-          <section class="chatbot-wrapper chatbot-parser-wrapper">
-          <div class="chatbot-parser-message">
-          <span>${userInput}</span>
-          </div>
-          <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
-          </div>
-          </section>`;
-    document.getElementById("chatbot-txt").value = '';
-    if (approval.includes(userInput.toLowerCase())) {
-      document.getElementById("chatbot-send-btn").style.display = "none";
-      document.getElementById("chatbot-switchgpt-btn").style.display = "block";
-      displayChatbotResponse('Okay, try sending your question again.');
-      document.getElementById("chatbot-switchgpt-btn").addEventListener("click", async function (event) {
-        try {
-          const question = document.getElementById("chatbot-txt").value;
-          document.getElementById("chatbot-body").innerHTML += `
-          <section class="chatbot-wrapper chatbot-parser-wrapper">
-          <div class="chatbot-parser-message">
-          <span>${question}</span>
-          </div>
-          <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
-          </div>
-          </section>`;
-          document.getElementById("chatbot-txt").value = '';
-          const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-            model: "gpt-4o-mini",
-            messages: [
-              { "role": "user", "content": question },
-            ],
-          }, {
-            headers: {
-              'Authorization': `Bearer ${await getApikey()}`,
-              'Content-Type': 'application/json',
+
+      if (approval.includes(userInput.toLowerCase())) {
+        document.getElementById("chatbot-send-btn").style.display = "none";
+        document.getElementById("chatbot-switchgpt-btn").style.display = "block";
+        displayChatbotResponse('Okay, try sending your question again.');
+        document.getElementById("chatbot-switchgpt-btn").addEventListener("click", async function (event) {
+          try {
+            const question = document.getElementById("chatbot-txt").value;
+
+            if (question === '') {
+              return;
             }
-          });
-          //document.getElementById("response").innerHTML = "AI: " + response.data.choices[0].message.content;
-          document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
+            else {
+              document.getElementById("chatbot-body").innerHTML += `
+            <section class="chatbot-wrapper chatbot-parser-wrapper">
+            <div class="chatbot-parser-message">
+            <span>${question}</span>
+            </div>
+            <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
+            </div>
+            </section>`;
+              document.getElementById("chatbot-txt").value = '';
+              const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+                model: "gpt-4o-mini",
+                messages: [
+                  { "role": "user", "content": question },
+                ],
+              }, {
+                headers: {
+                  'Authorization': `Bearer ${await getApikey()}`,
+                  'Content-Type': 'application/json',
+                }
+              });
+              //document.getElementById("response").innerHTML = "AI: " + response.data.choices[0].message.content;
+              document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
                       <div class="chatbot-gpt-profile">
                         <img
                           class="chatbot-gpt-img"
@@ -1551,16 +1561,13 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
                         >
                       </div>
                     </section>`;
-          document.getElementById("chatbot-send-btn").style.display = "block";
-          document.getElementById("chatbot-switchgpt-btn").style.display = "none";
-          gptQuestion = false;
-          scrollToBottom();
-        }
-        catch (error) {
-          document.getElementById("chatbot-send-btn").style.display = "block";
-          document.getElementById("chatbot-switchgpt-btn").style.display = "none";
-          gptQuestion = false;
-          document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
+
+            }
+          }
+          catch (error) {
+            document.getElementById("chatbot-send-btn").style.display = "block";
+            document.getElementById("chatbot-switchgpt-btn").style.display = "none";
+            document.getElementById("chatbot-body").innerHTML += `<section class="chatbot-wrapper chatbot-gpt-wrapper">
                       <div class="chatbot-gpt-profile">
                         <img
                           class="chatbot-gpt-img"
@@ -1572,51 +1579,60 @@ document.getElementById("chatbot-send-btn").addEventListener("click", async func
                         <span>Can't answer your question right now. Please try again later.</span>
                       </div>
                     </section>`;
+          }
+          document.getElementById("chatbot-send-btn").style.display = "block";
+          document.getElementById("chatbot-switchgpt-btn").style.display = "none";
+          gptQuestion = false;
           scrollToBottom();
-        }
-
-      });;
-    }
-    if (rejections.includes(userInput.toLowerCase())) {
-      gptQuestion = false;
-      displayChatbotResponse('Okay, Just let me know if you have any other questions.');
-      scrollToBottom();
-    }
-
-  }
-  else {
-    document.getElementById("chatbot-body").innerHTML += `
-  <section class="chatbot-wrapper chatbot-parser-wrapper">
-  <div class="chatbot-parser-message">
-  <span>${userInput}</span>
-  </div>
-  <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
-  </div>
-  </section>`;
-    document.getElementById("chatbot-txt").value = '';
-
-    const userInputLower = userInput.toLowerCase();
-    for (const trigger_input of siti_brain) {
-      const similarity = cosineSimilarity(trigger_input, userInputLower);
-      if (similarity >= 0.4) {
-        similarWords.push({
-          word: trigger_input,
-          similarity: similarity,
         });
       }
-    }
-    similarWords.sort((a, b) => b.similarity - a.similarity);
-    const highestSimilarity = similarWords[0];
-
-    if (highestSimilarity === undefined) {
-      gptQuestion = true;
-      const response = 'This seems outside my area of expertise. Would you like me to redirect you to ChatGPT?';
-      displayChatbotResponse(response);
+      else if (rejections.includes(userInput.toLowerCase())) {
+        displayChatbotResponse('Okay, Just let me know if you have any other questions.');
+        scrollToBottom();
+        gptQuestion = false;
+      }
+      else {
+        displayChatbotResponse('Didnt quite catch that. Try rephrasing your reponse.');
+        scrollToBottom();
+        gptQuestion = true;
+      }
     }
     else {
-      await getResponse(highestSimilarity.word);
+      document.getElementById("chatbot-body").innerHTML += `
+      <section class="chatbot-wrapper chatbot-parser-wrapper">
+      <div class="chatbot-parser-message">
+      <span>${userInput}</span>
+      </div>
+      <div class="chatbot-parser-profile"><img class="chatbot-parser-img" src="assets/profiles/${currentProfile}" alt=""/>
+      </div>
+      </section>`;
+      document.getElementById("chatbot-txt").value = '';
+
+      const userInputLower = userInput.toLowerCase();
+      for (const trigger_input of siti_brain) {
+        const similarity = cosineSimilarity(trigger_input, userInputLower);
+        if (similarity >= 0.4) {
+          similarWords.push({
+            word: trigger_input,
+            similarity: similarity,
+          });
+        }
+      }
+      similarWords.sort((a, b) => b.similarity - a.similarity);
+      const highestSimilarity = similarWords[0];
+
+      if (highestSimilarity === undefined) {
+        gptQuestion = true;
+        const response = 'This seems outside my area of expertise. Would you like me to redirect you to ChatGPT?';
+        displayChatbotResponse(response);
+      }
+      else {
+        await getResponse(highestSimilarity.word);
+      }
     }
   }
+
+
 
   // if (response !== null) {
   //   await getResponse(response);
