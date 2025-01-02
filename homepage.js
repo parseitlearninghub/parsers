@@ -274,6 +274,11 @@ document
     hideBodyWrapper("quiz_teacher_sec");
     revertNavIcon("homequiz_img");
     revertNavLbl("homequiz_lbl");
+
+    document.querySelectorAll('.yt-vid-wrapper').forEach(async (element) => {
+      element.style.display = 'flex';
+    });
+
   });
 document
   .getElementById("homechatbot_btn")
@@ -1873,6 +1878,9 @@ function formatDateTime(datetime) {
   return `${formattedDate}`;
 }
 
+document.getElementById('mySaves-btn').addEventListener('click', async () => {
+  await getMysaves();
+});
 
 document.querySelectorAll('.yt-vid-wrapper').forEach((element) => {
   element.addEventListener('click', (event) => {
@@ -1880,3 +1888,15 @@ document.querySelectorAll('.yt-vid-wrapper').forEach((element) => {
     window.location.href = `library.html?id=${id}&title=${event.currentTarget.querySelector('.ytlib-title').innerText}`;
   });
 });
+
+async function getMysaves() {
+  document.querySelectorAll('.yt-vid-wrapper').forEach(async (element) => {
+    const id = element.getAttribute('data-id');
+    await get(ref(database, `PARSEIT/library/videos/${id}/saves/${user_parser}`)).then(async (snapshot) => {
+      if (!snapshot.exists()) {
+        element.style.display = 'none';
+      }
+
+    });
+  });
+}
