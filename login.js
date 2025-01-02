@@ -105,40 +105,40 @@ document.getElementById("hidepass_btn").addEventListener("click", function () {
 
 document.getElementById("forgotpass_a").addEventListener("click", function () {
 
-    document.getElementById("nofeature").style.display = "flex";
-    setTimeout(() => {
-        document.getElementById("nofeature").style.display = "none";
-    }, 1000);
-    // const forgot_id = document.getElementById("id_txt").value;
-    // if (forgot_id === "") {
-    //     applyErrorStyle(document.getElementById("id_container"));
-    // }
-    // else {
+    // document.getElementById("nofeature").style.display = "flex";
+    // setTimeout(() => {
+    //     document.getElementById("nofeature").style.display = "none";
+    // }, 1000);
+    const forgot_id = document.getElementById("id_txt").value;
+    if (forgot_id === "") {
+        applyErrorStyle(document.getElementById("id_container"));
+    }
+    else {
 
-    //     get(child(dbRef, "PARSEIT/administration/students/" + forgot_id)).then((snapshot) => {
-    //         if (snapshot.exists()) {
-    //             //const email = snapshot.val().email;
-    //             sendResetEmail(forgot_id);
-    //             resetStyle(idBorder);
-    //             showMessage("Please check your email, thank you!");
-    //         } else {
-    //             get(child(dbRef, "PARSEIT/administration/teachers/" + forgot_id)).then((snapshot) => {
-    //                 if (snapshot.exists()) {
-    //                     //const email = snapshot.val().email;
-    //                     sendResetEmail(forgot_id);
-    //                     resetStyle(idBorder);
-    //                     showMessage("Please check your email, thank you!");
-    //                 } else {
-    //                     applyErrorStyle(idBorder);
-    //                     resetStyle(passwordBorder);
-    //                 }
-    //             });
-    //         }
-    //     }).catch((error) => {
+        get(child(dbRef, "PARSEIT/administration/students/" + forgot_id)).then((snapshot) => {
+            if (snapshot.exists()) {
+                //const email = snapshot.val().email;
+                sendResetEmail(forgot_id);
+                resetStyle(idBorder);
+                showMessage("Please check your email, thank you!");
+            } else {
+                get(child(dbRef, "PARSEIT/administration/teachers/" + forgot_id)).then((snapshot) => {
+                    if (snapshot.exists()) {
+                        //const email = snapshot.val().email;
+                        sendResetEmail(forgot_id);
+                        resetStyle(idBorder);
+                        showMessage("Please check your email, thank you!");
+                    } else {
+                        applyErrorStyle(idBorder);
+                        resetStyle(passwordBorder);
+                    }
+                });
+            }
+        }).catch((error) => {
 
-    //     });
+        });
 
-    // }
+    }
 
 });
 

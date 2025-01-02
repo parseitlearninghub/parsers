@@ -165,18 +165,18 @@ function sendVerificationCode(id, email, code) {
     })();
 
     //for testing purposes
-    document.getElementById("verificationcode_txt").value = code;
+    //document.getElementById("verificationcode_txt").value = code;
 
     updateDBVerification(id, code, type); //this supposed to go
 
-    // emailjs.send('service_g8cli5d', 'template_b0rhzue', {
-    //     to_name: email,
-    //     message: code,
-    // }).then((response) => {
-    //     updateDBVerification(id, code);
-    // }).catch((error) => {
-    //     console.log('FAILED...', error);
-    // });
+    emailjs.send('service_g8cli5d', 'template_b0rhzue', {
+        to_name: email,
+        message: code,
+    }).then((response) => {
+        updateDBVerification(id, code);
+    }).catch((error) => {
+        console.log('FAILED...', error);
+    });
 
 }
 

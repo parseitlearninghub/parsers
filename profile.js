@@ -32,12 +32,14 @@ let user_parser = localStorage.getItem("user-parser");
 await setScreenSize(window.innerWidth, window.innerHeight);
 window.addEventListener("load", async function () {
     document.getElementById("loading_animation_div").style.display = "none";
-    if (active_parser_type === "teacher") {
-        document.getElementById("teacher-year").style.display = "none";
-        document.getElementById("teacher-section").style.display = "none";
-        document.getElementById("span-yearlvl").style.display = "none";
-        document.getElementById("span-section").style.display = "none";
-    }
+    // if (active_parser_type === "teacher") {
+    //     document.getElementById("teacher-year").style.display = "none";
+    //     document.getElementById("teacher-section").style.display = "none";
+    //     document.getElementById("span-yearlvl").style.display = "none";
+    //     document.getElementById("span-section").style.display = "none";
+    // }
+    document.getElementById("span-username").style.display = "flex";
+    document.getElementById("span-tag").style.display = "flex";
     await getCreds(user_parser, active_parser_type);
 });
 
@@ -304,3 +306,89 @@ document.addEventListener('touchend', async (event) => {
         }, 600);
     }
 });
+getPosts();
+async function getPosts() {
+    const commentsRef = ref(database, `PARSEIT/community/posts/`);
+    const container = document.getElementById("profile-posts");
+    onValue(commentsRef, async (snapshot) => {
+        container.innerHTML = ``;
+        if (snapshot.exists()) {
+            for (const post in snapshot.val()) {
+                const id = snapshot.val()[post].student_id;
+                if (id === user_parser) {
+                    console.log(id);
+                    const username = snapshot.val()[post].username;
+                    const context = snapshot.val()[post].description;
+                    const time = formatTime(snapshot.val()[post].time);
+
+                    let currentProfile = 'default_profile.png';
+                    // Fetch the profile asynchronously
+                    const profileStudentRef = ref(database, `PARSEIT/administration/students/${id}/`);
+                    const profileStudentSnapshot = await get(profileStudentRef);
+
+                    if (profileStudentSnapshot.exists()) {
+                        currentProfile = profileStudentSnapshot.val().profile;
+                    } else {
+                        const profileTeacherRef = ref(database, `PARSEIT/administration/teachers/${id}/`);
+                        const profileTeacherSnapshot = await get(profileTeacherRef);
+
+                        if (profileTeacherSnapshot.exists()) {
+                            currentProfile = profileTeacherSnapshot.val().profile || 'default_profile.png';
+                        }
+                    }
+
+                    container.innerHTML += `
+                    <section class="post-wrapper-cont">
+                    <section class="post-top">
+                    <section class="img-side">
+                        <img
+                        class="user-img"
+                        src="assets/profiles/${currentProfile}"
+                        alt=""
+                        />
+                    </section>
+                    <section class="user-side">
+                        <span class="username-post">@${username}</span>
+                        <span class="date-post">${time}</span>
+                    </section>
+                    </section>
+                    <section class="post-body">${context}</section>
+                    <section class="post-bottom" onclick="window.location.href='answers.html?postID=${post}'">View Answers</section>
+                    </section>`;
+
+                }
+                container.innerHTML += `<section class="fillers"></section><section class="fillers"></section>`;
+            }
+        }
+        else {
+            container.innerHTML += `
+            <section class="comment-box">
+                <div class="comment-wrapper nocomment">
+                    <span class="nocomment">No Comment Yet...</span>
+                </div>
+            </section>`;
+        }
+
+    });
+}
+
+function formatTime(timestamp) {
+    // Ensure the timestamp is a valid number
+    const timestampNumber = Number(timestamp);
+    if (isNaN(timestampNumber)) {
+        console.error("Invalid timestamp:", timestamp);
+        return "Invalid time";
+    }
+
+    const now = new Date(timestampNumber);
+
+    return new Intl.DateTimeFormat("en-US", {
+        timeZone: "Asia/Manila", // Specifies Philippine Time
+        month: "long",
+        day: "2-digit",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+    }).format(now);
+}
