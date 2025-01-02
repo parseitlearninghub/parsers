@@ -83,39 +83,37 @@ document.getElementById("sendcomment-btn").addEventListener("click", async funct
 
 
 async function getComments() {
-    await get(ref(database, `PARSEIT/library/videos/${video_id}/comments/`)).then(async (snapshot) => {
-        if (snapshot.exists()) {
-            const container = document.getElementById("comments-container");
-            container.innerHTML = ``;
-            for (const comment in snapshot.val()) {
-                const name = snapshot.val()[comment].name;
-                const context = snapshot.val()[comment].comment;
-                container.innerHTML += `<section class="comment-box">
-                <div class="comment-wrapper">
-                    <span class="comment-name">${name}</span>
-                    <span class="comment"
-                    >${context}</span
-                    >
-                </div>
-                </section>
-                        `
+    const commentsRef = ref(database, `PARSEIT/library/videos/${video_id}/comments/`);
+    const container = document.getElementById("comments-container");
 
+    onValue(commentsRef, (snapshot) => {
+        container.innerHTML = ``; // Clear the container first
+
+        if (snapshot.exists()) {
+            const comments = snapshot.val();
+
+            for (const comment in comments) {
+                const name = comments[comment].name;
+                const context = comments[comment].comment;
+                container.innerHTML += `
+                <section class="comment-box">
+                    <div class="comment-wrapper">
+                        <span class="comment-name">${name}</span>
+                        <span class="comment">${context}</span>
+                    </div>
+                </section>`;
             }
-        }
-        else {
-            const container = document.getElementById("comments-container");
-            container.innerHTML = ``;
-            container.innerHTML += `<section class="comment-box ">
+
+            container.innerHTML += `<section class="fillers"></section><section class="fillers"></section>`;
+        } else {
+            container.innerHTML += `
+            <section class="comment-box">
                 <div class="comment-wrapper nocomment">
-                    
-                    <span class="nocomment"
-                    >No Comment Yet...</span
-                    >
+                    <span class="nocomment">No Comment Yet...</span>
                 </div>
-                </section>
-                        `
+            </section>`;
         }
-    })
+    });
 }
 
 async function getSaves() {
