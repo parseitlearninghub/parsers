@@ -313,13 +313,17 @@ async function getPosts() {
     onValue(commentsRef, async (snapshot) => {
         container.innerHTML = ``;
         if (snapshot.exists()) {
-            for (const post in snapshot.val()) {
-                const id = snapshot.val()[post].student_id;
+            const data = snapshot.val();
+            const dataArray = Object.entries(data);
+            const reversedArray = dataArray.reverse();
+            const reversedData = Object.fromEntries(reversedArray);
+            for (const post in reversedData) {
+                const id = reversedData[post].student_id;
                 if (id === user_parser) {
                     console.log(id);
-                    const username = snapshot.val()[post].username;
-                    const context = snapshot.val()[post].description;
-                    const time = formatTime(snapshot.val()[post].time);
+                    const username = reversedData[post].username;
+                    const context = reversedData[post].description;
+                    const time = formatTime(reversedData[post].time);
 
                     let currentProfile = 'default_profile.png';
                     // Fetch the profile asynchronously
