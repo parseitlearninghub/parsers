@@ -128,7 +128,6 @@ async function getParseroomMessages() {
             if (message.sender_profile !== `${active_profile}`) {
               updateSenderProfile(parseroom_id, user_parser, active_profile);
             }
-
             if (message.to === "everyone") {
               appendMessageHTML += `
                         <div class="parseroom-message">
@@ -137,17 +136,6 @@ async function getParseroomMessages() {
                         <section class="p-description p-description-me"> ${message.description}</section>
                         </section>
                         <section class="p-profile p-profile-me">
-                        <img id="parser-profile" class="parser-profile" src='${active_profile}' alt="" />
-                        </section>
-                        </div>`;
-            } else {
-              appendMessageHTML += `
-                        <div class="parseroom-message">
-                        <section class="p-message p-message-me" style="display: flex; align-items: center; justify-content: center;">
-                        <section class="p-username p-username-me" style="display: none;">@${message.from_username}</section>
-                        <section class="p-description p-description-me ping-whisper-me">You whispered to @${message.to_username}</section>
-                        </section>
-                        <section class="p-profile p-profile-me" style="display: none;">
                         <img id="parser-profile" class="parser-profile" src='${active_profile}' alt="" />
                         </section>
                         </div>`;
@@ -161,80 +149,14 @@ async function getParseroomMessages() {
                         </section>
                         <section class="p-message">
                         <section class="p-username">@${message.from_username}</section>
-                        <section class="p-description" onclick="
-                        document.getElementById('parsermessage-txt').value += ' @${message.from_username} ';
-                        "
+                        <section class="p-description" 
                         >${message.description}</section>
                         </section>
                         </div>`;
-            } else {
-              if (message.to === user_parser) {
-                appendMessageHTML += `
-                        <div class="parseroom-message parseroom-message-others" style="display: flex; align-items: center; justify-content: center;">
-                        <section class="p-profile" style="display: none;">
-                        <img id="parser-profile" class="parser-profile" src='${message.sender_profile}' alt="" />
-                        </section>
-                        <section class="p-message" style="display: flex; align-items: center; justify-content: center;">
-                        <section class="p-username" style="display: none;">@${message.from_username}</section>
-                        <section class="p-description ping-whisper" style="width: 100%;" onclick="
-                        document.getElementById('parsermessage-txt').value += ' @${message.from_username} ';
-                        "
-                        >@${message.from_username} whispered to you</section>
-                        </section>
-                        </div>`;
-              }
             }
           }
         });
         messagecont.innerHTML = appendMessageHTML;
-
-        let startX = 0;
-        let currentX = 0;
-        let isSwiped = false;
-
-        document.querySelectorAll('.parseroom-message-others').forEach(element => {
-          element.addEventListener('touchstart', (e) => {
-            startX = e.touches[0].clientX;
-            isSwiped = false;
-          });
-
-          element.addEventListener('touchmove', (e) => {
-            currentX = e.touches[0].clientX;
-            const deltaX = currentX - startX;
-
-            if (deltaX > 0) {
-              element.style.transform = `translateX(${deltaX}px)`;
-            }
-          });
-          element.addEventListener('touchend', () => {
-            const deltaX = currentX - startX;
-            if (deltaX > 100) {
-              isSwiped = true;
-              element.style.transition = 'transform 0.3s ease, opacity 0.3s ease';
-              element.style.transform = 'translateX(0%)';
-              setTimeout(async () => {
-                const usernameElement = element.querySelector('.p-username');
-                if (usernameElement) {
-                  const username = usernameElement.textContent.trim();
-                  document.getElementById('parsermessage-txt').value += username + ' ';
-                  let username_trim = extractUsername(username);
-                  let id = await getparser_id(username_trim);
-                  if (id !== null) {
-                    localStorage.setItem("active-whisper-id", id);
-                    showPrivateMessages();
-                    showWhisperTheme();
-                  }
-                }
-              }, 300);
-            } else {
-              element.style.transform = `translateX(0)`; // Reset position
-            }
-
-            startX = 0;
-            currentX = 0;
-          });
-        });
-
         scrollToBottom();
       } else {
       }
