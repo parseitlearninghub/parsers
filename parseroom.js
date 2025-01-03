@@ -1133,3 +1133,152 @@ document.getElementById("widget-texteditor").addEventListener("click", () => {
 //   }
 
 // }
+
+getMembersForDiscussionRoom();
+let checkedMembers = [];
+async function getMembersForDiscussionRoom() {
+  const acadref = localStorage.getItem("parseroom-acadref");
+  const yearlvl = localStorage.getItem("parseroom-yearlvl");
+  const sem = localStorage.getItem("parseroom-sem");
+  const subject = localStorage.getItem("parseroom-code");
+  const section = localStorage.getItem("parseroom-section");
+  const discussRoomBody = document.getElementById('creatediscussroom-body');
+  const membersRef = ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members`);
+  onValue(membersRef, async (membersRefSnapshot) => {
+    for (const studentid in membersRefSnapshot.val()) {
+      const section = document.createElement('section');
+      section.classList.add('discuss-member');
+      const checkbox = document.createElement('input');
+      checkbox.type = 'checkbox';
+      checkbox.classList.add('member-chckbx');
+      const checkboxId = `member-chckbx-${studentid}`;
+      checkbox.id = checkboxId;
+      const label = document.createElement('label');
+      label.classList.add('member-chckbx-lbl');
+      label.setAttribute('for', checkboxId);
+      label.textContent = await getFullname(studentid);
+
+      section.appendChild(checkbox);
+      section.appendChild(label);
+      discussRoomBody.appendChild(section);
+
+      checkbox.addEventListener('change', () => {
+        if (checkbox.checked) {
+          checkedMembers.push(studentid);
+        } else {
+
+          checkedMembers = checkedMembers.filter((member) => member !== studentid);
+        }
+      });
+      if (studentid === user_parser) {
+        checkbox.checked = true;
+        checkedMembers.push(studentid);
+        checkbox.disabled = true;
+      }
+    }
+
+  });
+
+}
+
+async function getFullname(studentid) {
+  const dbRef = ref(database);
+  return await get(child(dbRef, "PARSEIT/administration/students/" + studentid)).then((snapshot) => {
+    if (snapshot.exists()) {
+      if (snapshot.val().suffix === "none") {
+        return `${snapshot.val().lastname}, ${snapshot.val().firstname}`
+      }
+      else {
+        return `${snapshot.val().lastname}, ${snapshot.val().firstname} ${snapshot.val().suffix}`
+      }
+    }
+  });
+}
+
+document.getElementById("check_discussionroom").addEventListener("click", () => {
+  document.getElementById("creatediscussroom-container").style.display = "flex";
+  let startY = 0;
+  let endY = 0;
+  document.addEventListener("touchstart", (event) => {
+    startY = event.touches[0].clientY;
+  });
+  document.addEventListener("touchend", (event) => {
+    endY = event.changedTouches[0].clientY;
+    if (endY - startY > 300) {
+      document.getElementById("creatediscussroom-container").style.display = "none";
+    }
+  });
+
+});
+
+document.getElementById("createroombtn").addEventListener("click", async () => {
+  const acadref = localStorage.getItem("parseroom-acadref");
+  const subject = localStorage.getItem("parseroom-code");
+  const sem = localStorage.getItem("parseroom-sem");
+  const yearlvl = localStorage.getItem("parseroom-yearlvl");
+  const section = localStorage.getItem("parseroom-section");
+  const groupname = document.getElementById("discussroomname-txt").value;
+  const discussCode = user_parser + Date.now().toString() + acadref + subject + section;
+  if (checkedMembers.length > 2 && groupname !== '') {
+    await update(ref(database, `PARSEIT/discussionrooms/${acadref}/${yearlvl}/${sem}/${subject}/${section}`), {
+      [discussCode.replace(/\s+/g, "")]: {
+        name: groupname,
+        members: checkedMembers,
+      }
+    }).then(() => {
+      document.getElementById("creatediscussroom-container").style.display = "none";
+    })
+  }
+});
+getDiscussionRooms()
+async function getDiscussionRooms() {
+  const discussRoomBody = document.getElementById('details-parseroom-discussionroom');
+  const acadref = localStorage.getItem("parseroom-acadref");
+  const yearlvl = localStorage.getItem("parseroom-yearlvl");
+  const sem = localStorage.getItem("parseroom-sem");
+  const subject = localStorage.getItem("parseroom-code");
+  const section = localStorage.getItem("parseroom-section");
+
+  const roomsRef = ref(database, `PARSEIT/discussionrooms/${acadref}/${yearlvl}/${sem}/${subject}/${section}`);
+  onValue(roomsRef, async (roomsRefSnapshot) => {
+    const roomsData = roomsRefSnapshot.val();
+    discussRoomBody.innerHTML = '';
+    for (const roomid in roomsData) {
+      const roomData = roomsData[roomid];
+      //console.log(`Room ID: ${roomid}`);
+      //console.log(`Room Data:`, roomData);
+
+      if (roomData.members) {
+        //console.log(`Members of Room ${roomid}:`, roomData.members);
+        for (const memberId in roomData.members) {
+          //console.log(`Member ID: ${memberId}`);
+          //console.log(`Member Data:`, roomData.members[memberId]);
+
+          if (roomData.members[memberId] === user_parser) {
+            const groupname = roomsData[roomid].name;
+
+            const span = document.createElement('span');
+            span.classList.add('title-discussionroom');
+
+            const img = document.createElement('img');
+            img.classList.add('icon-details-discussionroom');
+            img.src = 'assets/icons/comment-dots-solid.svg';
+            const textNode = document.createTextNode(groupname);
+
+            span.appendChild(img);
+            span.appendChild(textNode);
+
+            span.addEventListener('click', () => {
+              window.location.href = `discussionroom.html?discussionroom=${roomid}&name=${groupname}`;
+            });
+
+            discussRoomBody.appendChild(span);
+          }
+        }
+      } else {
+        console.log(`No members found in Room ${roomid}`);
+      }
+    }
+  });
+
+}
