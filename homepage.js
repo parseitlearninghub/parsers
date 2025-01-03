@@ -210,6 +210,7 @@ document.getElementById("homelobby_btn").addEventListener("click", function () {
   selectNavLbl("homelobby_lbl");
   changeHomeLbl("lobby_title", "Home");
 
+  document.getElementById("bookmark-bubble").style.animation = "resetBubble 0.3s ease-in-out forwards";
   //revert
   hideBodyWrapper("game_student_sec");
   revertNavIcon("homegame_img");
@@ -232,6 +233,7 @@ document.getElementById("homegame_btn").addEventListener("click", function () {
   selectNavIcon("homegame_img");
   selectNavLbl("homegame_lbl");
   changeHomeLbl("lobby_title", "Game");
+  document.getElementById("bookmark-bubble").style.animation = "resetBubble 0.3s ease-in-out forwards";
 
   //revert
   hideBodyWrapper("home_all_sec");
@@ -257,6 +259,7 @@ document
     selectNavIcon("homelibrary_img");
     selectNavLbl("homelibrary_lbl");
     changeHomeLbl("lobby_title", "Library");
+    document.getElementById("bookmark-bubble").style.animation = "resetBubble 0.3s ease-in-out forwards";
 
     //revert
     hideBodyWrapper("home_all_sec");
@@ -291,7 +294,7 @@ document
     selectNavIcon("homechatbot_img");
     selectNavLbl("homechatbot_lbl");
     changeHomeLbl("lobby_title", "ChatBot");
-
+    document.getElementById("bookmark-bubble").style.animation = "moveBubble 0.3s ease-in-out forwards";
     //revert
     hideBodyWrapper("home_all_sec");
     revertNavIcon("homelobby_img");
@@ -318,7 +321,7 @@ document
     selectNavIcon("homelobby_imgx");
     selectNavLbl("homelobby_lblx");
     changeHomeLbl("lobby_title", "Home");
-
+    document.getElementById("bookmark-bubble").style.animation = "resetBubble 0.3s ease-in-out forwards";
     //revert
     hideBodyWrapper("honors_teacher_sec");
     revertNavIcon("homehonors_img");

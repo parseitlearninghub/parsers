@@ -1323,7 +1323,6 @@ body {
 
 .bookmark-bubble {
   position: fixed;
-
   bottom: 75px;
   right: 25px;
   width: 60px;
@@ -1342,6 +1341,24 @@ body {
 
 .bookmark-bubble:hover {
   transform: scale(1.1);
+}
+
+@keyframes moveBubble {
+  0% {
+    bottom: 75px;
+  }
+  100% {
+    bottom: 140px;
+  }
+}
+
+@keyframes resetBubble {
+  0% {
+    bottom: 140px;
+  }
+  100% {
+    bottom: 75px;
+  }
 }
 
 .bubble-icon {
