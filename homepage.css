@@ -1552,18 +1552,121 @@ body {
 
 .body-honorroll {
   height: 100%;
-  background-color: tomato;
+  background-color: transparent;
   width: 100%;
 }
 
-.addcluster-btn {
+.header-honorroll {
+  height: auto;
+}
+
+.lbl-honor-roll {
+  margin-top: 15px;
+}
+
+.honorroll-nav {
+  margin-top: 15px;
+  height: 40px;
+  width: 100%;
+  background-color: transparent;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.honorroll-myclusters {
+  display: none;
+  height: 100%;
+  width: 100%;
+  background-color: transparent;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.honorroll-mydrafts {
+  display: none;
+  height: 100%;
+  width: 100%;
+  background-color: red;
+  overflow: scroll;
+  scrollbar-width: none;
+}
+
+.honor-fillers {
+  height: 120px;
+  width: 100%;
+  background-color: yellowgreen;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+.honorroll-btn {
   width: 100%;
   height: 40px;
   background-color: transparent;
-  border-radius: 4px;
   font-size: 16px;
   font-family: Inter-Regular;
-  color: #f30505;
+  color: #000000;
+  border: none;
+  border-bottom: 4px solid #f30505;
+  transition: all 0.2s ease-in-out;
+}
+
+.honor-mycluster-header {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.honor-mycluster-txt {
+  width: 100%;
+  height: 45px;
+  background-color: transparent;
+  font-size: 14px;
+  font-family: Inter-Regular;
+  box-sizing: border-box;
+  border: 0.3px solid #bebebe;
+  border-radius: 4px;
+  padding-left: 10px;
+}
+
+.honor-mycluster-txt:focus {
+  outline: none;
+}
+
+.honor-mycluster-options {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
   margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.honor-mycluster-options-btn {
+  width: 100%;
+  height: 40px;
+  border-radius: 4px;
+  background-color: transparent;
   border: 0.3px solid #f30505;
+  font-size: 12px;
+  font-family: Inter-Regular;
+  color: #f30505;
+}
+
+.honor-mycluster-list-wrapper {
+  display: flex;
+  justify-content: flex-start;
+  align-items: baseline;
+  margin-bottom: 15px;
+}
+
+.honor-mycluster-radio {
+  margin-right: 10px;
+  accent-color: #f30505;
 }

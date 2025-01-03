@@ -346,6 +346,11 @@ document
     selectNavIcon("homehonors_img");
     selectNavLbl("homehonors_lbl");
     changeHomeLbl("lobby_title", "Honors");
+    document.getElementById("honorroll-myclusters").style.display = "block";
+    document.getElementById("honorroll-mydrafts").style.display = "none";
+    document.getElementById("honorroll-cluster-btn").style.borderBottom = "4px solid #f30505";
+    document.getElementById("honorroll-draft-btn").style.border = "none";
+
 
     //revert
     hideBodyWrapper("home_all_sec");
@@ -2160,3 +2165,18 @@ function cosineSimilarity(str1, str2) {
   return dotProduct / (magnitude1 * magnitude2);
 }
 
+
+
+document.getElementById("honorroll-cluster-btn").addEventListener("click", function () {
+  document.getElementById("honorroll-myclusters").style.display = "block";
+  document.getElementById("honorroll-mydrafts").style.display = "none";
+  document.getElementById("honorroll-cluster-btn").style.borderBottom = "4px solid #f30505";
+  document.getElementById("honorroll-draft-btn").style.border = "none";
+});
+
+document.getElementById("honorroll-draft-btn").addEventListener("click", function () {
+  document.getElementById("honorroll-myclusters").style.display = "none";
+  document.getElementById("honorroll-mydrafts").style.display = "block";
+  document.getElementById("honorroll-cluster-btn").style.border = "none";
+  document.getElementById("honorroll-draft-btn").style.borderBottom = "4px solid #f30505";
+});

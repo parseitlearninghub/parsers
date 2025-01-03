@@ -403,13 +403,61 @@
           </section>
         </section>
         <section class="body-nav-wrapper" id="honors_teacher_sec">
-          <section class="header-share">
-            <span class="lbl-share">Generate Honor Roll.</span>
+          <section class="header-share header-honorroll">
+            <span class="lbl-share lbl-honor-roll">Generate Honor Roll.</span>
             <span class="lbl-subshare"
               >Create Dean's listers for your class.</span
             >
+            <section class="honorroll-nav">
+              <button class="honorroll-btn" id="honorroll-cluster-btn">
+                My Clusters
+              </button>
+              <button class="honorroll-btn" id="honorroll-draft-btn">
+                My Drafts
+              </button>
+            </section>
           </section>
-          <section class="body-honorroll"></section>
+          <section class="body-honorroll">
+            <section class="honorroll-myclusters" id="honorroll-myclusters">
+              <section class="honor-mycluster-header">
+                <input
+                  type="text"
+                  class="honor-mycluster-txt"
+                  placeholder="Enter Cluster Name"
+                />
+                <section class="honor-mycluster-options">
+                  <button class="honor-mycluster-options-btn">Set</button>
+                  <button class="honor-mycluster-options-btn">Add</button>
+                  <button class="honor-mycluster-options-btn">Delete</button>
+                  <button class="honor-mycluster-options-btn">Lock</button>
+                </section>
+              </section>
+              <section class="honor-mycluster-list" id="honor-mycluster-list">
+                <section class="honor-mycluster-list-wrapper">
+                  <input
+                    type="radio"
+                    class="honor-mycluster-radio"
+                    id="honor-mycluster-radio"
+                  />
+                  <label
+                    for="honor-mycluster-radio"
+                    class="honor-mycluster-radio-label"
+                    >Cluster Name</label
+                  >
+                </section>
+              </section>
+              <section class="honor-fillers"></section>
+            </section>
+
+            <section class="honorroll-mydrafts" id="honorroll-mydrafts">
+              <section class="honor-fillers"></section>
+              <section class="honor-fillers"></section>
+              <section class="honor-fillers"></section>
+              <section class="honor-fillers"></section>
+              <section class="honor-fillers"></section>
+              <section class="honor-fillers"></section>
+            </section>
+          </section>
         </section>
 
         <section class="body-nav-wrapper" id="share_teacher_sec">
