@@ -57,6 +57,7 @@ window.addEventListener("load", async function () {
   scrollToBottom();
   if (user_parser_type === "teacher") {
     document.getElementById("monitor-btn").style.display = "flex";
+    document.getElementById("check_discussionroom").style.display = "none";
   }
   // getTeacherFullname(
   //   localStorage.getItem("forparseroom-acadref"),
