@@ -593,22 +593,27 @@ document.getElementById("show-myjourney-btn").addEventListener("click", async ()
     const acadRef = document.getElementById("myjourney-select-acad").value;
     //const yearlvl = document.getElementById("myjourney-select-yearlvl").value;
     const sem = document.getElementById("myjourney-select-sem").value;
+    const parentElement = document.getElementById('myjourney-result-container');
 
     if (acadRef === '' && sem === '') {
         pdfFiles = [];
+        parentElement.innerHTML = ''; // Clear previous content
         previewMyJourney();
     }
     if (acadRef !== '' && sem === '') {
         pdfFiles = [];
+        parentElement.innerHTML = ''; // Clear previous content
         previewMyJourneyByAcad(acadRef);
     }
     if (acadRef === '' && sem !== '') {
         pdfFiles = [];
+        parentElement.innerHTML = ''; // Clear previous content
         previewMyJourneyBySem(sem);
     }
 
     if (acadRef !== '' && sem !== '') {
         pdfFiles = [];
+        parentElement.innerHTML = ''; // Clear previous content
         previewMyJourneyByAll(acadRef, sem);
     }
 

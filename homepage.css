@@ -505,7 +505,7 @@ body {
 }
 
 #honors_teacher_sec {
-  background-color: blue;
+  background-color: transparent;
 }
 #quiz_teacher_sec {
   background-color: pink;
@@ -1548,4 +1548,22 @@ body {
 
 .ytt-icon {
   margin-left: -10px;
+}
+
+.body-honorroll {
+  height: 100%;
+  background-color: tomato;
+  width: 100%;
+}
+
+.addcluster-btn {
+  width: 100%;
+  height: 40px;
+  background-color: transparent;
+  border-radius: 4px;
+  font-size: 16px;
+  font-family: Inter-Regular;
+  color: #f30505;
+  margin-top: 10px;
+  border: 0.3px solid #f30505;
 }
