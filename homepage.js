@@ -10,7 +10,8 @@ import {
   limitToLast,
   push,
   set,
-  remove
+  remove,
+  update
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
 const firebaseConfig = {
   apiKey: "AIzaSyCFqgbA_t3EBVO21nW70umJOHX3UdRr9MY",
@@ -2180,3 +2181,129 @@ document.getElementById("honorroll-draft-btn").addEventListener("click", functio
   document.getElementById("honorroll-cluster-btn").style.border = "none";
   document.getElementById("honorroll-draft-btn").style.borderBottom = "4px solid #f30505";
 });
+
+
+document.getElementById("honor-mycluster-add-btn").addEventListener("click", async function () {
+  const clusterName = document.getElementById("honor-mycluster-txt").value;
+  const clusterId = `${user_parser}-` + Date.now().toString();
+  if (clusterName === '') {
+    return;
+  }
+  else {
+    await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${clusterId}`), {
+      name: clusterName,
+      locked: false,
+
+    });
+
+    await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/`), {
+      active: clusterId,
+    });
+    document.getElementById("honor-mycluster-txt").value = '';
+    getHonorCluster();
+  }
+});
+
+document.getElementById("honor-mycluster-lock-btn").addEventListener("click", async () => {
+  const clusterId = await getActiveCluster();
+  const activeLock = await getActiveLock();
+  if (activeLock) {
+    await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${clusterId}/`), {
+      locked: false,
+    });
+  }
+  else {
+    await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${clusterId}/`), {
+      locked: true,
+    });
+  }
+  await getActiveLock();
+});
+
+document.getElementById("honor-mycluster-rename-btn").addEventListener("blur", async () => {
+  const clusterName = document.getElementById("honor-mycluster-txt").value;
+  const clusterId = await getActiveCluster();
+  console.log(clusterId);
+  await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll`), {
+    active: clusterId,
+  });
+});
+
+document.getElementById("honor-mycluster-delete-btn").addEventListener("click", async function () {
+  const clusterId = await getActiveCluster();
+  await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${clusterId}`));
+  await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/active`));
+  getHonorCluster();
+  getActiveLock();
+});
+
+
+getActiveCluster();
+async function getActiveCluster() {
+  return await get(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/active`)).then(async (snapshot) => {
+    if (!snapshot.exists()) {
+      document.getElementById("honorroll-draft-btn").disabled = true;
+      document.getElementById("honorroll-draft-btn").style.color = '#dcdcdc';
+    }
+    else {
+      document.getElementById("honorroll-draft-btn").disabled = false;
+      document.getElementById("honorroll-draft-btn").style.color = 'black';
+
+    }
+    return await snapshot.val();
+  });
+}
+getActiveLock();
+async function getActiveLock() {
+  const clusterId = await getActiveCluster();
+  return await get(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${clusterId}/locked`)).then(async (snapshot) => {
+    document.getElementById("honor-mycluster-lock-btn").innerText = 'Lock';
+    if (snapshot.val() === true) {
+      document.getElementById("honor-mycluster-lock-btn").innerText = 'Unlock';
+    }
+    return await snapshot.val();
+  });
+}
+getHonorCluster();
+async function getHonorCluster() {
+  await get(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters`)).then(async (snapshot) => {
+
+    if (snapshot.exists()) {
+      const clusterData = snapshot.val();
+      const container = document.getElementById('honor-mycluster-list');
+      container.innerHTML = '';
+      for (const cluster in clusterData) {
+
+        const clusterElement = document.createElement('section');
+        clusterElement.className = 'honor-mycluster-list-wrapper';
+        const clusterName = document.createElement('input');
+        clusterName.className = 'honor-mycluster-radio';
+        clusterName.type = 'radio';
+        clusterName.id = `honor-mycluster-radio-${cluster}`;
+        clusterName.name = 'cluster';
+        clusterName.value = cluster;
+        clusterElement.appendChild(clusterName);
+        const clusterNameSpan = document.createElement('label');
+        clusterNameSpan.className = 'honor-mycluster-radio-label';
+        clusterNameSpan.innerText = clusterData[cluster].name;
+        clusterNameSpan.setAttribute('for', clusterName.id);
+        clusterElement.appendChild(clusterNameSpan);
+        clusterNameSpan.addEventListener('click', async function () {
+          await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/`), {
+            active: cluster,
+          });
+          getActiveLock();
+        });
+        if (cluster === await getActiveCluster()) {
+          clusterName.checked = true;
+          getActiveLock();
+        }
+        container.appendChild(clusterElement);
+      }
+    }
+    else {
+      const container = document.getElementById('honor-mycluster-list');
+      container.innerHTML = '';
+    }
+  });
+}

@@ -1624,7 +1624,7 @@ body {
 
 .honor-mycluster-txt {
   width: 100%;
-  height: 45px;
+  height: 40px;
   background-color: transparent;
   font-size: 14px;
   font-family: Inter-Regular;
@@ -1669,4 +1669,18 @@ body {
 .honor-mycluster-radio {
   margin-right: 10px;
   accent-color: #f30505;
+}
+.honors-rename {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+#honor-mycluster-add-btn {
+  box-sizing: border-box;
+  width: 30%;
+  border: none;
+  background-color: #f30505;
+  color: #fefefe;
 }
