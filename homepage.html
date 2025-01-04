@@ -473,12 +473,55 @@
             </section>
 
             <section class="honorroll-mydrafts" id="honorroll-mydrafts">
-              <section class="honor-fillers"></section>
-              <section class="honor-fillers"></section>
-              <section class="honor-fillers"></section>
-              <section class="honor-fillers"></section>
-              <section class="honor-fillers"></section>
-              <section class="honor-fillers"></section>
+              <section class="honor-mydrafts-wrapper">
+                <section class="honor-mydraft-options-top">
+                  <section class="honor-mydraft-options-upper">
+                    <select
+                      type="dropdown"
+                      class="acad-mydraft-drp"
+                      id="acad-mydraft-drp"
+                      disabled
+                    ></select>
+                    <select
+                      type="dropdown"
+                      class="acad-mydraft-drp"
+                      id="sem-mydraft-drp"
+                      disabled
+                    ></select>
+                  </section>
+                  <section class="honor-mydraft-options-upper">
+                    <select
+                      type="dropdown"
+                      class="acad-mydraft-drp"
+                      id="theme-mydraft-drp"
+                    ></select>
+                    <div class="acad-mydraft-drp" id="generate-mydraft-btn">
+                      Generate
+                    </div>
+                  </section>
+                  <section class="honor-mydraft-options-upper">
+                    <input
+                      type="text"
+                      class="acad-mydraft-txt"
+                      id="honoradd-mydraft-txt"
+                      placeholder="Enter Student ID"
+                    />
+                    <div
+                      class="addstudenthonor-mydraft-btn"
+                      id="honoradd-mydraft-btn"
+                    >
+                      +
+                    </div>
+                    <div
+                      class="addstudenthonor-mydraft-btn"
+                      id="honordelete-mydraft-btn"
+                    >
+                      -
+                    </div>
+                  </section>
+                </section>
+                <section class="honor-mydraft-body"></section>
+              </section>
             </section>
           </section>
         </section>
@@ -609,11 +652,11 @@
           <div class="lobby-icon-wrapper" id="homequiz_btn">
             <img
               class="homelobby_icon"
-              src="assets/icons/pen-clip-solid.svg"
+              src="assets/icons/user-graduate-solid.svg"
               alt=""
               id="homequiz_img"
             />
-            <span class="homelobby_icon_lbl" id="homequiz_lbl">Quiz</span>
+            <span class="homelobby_icon_lbl" id="homequiz_lbl">Grades</span>
           </div>
         </nav>
       </footer>

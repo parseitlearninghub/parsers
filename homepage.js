@@ -2175,11 +2175,22 @@ document.getElementById("honorroll-cluster-btn").addEventListener("click", funct
   document.getElementById("honorroll-draft-btn").style.border = "none";
 });
 
-document.getElementById("honorroll-draft-btn").addEventListener("click", function () {
+document.getElementById("honorroll-draft-btn").addEventListener("click", async function () {
   document.getElementById("honorroll-myclusters").style.display = "none";
   document.getElementById("honorroll-mydrafts").style.display = "block";
   document.getElementById("honorroll-cluster-btn").style.border = "none";
   document.getElementById("honorroll-draft-btn").style.borderBottom = "4px solid #f30505";
+
+  const lock = await getActiveLock();
+  console.log(lock);
+  if (lock) {
+    document.getElementById("acad-mydraft-drp").disabled = true;
+    document.getElementById("sem-mydraft-drp").disabled = true;
+  }
+  else {
+    document.getElementById("acad-mydraft-drp").disabled = false;
+    document.getElementById("sem-mydraft-drp").disabled = false;
+  }
 });
 
 
@@ -2304,6 +2315,68 @@ async function getHonorCluster() {
     else {
       const container = document.getElementById('honor-mycluster-list');
       container.innerHTML = '';
+    }
+  });
+}
+
+function populateDropdown(dropdownId, options, type) {
+  const dropdown = document.getElementById(dropdownId);
+  dropdown.innerHTML = '';
+
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+
+  if (type === 'academic') {
+    defaultOption.textContent = 'Academic Year';
+  } else if (type === 'theme') {
+    defaultOption.textContent = 'Theme';
+  }
+  else if (type === 'sem') {
+    defaultOption.textContent = 'Semester';
+  }
+
+  dropdown.appendChild(defaultOption);
+  options.forEach(option => {
+    const newOption = document.createElement('option');
+    newOption.value = option.value;
+    newOption.textContent = option.text;
+    dropdown.appendChild(newOption);
+  });
+}
+getDropdownValues();
+async function getDropdownValues() {
+  const options_acadref = [];
+  const options_sem = [{ value: 'first-sem', text: 'First Semester' }, { value: 'second-sem', text: 'Second Semester' }];
+  const options_theme = [{ value: 'theme1.png', text: 'Crimson Aura' }, { value: 'theme2.png', text: 'Aqua Gleam' }, { value: 'theme3.png', text: 'Plain White' }];
+  const dbRef = ref(database);
+  await get(child(dbRef, "PARSEIT/administration/academicyear/BSIT/")).then((snapshot) => {
+    if (snapshot.exists()) {
+      for (const title in snapshot.val()) {
+        const academicYear = snapshot.val()[title];
+        options_acadref.push({ value: title, text: academicYear.title });
+      }
+    }
+  });
+  populateDropdown("acad-mydraft-drp", options_acadref, 'academic');
+  populateDropdown("sem-mydraft-drp", options_sem, 'sem');
+  populateDropdown("theme-mydraft-drp", options_theme, 'theme');
+}
+getMyDraftAcad('0000001-1735993126412');
+async function getMyDraftAcad(active) {
+  await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/acadref`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      console.log(snapshot.val());
+    }
+    else {
+      document.getElementById("acad-mydraft-drp").disabled = true;
+    }
+  });
+}
+
+async function getMyDraftSem(active) {
+  await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/sem`)).then((snapshot) => {
+    if (snapshot.exists()) {
+
     }
   });
 }
