@@ -1,0 +1,293 @@
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(assets/fonts/Inter-Bold.otf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(assets/fonts/Inter-Medium.otf);
+}
+
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(assets/fonts/Inter-Regular.otf);
+}
+
+@font-face {
+  font-family: "Inter-Light";
+  src: url(assets/fonts/Inter-Light.otf);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+}
+
+#home_div {
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  display: none;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+#loading_animation_div {
+  height: 100%;
+  width: 100%;
+  background-color: #fefefe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1000;
+  position: fixed;
+}
+
+#loading_animation_gif {
+  height: 50px;
+  width: 50px;
+}
+
+#parsing_lbl {
+  font-family: Inter-Regular;
+  color: #f30505;
+  margin-top: 15px;
+  font-size: 12px;
+}
+
+#home_trainchatbot {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trainchatbot-wrapper {
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+#canceladdchatbot-btn {
+  border: none;
+  background-color: #fefefe;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 100;
+}
+
+.canceladdcluster-btn {
+  width: 15px;
+  margin-top: 10px;
+}
+
+.fillers {
+  width: 100%;
+  height: 350px;
+  margin-bottom: 15px;
+  background-color: transparent;
+}
+.header-title-wrapper {
+  height: 40px;
+}
+.header-title {
+  font-family: Inter-Bold;
+  font-size: 20px;
+  background-color: transparent;
+  width: 100%;
+  height: 150px;
+}
+
+.chatbot-data-wrapper {
+  width: 100%;
+  background-color: transparent;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+  padding: 1px;
+}
+
+.student-assignment-wrapper-completed {
+  height: 60px;
+  width: 100%;
+  background-color: #fafafa;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.top-menu-assignment {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: Inter-Regular;
+  font-size: 14px;
+  flex-direction: column;
+}
+
+.bottom-menu-assignment {
+  width: 80px;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Inter-Regular;
+  font-size: 14px;
+}
+
+.student-id {
+  width: 45px;
+  height: 45px;
+  font-family: Inter-Light;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 0.3px solid #dcdcdc;
+  text-align: center;
+}
+
+.student-id:focus {
+  outline: none;
+}
+.student-id-username {
+  padding-left: 10px;
+  opacity: 0.5;
+  font-family: Inter-Light;
+}
+.student-name {
+  padding-left: 10px;
+  font-family: Inter-Bold;
+  font-size: 15px;
+}
+
+.student-name-id {
+  padding-left: 10px;
+  font-family: Inter-Light;
+  width: 230px;
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.student-status-red {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.student-status-gray {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: gainsboro;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.student-status-green {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: #4caf50;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.student-status-yellow {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: yellow;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
+}
+
+.student-score {
+  padding-right: 10px;
+}
+
+.progress-wrapper {
+  width: 100%;
+  height: 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.counter-progress-wrapper {
+  font-family: Inter-Medium;
+  font-size: 18px;
+  white-space: nowrap;
+}
+
+.progress-circle {
+  position: relative;
+  width: 100px;
+  height: 100px;
+}
+
+.progress-circle svg {
+  transform: rotate(-90deg);
+  width: 100%;
+  height: 100%;
+}
+
+.progress-circle circle {
+  fill: none;
+  stroke-width: 6;
+}
+
+.progress-circle .bg {
+  stroke: transparent;
+}
+
+.progress-circle .progress {
+  stroke: #4caf50;
+  stroke-linecap: round;
+  stroke-dasharray: 440;
+  stroke-dashoffset: 440;
+  transition: 0.3s ease-in-out;
+}
+
+.progress-circle .percentage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 16px;
+  color: #4caf50;
+  font-family: Inter-Regular;
+}

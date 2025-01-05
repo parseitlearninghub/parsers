@@ -185,6 +185,78 @@ window.addEventListener("load", async function () {
         revertNavLbl("homequiz_lbl");
       }
     });
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    if (urlParams.get('draft') === 'true') {
+      showBodyWrapper("honors_teacher_sec");
+      selectNavIcon("homehonors_img");
+      selectNavLbl("homehonors_lbl");
+      changeHomeLbl("lobby_title", "Honors");
+      document.getElementById("honorroll-myclusters").style.display = "block";
+      document.getElementById("honorroll-mydrafts").style.display = "none";
+      document.getElementById("honorroll-cluster-btn").style.borderBottom = "4px solid #f30505";
+      document.getElementById("honorroll-draft-btn").style.border = "none";
+
+
+      //revert
+      hideBodyWrapper("home_all_sec");
+      revertNavIcon("homelobby_imgx");
+      revertNavLbl("homelobby_lblx");
+
+      hideBodyWrapper("share_teacher_sec");
+      revertNavIcon("homeshare_img");
+      revertNavLbl("homeshare_lbl");
+
+      // hideBodyWrapper("chatgpt_all_sec");
+      // revertNavIcon("homechatbot_imgx");
+      // revertNavLbl("homechatbot_lblx");
+
+      hideBodyWrapper("quiz_teacher_sec");
+      revertNavIcon("homequiz_img");
+      revertNavLbl("homequiz_lbl");
+
+      document.getElementById("honorroll-myclusters").style.display = "none";
+      document.getElementById("honorroll-mydrafts").style.display = "block";
+      document.getElementById("honorroll-cluster-btn").style.border = "none";
+      document.getElementById("honorroll-draft-btn").style.borderBottom = "4px solid #f30505";
+
+
+      const active = await getActiveCluster();
+      const acadref = await getMyDraftAcad(active);
+      const sem = await getMyDraftSem(active);
+      const theme = await getMyDraftTheme(active);
+
+      const options_acadref = [];
+      const options_sem = [{ value: 'first-sem', text: 'First Semester' }, { value: 'second-sem', text: 'Second Semester' }];
+      const options_theme = [{ value: 'theme1.png', text: 'Ember Glow' }, { value: 'theme2.png', text: 'Starry, Starry Night' }, { value: 'theme3.png', text: 'Black N White' }];
+      const dbRef = ref(database);
+      await get(child(dbRef, "PARSEIT/administration/academicyear/BSIT/")).then((snapshot) => {
+        if (snapshot.exists()) {
+          for (const title in snapshot.val()) {
+            const academicYear = snapshot.val()[title];
+            options_acadref.push({ value: title, text: academicYear.title });
+          }
+        }
+
+      });
+
+      document.getElementById("honor-mydraft-body").style.height = parseFloat(window.innerHeight) / 2 + 'px';
+      populateDropdown("acad-mydraft-drp", options_acadref, 'academic', acadref, sem, theme);
+      populateDropdown("sem-mydraft-drp", options_sem, 'sem', acadref, sem, theme);
+      populateDropdown("theme-mydraft-drp", options_theme, 'theme', acadref, sem, theme);
+      await checkHonorAcadSem();
+      await checkHonorGenerate();
+      await getHonorDraftCluster();
+      const lock = await getActiveLock();
+      if (lock) {
+        document.getElementById("acad-mydraft-drp").disabled = true;
+        document.getElementById("sem-mydraft-drp").disabled = true;
+      }
+      else {
+        document.getElementById("acad-mydraft-drp").disabled = false;
+        document.getElementById("sem-mydraft-drp").disabled = false;
+      }
+    }
   });
 });
 document.getElementById("sidebar_btn").addEventListener("click", function () {
@@ -369,6 +441,8 @@ document
     hideBodyWrapper("quiz_teacher_sec");
     revertNavIcon("homequiz_img");
     revertNavLbl("homequiz_lbl");
+
+
   });
 document.getElementById("homeshare_btn").addEventListener("click", function () {
   showBodyWrapper("share_teacher_sec");
@@ -2188,7 +2262,7 @@ document.getElementById("honorroll-draft-btn").addEventListener("click", async f
 
   const options_acadref = [];
   const options_sem = [{ value: 'first-sem', text: 'First Semester' }, { value: 'second-sem', text: 'Second Semester' }];
-  const options_theme = [{ value: 'theme1.png', text: 'Crimson Aura' }, { value: 'theme2.png', text: 'Aqua Gleam' }, { value: 'theme3.png', text: 'Plain White' }];
+  const options_theme = [{ value: 'theme1.png', text: 'Ember Glow' }, { value: 'theme2.png', text: 'Starry, Starry Night' }, { value: 'theme3.png', text: 'Black N White' }];
   const dbRef = ref(database);
   await get(child(dbRef, "PARSEIT/administration/academicyear/BSIT/")).then((snapshot) => {
     if (snapshot.exists()) {
@@ -2599,7 +2673,7 @@ async function getHonorDraftCluster() {
         assignmentWrapper.appendChild(bottomMenu);
 
         assignmentWrapper.addEventListener("click", async (event) => {
-          console.log(studentid);
+          window.location.href = `listergrade.html?active=${active}&studentid=${studentid}`;
         });
 
 
@@ -2852,3 +2926,152 @@ function errorElement(element) {
     document.getElementById(element).style.border = "0.4px solid #dcdcdc";
   }, 2000);
 }
+
+
+document.getElementById("generate-mydraft-btn").addEventListener("click", async function () {
+  const active = await getActiveCluster();
+  let theme = await getMyDraftTheme(active);
+  await get(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/`)).then(async (snapshot) => {
+    let numbering = 0;
+    let totalstudents = 0;
+    let deanslist = [];
+    for (const studentid in snapshot.val()) {
+      const studentData = snapshot.val()[studentid];
+      const gpa = studentData.gpa;
+      const unit = studentData.unit;
+      const fullname = await getFullname(studentid);
+      if (gpa <= 1.75 && unit >= 17) {
+        const student = {
+          studentname: fullname,
+          gpa: gpa,
+        }
+        deanslist.push(student);
+        numbering++;
+      }
+      totalstudents++;
+
+    }
+
+    let fontcolor = '';
+    let fontcolorheader = '';
+    if (theme === undefined) {
+      theme = 'theme3.png';
+    }
+    if (theme === 'theme2.png') {
+      fontcolor = 'theme2';
+      fontcolorheader = 'theme2header';
+    }
+    if (theme === 'theme1.png') {
+      fontcolor = 'theme1';
+      fontcolorheader = 'theme1header';
+    }
+    //console.log(numbering);
+    //console.log(totalstudents);
+    //console.log(deanslist.sort((a, b) => a.gpa - b.gpa));
+    //console.log(theme);
+
+    let adviser = '';
+    await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        adviser = snapshot.val().firstname + ' ' + snapshot.val().lastname;
+      }
+    });
+
+    let courseyear = '';
+    await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/`)).then((snapshot) => {
+      if (snapshot.exists()) {
+        courseyear = snapshot.val().name;
+      }
+    });
+
+    document.getElementById('preview-honorroll').style.display = 'flex';
+
+    const previewHonorrollWrapper = document.getElementById('preview-honorroll-wrapper');
+    previewHonorrollWrapper.innerHTML = ''; // Clear previous content
+    previewHonorrollWrapper.style.backgroundImage = `url(assets/${theme})`;
+    // Create the section element
+    const section = document.createElement('section');
+    section.className = 'preview-honorroll-header';
+    section.innerHTML = `
+      <img src="assets/myjourney-header-template.png" alt="" class="honorroll-banner" />
+      <span class="honorroll-greetings ${fontcolorheader}">Congratulations</span>
+      <section class="honorroll-course-wrapper ${fontcolorheader}">
+        <span class="honorroll-title-lbl">Course Year / Section: </span>
+        <span class="honorroll-course-course">${courseyear}</span>
+      </section>
+      <section class="honorroll-course-wrapper ${fontcolorheader}">
+        <span class="honorroll-title-lbl">Adviser: </span>
+        <span class="honorroll-course-adviser">${adviser}</span>
+      </section>
+      <section class="honorroll-course-wrapper ${fontcolorheader}">
+        <span class="honorroll-title-lbl">Total No. of Students: </span>
+        <span class="honorroll-course-total">${totalstudents}</span>
+      </section>
+    `;
+
+    const body = document.createElement('section');
+    body.className = 'preview-honorroll-body';
+    body.id = 'preview-honorroll-body';
+    body.innerHTML = `
+    <section class="preview-honorroll-table-header">
+      <span class="preview-honorroll-table-left ${fontcolor}">NO.</span>
+      <span class="preview-honorroll-table-middle ${fontcolor}">NAME OF STUDENT</span>
+      <span class="preview-honorroll-table-right ${fontcolor}">RANK</span>
+    </section>`;
+
+    let currentRank = 1; // Initialize the rank
+    let previousGPA = null; // Keep track of the previous GPA
+
+
+
+    deanslist.sort((a, b) => b.gpa - a.gpa).forEach((dean, index) => {
+
+      if (previousGPA !== dean.gpa) {
+        currentRank = index + 1;
+      }
+      previousGPA = dean.gpa;
+
+      // Add the entry to the body
+      body.innerHTML += `
+    <section class="preview-honorroll-table-header">
+      <span class="preview-honorroll-table-left ${fontcolor}">${index + 1}</span>
+      <span class="preview-honorroll-table-middle ${fontcolor}">${dean.studentname}</span>
+      <span class="preview-honorroll-table-right ${fontcolor}">${currentRank}</span>
+    </section>
+  `;
+    });
+
+
+    const footer = document.createElement('section');
+    footer.className = 'preview-honorroll-footer';
+
+    // Append these sections to a container element
+
+    previewHonorrollWrapper.appendChild(section);
+    previewHonorrollWrapper.appendChild(body);
+    previewHonorrollWrapper.appendChild(footer);
+
+  });
+
+
+  // const element = document.getElementById('preview-honorroll-wrapper');
+  // html2canvas(element, { scale: 3 }) // Increase the scale for HD quality
+  //   .then(canvas => {
+  //     const link = document.createElement('a');
+  //     link.download = 'div-image.png';
+  //     link.href = canvas.toDataURL();
+  //     link.click();
+  //   });
+
+  let startY = 0;
+  let endY = 0;
+  document.addEventListener("touchstart", (event) => {
+    startY = event.touches[0].clientY;
+  });
+  document.addEventListener("touchend", (event) => {
+    endY = event.changedTouches[0].clientY;
+    if (endY - startY > 300) {
+      document.getElementById('preview-honorroll').style.display = 'none';
+    }
+  });
+});
