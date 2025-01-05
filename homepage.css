@@ -1760,8 +1760,8 @@ body {
   overflow: scroll;
   scrollbar-width: none;
   box-sizing: border-box;
-  padding-bottom: 300px;
   padding: 1px;
+  padding-bottom: 300px;
 }
 .acad-mydraft-txt {
   height: 35px;
@@ -1883,4 +1883,10 @@ body {
   flex-direction: column;
   z-index: 100;
   background-color: rgba(255, 255, 255, 0.685);
+}
+
+.bottom-menu-filler {
+  height: 200px;
+  width: 100%;
+  background-color: tomato;
 }

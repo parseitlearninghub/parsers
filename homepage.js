@@ -2421,12 +2421,14 @@ document.getElementById("acad-mydraft-drp").addEventListener("change", async fun
         document.getElementById("honordelete-mydraft-btn").style.backgroundColor = '#f30505';
         document.getElementById("honordelete-mydraft-btn").style.pointerEvents = 'all';
         document.getElementById("loading_animation_div_processing").style.display = 'flex';
+        document.getElementById("honor-mydraft-body").style.visibility = 'hidden';
         for (const studentid in snapshot.val()) {
           await updateMyDraftHonor(newAcad, sem_val, studentid, active).then(async () => {
             await getHonorDraftCluster();
           });
         }
         setTimeout(() => {
+          document.getElementById("honor-mydraft-body").style.visibility = 'visible';
           document.getElementById("loading_animation_div_processing").style.display = 'none';
         }, 1500);
 
@@ -2465,6 +2467,7 @@ document.getElementById("sem-mydraft-drp").addEventListener("change", async func
         document.getElementById("honordelete-mydraft-btn").style.pointerEvents = 'all';
 
         document.getElementById("loading_animation_div_processing").style.display = 'flex';
+        document.getElementById("honor-mydraft-body").style.visibility = 'hidden';
         for (const studentid in snapshot.val()) {
           await updateMyDraftHonor(acad_val, newSem, studentid, active).then(async () => {
             await getHonorDraftCluster();
@@ -2474,6 +2477,7 @@ document.getElementById("sem-mydraft-drp").addEventListener("change", async func
         }
 
         setTimeout(() => {
+          document.getElementById("honor-mydraft-body").style.visibility = 'visible';
           document.getElementById("loading_animation_div_processing").style.display = 'none';
         }, 1500);
 
@@ -2593,9 +2597,9 @@ async function getHonorDraftCluster() {
         topMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score"></span>
           <span class="student-name-id">${studentid}</span><span class="student-score"></span>`;
         assignmentWrapper.appendChild(bottomMenu);
-
         container.appendChild(assignmentWrapper);
       });
+
     } else {
       document.getElementById("draft-student").style.display = "none";
       const container = document.getElementById("honor-mydraft-body");
@@ -2790,6 +2794,7 @@ async function calculateUnit(studentid) {
     gpa: finalgrade.toFixed(2),
   });
   await checkHonorGenerate();
+  await getHonorDraftCluster();
 }
 
 
