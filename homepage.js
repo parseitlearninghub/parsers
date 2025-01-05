@@ -2200,10 +2200,11 @@ document.getElementById("honorroll-draft-btn").addEventListener("click", async f
     }
   });
 
+  document.getElementById("honor-mydraft-body").style.height = parseFloat(window.innerHeight) / 2 + 'px';
   populateDropdown("acad-mydraft-drp", options_acadref, 'academic', acadref, sem, theme);
   populateDropdown("sem-mydraft-drp", options_sem, 'sem', acadref, sem, theme);
   populateDropdown("theme-mydraft-drp", options_theme, 'theme', acadref, sem, theme);
-
+  await checkHonorAcadSem();
   await checkHonorGenerate();
   const lock = await getActiveLock();
   if (lock) {
@@ -2416,6 +2417,7 @@ document.getElementById("acad-mydraft-drp").addEventListener("change", async fun
   if (newAcad === '') {
     await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/acadref`));
   }
+  await checkHonorAcadSem();
 });
 
 
@@ -2428,6 +2430,7 @@ document.getElementById("sem-mydraft-drp").addEventListener("change", async func
   if (newSem === '') {
     await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/sem`));
   }
+  await checkHonorAcadSem();
 });
 
 
@@ -2448,12 +2451,45 @@ async function checkHonorGenerate() {
   await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster`)).then((snapshot) => {
     if (snapshot.exists()) {
       document.getElementById("generate-mydraft-btn").style.backgroundColor = '#f30505';
+      document.getElementById("generate-mydraft-btn").style.pointerEvents = 'all';
     }
     else {
       document.getElementById("generate-mydraft-btn").style.backgroundColor = '#dcdcdc';
+      document.getElementById("generate-mydraft-btn").style.pointerEvents = 'none';
     }
   });
 }
+async function checkHonorAcadSem() {
+  const active = await getActiveCluster();
+  await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/`)).then((snapshot) => {
+    if (snapshot.exists()) {
+      if (snapshot.val().sem !== undefined && snapshot.val().acadref !== undefined) {
+        document.getElementById("honoradd-mydraft-btn").style.backgroundColor = '#f30505';
+        document.getElementById("honoradd-mydraft-btn").style.pointerEvents = 'all';
+
+        document.getElementById("honordelete-mydraft-btn").style.backgroundColor = '#f30505';
+        document.getElementById("honordelete-mydraft-btn").style.pointerEvents = 'all';
+      }
+      else {
+        document.getElementById("honoradd-mydraft-btn").style.backgroundColor = '#dcdcdc';
+        document.getElementById("honoradd-mydraft-btn").style.pointerEvents = 'none';
+
+        document.getElementById("honordelete-mydraft-btn").style.backgroundColor = '#dcdcdc';
+        document.getElementById("honordelete-mydraft-btn").style.pointerEvents = 'none';
+      }
+
+    }
+    else {
+      document.getElementById("honoradd-mydraft-btn").style.backgroundColor = '#dcdcdc';
+      document.getElementById("honordelete-mydraft-btn").style.backgroundColor = '#dcdcdc';
+
+      document.getElementById("honoradd-mydraft-btn").style.pointerEvents = 'none';
+      document.getElementById("honordelete-mydraft-btn").style.pointerEvents = 'none';
+    }
+  });
+}
+
+
 
 
 

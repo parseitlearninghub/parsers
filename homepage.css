@@ -1731,7 +1731,9 @@ body {
 .honor-mydraft-body {
   background-color: blue;
   width: 100%;
-  height: 900px;
+  overflow: scroll;
+  scrollbar-width: none;
+  box-sizing: border-box;
 }
 .acad-mydraft-txt {
   height: 35px;
@@ -1757,4 +1759,12 @@ body {
   width: 30px;
   padding: 10px;
   font-size: 12px;
+}
+
+.honor-cluster-wrapper {
+  width: 100%;
+  height: 100px;
+  background-color: yellow;
+  margin-bottom: 15px;
+  border-radius: 4px;
 }
