@@ -2597,6 +2597,13 @@ async function getHonorDraftCluster() {
         topMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score"></span>
           <span class="student-name-id">${studentid}</span><span class="student-score"></span>`;
         assignmentWrapper.appendChild(bottomMenu);
+
+        assignmentWrapper.addEventListener("click", async (event) => {
+          console.log(studentid);
+        });
+
+
+
         container.appendChild(assignmentWrapper);
       });
 
@@ -2843,5 +2850,5 @@ function errorElement(element) {
   document.getElementById(element).style.border = "0.4px solid #f30505";
   setTimeout(() => {
     document.getElementById(element).style.border = "0.4px solid #dcdcdc";
-  }, 1000);
+  }, 2000);
 }
