@@ -56,6 +56,7 @@ window.addEventListener("load", async function () {
     });
     populateDropdown("myjourney-select-acad", options_acadref, 'academic');
     populateDropdown("myjourney-select-sem", options_sem, 'sem');
+    pdfFiles = [];
     previewMyJourney();
 
 
@@ -268,7 +269,6 @@ async function previewMyJourney() {
         pdfFiles = [];
         if (acadRefSnapshot.exists()) {
             const updates = {};
-
             for (const acadref in acadRefSnapshot.val()) {
                 const yearlvlSnapshot = acadRefSnapshot.val()[acadref];
 
@@ -462,7 +462,6 @@ async function previewMyJourney() {
             await get(ref(database, `PARSEIT/myjourney/${admin_id}`)).then(async (snapshot) => {
                 let counter = 0;
                 for (const acadref in snapshot.val()) {
-
                     const section = document.createElement('section');
                     section.classList.add('myjourney-template');
                     section.id = 'myjourney-template';
@@ -475,7 +474,6 @@ async function previewMyJourney() {
                     headerImg.setAttribute('crossorigin', 'anonymous');
                     headerDiv.appendChild(headerImg);
                     section.appendChild(headerDiv);
-
 
                     const academicYearDiv = document.createElement('div');
                     academicYearDiv.classList.add('myjourney-template-header-year');
@@ -587,7 +585,6 @@ async function previewMyJourney() {
         }
     });
 }
-
 
 document.getElementById("show-myjourney-btn").addEventListener("click", async () => {
     const acadRef = document.getElementById("myjourney-select-acad").value;

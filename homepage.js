@@ -2621,7 +2621,14 @@ document.getElementById("honoradd-mydraft-btn").addEventListener("click", async 
   const dbRef = ref(database);
   await get(child(dbRef, "PARSEIT/administration/students/" + studentid)).then(async (snapshot) => {
     if (snapshot.exists() && studentid !== '') {
+      document.getElementById("loading_animation_div_processing").style.display = 'flex';
+      document.getElementById("honor-mydraft-body").style.visibility = 'hidden';
       await previewMyJourneyByAll(acad_val, sem_val, studentid, active);
+
+      setTimeout(() => {
+        document.getElementById("honor-mydraft-body").style.visibility = 'visible';
+        document.getElementById("loading_animation_div_processing").style.display = 'none';
+      }, 1500);
     }
     else {
       errorElement("honoradd-mydraft-txt");
@@ -2635,10 +2642,19 @@ document.getElementById("honordelete-mydraft-btn").addEventListener("click", asy
   const dbRef = ref(database);
   await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/`)).then(async (snapshot) => {
     if (snapshot.exists() && studentid !== '') {
+      document.getElementById("loading_animation_div_processing").style.display = 'flex';
+      document.getElementById("honor-mydraft-body").style.visibility = 'hidden';
+
       await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/`));
       await getHonorDraftCluster();
       document.getElementById("honoradd-mydraft-txt").value = '';
       await checkHonorGenerate();
+
+
+      setTimeout(() => {
+        document.getElementById("honor-mydraft-body").style.visibility = 'visible';
+        document.getElementById("loading_animation_div_processing").style.display = 'none';
+      }, 1500);
     }
     else {
       errorElement("honoradd-mydraft-txt");
