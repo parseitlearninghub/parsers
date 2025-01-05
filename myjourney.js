@@ -56,6 +56,8 @@ window.addEventListener("load", async function () {
     });
     populateDropdown("myjourney-select-acad", options_acadref, 'academic');
     populateDropdown("myjourney-select-sem", options_sem, 'sem');
+    const parentElement = document.getElementById('myjourney-result-container');
+    parentElement.innerHTML = ''; // Clear previous content
     pdfFiles = [];
     previewMyJourney();
 
