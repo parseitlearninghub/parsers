@@ -2672,8 +2672,19 @@ async function getHonorDraftCluster() {
           <span class="student-name-id">${studentid}</span><span class="student-score"></span>`;
         assignmentWrapper.appendChild(bottomMenu);
 
-        assignmentWrapper.addEventListener("click", async (event) => {
+        topMenu.addEventListener("click", async (event) => {
           window.location.href = `listergrade.html?active=${active}&studentid=${studentid}`;
+        });
+
+        inputElement.addEventListener("blur", async () => {
+          if (inputElement.value !== "") {
+            await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/`), {
+              gpa: inputElement.value,
+            });
+          }
+          else {
+            inputElement.value = currentGrade;
+          }
         });
 
 
