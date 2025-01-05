@@ -2174,7 +2174,6 @@ document.getElementById("honorroll-cluster-btn").addEventListener("click", funct
   document.getElementById("honorroll-cluster-btn").style.borderBottom = "4px solid #f30505";
   document.getElementById("honorroll-draft-btn").style.border = "none";
 });
-
 document.getElementById("honorroll-draft-btn").addEventListener("click", async function () {
   document.getElementById("honorroll-myclusters").style.display = "none";
   document.getElementById("honorroll-mydrafts").style.display = "block";
@@ -2206,6 +2205,7 @@ document.getElementById("honorroll-draft-btn").addEventListener("click", async f
   populateDropdown("theme-mydraft-drp", options_theme, 'theme', acadref, sem, theme);
   await checkHonorAcadSem();
   await checkHonorGenerate();
+  await getHonorDraftCluster();
   const lock = await getActiveLock();
   if (lock) {
     document.getElementById("acad-mydraft-drp").disabled = true;
@@ -2216,8 +2216,6 @@ document.getElementById("honorroll-draft-btn").addEventListener("click", async f
     document.getElementById("sem-mydraft-drp").disabled = false;
   }
 });
-
-
 document.getElementById("honor-mycluster-add-btn").addEventListener("click", async function () {
   const clusterName = document.getElementById("honor-mycluster-txt").value;
   const clusterId = `${user_parser}-` + Date.now().toString();
@@ -2238,7 +2236,6 @@ document.getElementById("honor-mycluster-add-btn").addEventListener("click", asy
     getHonorCluster();
   }
 });
-
 document.getElementById("honor-mycluster-lock-btn").addEventListener("click", async () => {
   const clusterId = await getActiveCluster();
   const activeLock = await getActiveLock();
@@ -2254,7 +2251,6 @@ document.getElementById("honor-mycluster-lock-btn").addEventListener("click", as
   }
   await getActiveLock();
 });
-
 document.getElementById("honor-mycluster-rename-btn").addEventListener("blur", async () => {
   const clusterName = document.getElementById("honor-mycluster-txt").value;
   const clusterId = await getActiveCluster();
@@ -2263,7 +2259,6 @@ document.getElementById("honor-mycluster-rename-btn").addEventListener("blur", a
     active: clusterId,
   });
 });
-
 document.getElementById("honor-mycluster-delete-btn").addEventListener("click", async function () {
   const clusterId = await getActiveCluster();
   await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${clusterId}`));
@@ -2271,8 +2266,6 @@ document.getElementById("honor-mycluster-delete-btn").addEventListener("click", 
   getHonorCluster();
   getActiveLock();
 });
-
-
 getActiveCluster();
 async function getActiveCluster() {
   return await get(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/active`)).then(async (snapshot) => {
@@ -2342,7 +2335,6 @@ async function getHonorCluster() {
     }
   });
 }
-
 function populateDropdown(dropdownId, options, type, active, sem, theme) {
   const dropdown = document.getElementById(dropdownId);
   dropdown.innerHTML = '';
@@ -2379,7 +2371,6 @@ function populateDropdown(dropdownId, options, type, active, sem, theme) {
     dropdown.appendChild(newOption);
   });
 }
-
 async function getMyDraftAcad(active) {
   return await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/acadref`)).then(async (snapshot) => {
     if (snapshot.exists()) {
@@ -2407,7 +2398,6 @@ async function getMyDraftTheme(active) {
     }
   });
 }
-
 document.getElementById("acad-mydraft-drp").addEventListener("change", async function () {
   const active = await getActiveCluster();
   const newAcad = document.getElementById("acad-mydraft-drp").value;
@@ -2433,7 +2423,6 @@ document.getElementById("sem-mydraft-drp").addEventListener("change", async func
   await checkHonorAcadSem();
 });
 
-
 document.getElementById("theme-mydraft-drp").addEventListener("change", async function () {
   const active = await getActiveCluster();
   const newTheme = document.getElementById("theme-mydraft-drp").value;
@@ -2444,8 +2433,6 @@ document.getElementById("theme-mydraft-drp").addEventListener("change", async fu
     await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/theme`));
   }
 });
-
-
 async function checkHonorGenerate() {
   const active = await getActiveCluster();
   await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster`)).then((snapshot) => {
@@ -2490,35 +2477,204 @@ async function checkHonorAcadSem() {
 }
 
 
+async function getHonorDraftCluster() {
+  const active = await getActiveCluster();
+  const membersRef = ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster`);
+
+  try {
+    const membersRefSnapshot = await get(membersRef);
+
+    if (membersRefSnapshot.exists()) {
+      const container = document.getElementById("honor-mydraft-body");
+      container.innerHTML = "";
+      document.getElementById("draft-student").style.display = "flex";
+      const members = [];
+
+      for (const studentid in membersRefSnapshot.val()) {
+        const fullname = await getFullname(studentid);
+        members.push({ studentid, fullname });
+      }
+
+      members.sort((a, b) => a.fullname.localeCompare(b.fullname));
+      members.forEach(async ({ studentid, fullname }) => {
+        const assignmentWrapper = document.createElement("section");
+        assignmentWrapper.className = "student-assignment-wrapper-completed";
+        const username = await getUsername(studentid);
+
+        const topMenu = document.createElement("section");
+        topMenu.className = "top-menu-assignment";
+        topMenu.innerHTML = `
+          <span class="student-id-username">${studentid}</span>
+        `;
+        assignmentWrapper.appendChild(topMenu);
+
+        const bottomMenu = document.createElement("section");
+        bottomMenu.className = "bottom-menu-assignment";
+
+        let currentGrade = membersRefSnapshot.val()[studentid].gpa;
+        const inputElement = document.createElement('input');
+        inputElement.type = 'number';
+        inputElement.className = 'student-id';
+        inputElement.id = 'finalgrade-txt';
+        inputElement.value = currentGrade;
+
+        let unit = membersRefSnapshot.val()[studentid].unit;
+        const unitElement = document.createElement('span');
+        unitElement.className = 'draft-student-name-unit';
+        unitElement.textContent = unit;
+        bottomMenu.appendChild(unitElement);
+
+        bottomMenu.appendChild(inputElement);
+        topMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score"></span>
+          <span class="student-name-id">${studentid}</span><span class="student-score"></span>`;
+        assignmentWrapper.appendChild(bottomMenu);
+
+        container.appendChild(assignmentWrapper);
+      });
+    } else {
+      document.getElementById("draft-student").style.display = "none";
+    }
+  } catch (error) {
+    console.error("Error fetching cluster data:", error);
+  }
+}
 
 
+document.getElementById("honoradd-mydraft-btn").addEventListener("click", async function () {
+  const active = await getActiveCluster();
+  const studentid = document.getElementById("honoradd-mydraft-txt").value;
+  const acad_val = document.getElementById("acad-mydraft-drp").value;
+  const sem_val = document.getElementById("sem-mydraft-drp").value;
+  const dbRef = ref(database);
+  await get(child(dbRef, "PARSEIT/administration/students/" + studentid)).then(async (snapshot) => {
+    if (snapshot.exists() && studentid !== '') {
+      const container = document.getElementById("honor-mydraft-body");
+      container.innerHTML = "";
+      await previewMyJourneyByAll(acad_val, sem_val, studentid, active);
 
-// async function getDropdownValues() {
-//   const options_acadref = [];
-//   const options_sem = [{ value: 'first-sem', text: 'First Semester' }, { value: 'second-sem', text: 'Second Semester' }];
-//   const options_theme = [{ value: 'theme1.png', text: 'Crimson Aura' }, { value: 'theme2.png', text: 'Aqua Gleam' }, { value: 'theme3.png', text: 'Plain White' }];
-//   const dbRef = ref(database);
-//   await get(child(dbRef, "PARSEIT/administration/academicyear/BSIT/")).then((snapshot) => {
-//     if (snapshot.exists()) {
-//       for (const title in snapshot.val()) {
-//         const academicYear = snapshot.val()[title];
-//         options_acadref.push({ value: title, text: academicYear.title });
-//       }
-//     }
-//   });
-//   populateDropdown("acad-mydraft-drp", options_acadref, 'academic');
-//   populateDropdown("sem-mydraft-drp", options_sem, 'sem');
-//   populateDropdown("theme-mydraft-drp", options_theme, 'theme');
-// }
+    }
+    else {
+      errorElement("honoradd-mydraft-txt");
+    }
+  });
+  document.getElementById("honoradd-mydraft-txt").value = '';
+});
 
-// async function getAcadName(acad) {
-//   const dbRef = ref(database);
-//   return await get(child(dbRef, "PARSEIT/administration/academicyear/BSIT/" + acad)).then((snapshot) => {
-//     if (snapshot.exists()) {
-//       return snapshot.val().title
-//     }
-//     else {
-//       return console.log('No data available');
-//     }
-//   });
-// }
+async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
+  const acadRef = ref(database, `PARSEIT/administration/parseclass/${acad_val}`);
+  onValue(acadRef, async (acadRefSnapshot) => {
+    if (acadRefSnapshot.exists()) {
+      const updates = {};
+      const yearlvlSnapshot = acadRefSnapshot.val();
+      for (const yearlvl in yearlvlSnapshot) {
+        const semSnapshot = yearlvlSnapshot[yearlvl];
+
+        for (const sem in semSnapshot) {
+          const subjectSnapshot = semSnapshot[sem];
+          if (sem === sem_val) {
+            for (const subject in subjectSnapshot) {
+              const sectionSnapshot = subjectSnapshot[subject];
+
+              for (const key in sectionSnapshot) {
+                const value = sectionSnapshot[key];
+
+                if (typeof value === "object" && value !== null) {
+                  for (const subKey in value) {
+                    if (typeof value[subKey] === "object" && value[subKey] !== null) {
+                      for (const studentKey in value[subKey]) {
+                        if (studentKey === studentid) {
+
+                          if (!updates[acad_val]) updates[acad_val] = {};
+                          if (!updates[acad_val][sem]) updates[acad_val][sem] = {};
+
+                          updates[subject] = {
+                            name: subjectSnapshot[subject].name,
+                            finalgrade: value[subKey][studentKey].finalgrade,
+                            unit: subjectSnapshot[subject].unit,
+                          };
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+        }
+      }
+      //await remove(ref(database, `PARSEIT/myjourney/${admin_id}`));
+      await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`), updates);
+      const container = document.getElementById("honor-mydraft-body");
+      container.innerHTML = "";
+      await calculateUnit(studentid);
+    }
+    else {
+      // const section = document.createElement('section');
+      // section.classList.add('myjourney-template');
+      // section.id = 'myjourney-template';
+
+      // const span = document.createElement('span');
+      // span.textContent = 'No data available';
+      // span.className = 'no-data-available';
+      // section.appendChild(span);
+      // parentElement.appendChild(section);
+    }
+  });
+}
+async function calculateUnit(studentid) {
+  const active = await getActiveCluster();
+  let totalunit = 0;
+  let grade = 0;
+  await get(child(dbRef, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`)).then(async (snapshot) => {
+    if (snapshot.exists()) {
+      for (const subject in snapshot.val()) {
+        const subjectData = snapshot.val()[subject];
+        const unit = parseFloat(subjectData.unit);
+        const subjectgrade = parseFloat(subjectData.finalgrade);
+        totalunit += unit;
+        grade += (subjectgrade * unit);
+      }
+    }
+  });
+
+  let finalgrade = grade / totalunit;
+  await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/`), {
+    unit: totalunit,
+    gpa: finalgrade.toFixed(2),
+  });
+  await getHonorDraftCluster();
+}
+
+
+async function getFullname(studentid) {
+  const dbRef = ref(database);
+  return await get(child(dbRef, "PARSEIT/administration/students/" + studentid)).then((snapshot) => {
+    if (snapshot.exists()) {
+      if (snapshot.val().suffix === "none") {
+        return `${snapshot.val().lastname}, ${snapshot.val().firstname}`
+      }
+      else {
+        return `${snapshot.val().lastname}, ${snapshot.val().firstname} ${snapshot.val().suffix}`
+      }
+    }
+  });
+}
+async function getUsername(studentid) {
+  const dbRef = ref(database);
+  return await get(child(dbRef, "PARSEIT/username/")).then((snapshot) => {
+    if (snapshot.exists()) {
+      for (const username in snapshot.val()) {
+        if (snapshot.val()[username] === studentid) {
+          return username;
+        }
+      }
+    }
+  });
+}
+function errorElement(element) {
+  document.getElementById(element).style.border = "0.4px solid #f30505";
+  setTimeout(() => {
+    document.getElementById(element).style.border = "0.4px solid #dcdcdc";
+  }, 1000);
+}

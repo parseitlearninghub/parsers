@@ -1727,13 +1727,41 @@ body {
   border-radius: 4px;
   color: #fefefe;
 }
+.draft-student-name {
+  font-family: Inter-Light;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+.draft-student {
+  display: flex;
+  justify-content: space-between;
+}
+.draft-student-gpa {
+  margin-left: 25px;
+  margin-right: 20px;
+}
+.draft-student-name-unit {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Inter-Light;
+  opacity: 0.5;
+}
+.left-draftstudent {
+  display: flex;
+}
 
 .honor-mydraft-body {
-  background-color: blue;
+  background-color: transparent;
   width: 100%;
   overflow: scroll;
   scrollbar-width: none;
   box-sizing: border-box;
+  padding-bottom: 300px;
+  padding: 1px;
 }
 .acad-mydraft-txt {
   height: 35px;
@@ -1763,8 +1791,84 @@ body {
 
 .honor-cluster-wrapper {
   width: 100%;
-  height: 100px;
+  height: 60px;
   background-color: yellow;
   margin-bottom: 15px;
   border-radius: 4px;
+}
+
+.student-assignment-wrapper-completed {
+  height: 60px;
+  width: 100%;
+  background-color: #fafafa;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
+    rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.top-menu-assignment {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: Inter-Regular;
+  font-size: 14px;
+  flex-direction: column;
+}
+
+.bottom-menu-assignment {
+  width: 80px;
+  height: 100%;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Inter-Regular;
+  font-size: 14px;
+}
+
+.student-id {
+  width: 45px;
+  height: 45px;
+  font-family: Inter-Light;
+  box-sizing: border-box;
+  border-radius: 4px;
+  border: 0.3px solid #dcdcdc;
+  text-align: center;
+  margin-right: 15px;
+  margin-left: 20px;
+}
+
+.student-id:focus {
+  outline: none;
+}
+.student-id-username {
+  padding-left: 10px;
+  opacity: 0.5;
+  font-family: Inter-Light;
+}
+.student-name {
+  padding-left: 10px;
+  font-family: Inter-Bold;
+  font-size: 15px;
+}
+
+.student-name-id {
+  padding-left: 10px;
+  font-family: Inter-Light;
+}
+.student-status-red {
+  margin-right: 15px;
+  margin-bottom: 7px;
+  width: 12px;
+  height: 12px;
+  background-color: red;
+  border-radius: 50%;
+  aspect-ratio: 1/1;
 }
