@@ -310,6 +310,8 @@ async function previewMyJourney() {
                     }
                 }
             }
+
+            await remove(ref(database, `PARSEIT/myjourney/${admin_id}`));
             await update(ref(database, `PARSEIT/myjourney/${admin_id}`), updates);
 
             //generate pdf
