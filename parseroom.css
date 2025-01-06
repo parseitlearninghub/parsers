@@ -1066,13 +1066,9 @@ body {
 
 .bullettin-materials-cont {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 .material-notdone-wrapper {
-  width: 95%;
   background-color: #fefefe;
   border-radius: 5px;
   margin-top: 10px;
@@ -1081,4 +1077,6 @@ body {
   overflow: hidden;
   display: flex;
   padding-bottom: 10px;
+  box-sizing: border-box;
+  margin: 10px;
 }
