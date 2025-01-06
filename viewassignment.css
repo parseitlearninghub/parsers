@@ -271,16 +271,25 @@ body {
 }
 
 .download-attach-btn {
-  width: 80%;
-  height: 30px;
+  width: 70%;
+  padding: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: transparent;
+  background-color: #f30505;
   color: #fefefe;
   border: none;
   font-family: Inter-Regular;
-  margin-top: 15px;
+  margin-top: 10px;
+  z-index: 100;
+  border-radius: 4px;
+}
+
+.bulletin-close-div {
+  width: 30px;
+  filter: invert(100%) sepia(56%) saturate(2%) hue-rotate(45deg)
+    brightness(112%) contrast(99%);
+  margin-top: 10px;
 }
 
 .viewattachedfile-cont {
@@ -310,7 +319,7 @@ body {
 }
 .viewattachedfile-cont-docs {
   width: 65%;
-  height: 75%;
+  height: 60%;
   object-fit: contain;
   border-radius: 7px;
   overflow: scroll;

@@ -825,23 +825,28 @@ document.getElementById("check_bulletin").addEventListener("click", async (event
   }
 
 
-  let startY = 0;
-  let endY = 0;
-  document.addEventListener("touchstart", (event) => {
-    startY = event.touches[0].clientY;
-  });
-  document.addEventListener("touchend", (event) => {
-    endY = event.changedTouches[0].clientY;
-    if (endY - startY > 300) {
-      document.getElementById("bulletin-wrapper").style.animation =
-        "fadeScaleDown 0.25s ease-in-out forwards";
-      document.getElementById("bulletin-div").style.animation =
-        "opacity_bg_rev 0.25s ease-in-out forwards";
+  // let startY = 0;
+  // let endY = 0;
+  // document.addEventListener("touchstart", (event) => {
+  //   startY = event.touches[0].clientY;
+  // });
+  // document.addEventListener("touchend", (event) => {
+  //   endY = event.changedTouches[0].clientY;
+  //   if (endY - startY > 300) {
 
-      document.getElementById("teacher-widget-div").style.display = "none";
-    }
-  });
+  //   }
+  // });
 });
+
+document.getElementById("bulletin-close-div").addEventListener("click", () => {
+  document.getElementById("bulletin-wrapper").style.animation =
+    "fadeScaleDown 0.25s ease-in-out forwards";
+  document.getElementById("bulletin-div").style.animation =
+    "opacity_bg_rev 0.25s ease-in-out forwards";
+
+  document.getElementById("teacher-widget-div").style.display = "none";
+});
+
 
 document.getElementById("bulletin_assignment").addEventListener("click", () => {
   showBulletinMenu("bulletin_assignment", "bulletin_announcement", "bulletin-assignment", "bulletin-announcement");
@@ -1195,20 +1200,23 @@ async function getFullname(studentid) {
     }
   });
 }
+document.getElementById("viewattachedfile-img-close-btn").addEventListener("click", () => {
+  document.getElementById("creatediscussroom-container").style.display = "none";
+});
 
 document.getElementById("check_discussionroom").addEventListener("click", () => {
   document.getElementById("creatediscussroom-container").style.display = "flex";
-  let startY = 0;
-  let endY = 0;
-  document.addEventListener("touchstart", (event) => {
-    startY = event.touches[0].clientY;
-  });
-  document.addEventListener("touchend", (event) => {
-    endY = event.changedTouches[0].clientY;
-    if (endY - startY > 300) {
-      document.getElementById("creatediscussroom-container").style.display = "none";
-    }
-  });
+  // let startY = 0;
+  // let endY = 0;
+  // document.addEventListener("touchstart", (event) => {
+  //   startY = event.touches[0].clientY;
+  // });
+  // document.addEventListener("touchend", (event) => {
+  //   endY = event.changedTouches[0].clientY;
+  //   if (endY - startY > 300) {
+
+  //   }
+  // });
 
 });
 

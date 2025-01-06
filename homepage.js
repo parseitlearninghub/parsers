@@ -534,19 +534,24 @@ document
     document.getElementById("allannouncement-div").style.animation =
       "fadeScaleUp 0.25s ease-in-out forwards";
 
-    let startY = 0;
-    let endY = 0;
-    document.addEventListener("touchstart", (event) => {
-      startY = event.touches[0].clientY;
-    });
-    document.addEventListener("touchend", (event) => {
-      endY = event.changedTouches[0].clientY;
-      if (endY - startY > 300) {
-        document.getElementById("allannouncement-div").style.animation =
-          "fadeScaleDown 0.25s ease-in-out forwards";
-      }
-    });
+    // let startY = 0;
+    // let endY = 0;
+    // document.addEventListener("touchstart", (event) => {
+    //   startY = event.touches[0].clientY;
+    // });
+    // document.addEventListener("touchend", (event) => {
+    //   endY = event.changedTouches[0].clientY;
+    //   if (endY - startY > 300) {
+
+    //   }
+    // });
   });
+
+document.getElementById("allannouncement-close").addEventListener("click", function () {
+  document.getElementById("allannouncement-div").style.animation =
+    "fadeScaleDown 0.25s ease-in-out forwards";
+});
+
 
 
 document.getElementById("community_btn").addEventListener("click", (event) => {
@@ -2329,13 +2334,19 @@ document.getElementById("honor-mycluster-lock-btn").addEventListener("click", as
   }
   await getActiveLock();
 });
-document.getElementById("honor-mycluster-rename-btn").addEventListener("blur", async () => {
-  const clusterName = document.getElementById("honor-mycluster-txt").value;
+document.getElementById("honor-mycluster-rename-btn").addEventListener("click", async () => {
   const clusterId = await getActiveCluster();
-  console.log(clusterId);
-  await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll`), {
-    active: clusterId,
-  });
+  const clusterName = document.getElementById("honor-mycluster-txt").value;
+  if (clusterName !== '') {
+    await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${clusterId}/`), {
+      name: clusterName,
+    });
+    document.getElementById("honor-mycluster-txt").value = '';
+    await getHonorCluster();
+  }
+  else {
+    errorElement("honor-mycluster-txt");
+  }
 });
 document.getElementById("honor-mycluster-delete-btn").addEventListener("click", async function () {
   const clusterId = await getActiveCluster();
@@ -2399,6 +2410,7 @@ async function getHonorCluster() {
             active: cluster,
           });
           getActiveLock();
+
         });
         if (cluster === await getActiveCluster()) {
           clusterName.checked = true;
@@ -2662,6 +2674,7 @@ async function getHonorDraftCluster() {
         inputElement.className = 'student-id';
         inputElement.id = 'finalgrade-txt';
         inputElement.value = currentGrade;
+        inputElement.disabled = true;
 
         let unit = membersRefSnapshot.val()[studentid].unit;
         const unitElement = document.createElement('span');

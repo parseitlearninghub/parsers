@@ -35,7 +35,7 @@ const firebaseConfigAdmin = {
 const appAdmin = initializeApp(firebaseConfigAdmin, "ParseITAdmin");
 const databaseAdmin = getDatabase(appAdmin);
 const dbRefAdmin = ref(databaseAdmin);
-const user_parser = localStorage.getItem('user_parser');
+const user_parser = localStorage.getItem('user-parser');
 
 
 
@@ -328,7 +328,7 @@ async function previewMyJourney(admin_id) {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -424,7 +424,7 @@ async function previewMyJourney(admin_id) {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -470,7 +470,7 @@ async function previewMyJourney(admin_id) {
                     const headerDiv = document.createElement('div');
                     headerDiv.classList.add('myjourney-template-header');
                     const headerImg = document.createElement('img');
-                    headerImg.src = 'assets/myjourney-header-template.png';
+                    headerImg.src = 'assets/myjourney-header-template-1.png';
                     headerImg.classList.add('myjourney-template-header-img');
                     headerImg.id = 'myjourney-template-header-img';
                     headerImg.setAttribute('crossorigin', 'anonymous');
@@ -670,7 +670,7 @@ async function previewMyJourneyByAcad(acad_val, admin_id) {
             await remove(ref(database, `PARSEIT/myjourney/${user_parser}`));
             await update(ref(database, `PARSEIT/myjourney/${user_parser}`), updates);
             //generate pdf
-            await get(ref(database, `PARSEIT/myjourney/${auser_parser}`)).then(async (snapshot) => {
+            await get(ref(database, `PARSEIT/myjourney/${user_parser}`)).then(async (snapshot) => {
                 for (const acadref in snapshot.val()) {
                     const { jsPDF } = window.jspdf;
                     const pdf = new jsPDF();
@@ -684,7 +684,7 @@ async function previewMyJourneyByAcad(acad_val, admin_id) {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -780,7 +780,7 @@ async function previewMyJourneyByAcad(acad_val, admin_id) {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -826,7 +826,7 @@ async function previewMyJourneyByAcad(acad_val, admin_id) {
                         const headerDiv = document.createElement('div');
                         headerDiv.classList.add('myjourney-template-header');
                         const headerImg = document.createElement('img');
-                        headerImg.src = 'assets/myjourney-header-template.png';
+                        headerImg.src = 'assets/myjourney-header-template-1.png';
                         headerImg.classList.add('myjourney-template-header-img');
                         headerImg.id = 'myjourney-template-header-img';
                         headerImg.setAttribute('crossorigin', 'anonymous');
@@ -1026,7 +1026,7 @@ async function previewMyJourneyBySem(sem_val, admin_id) {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -1122,7 +1122,7 @@ async function previewMyJourneyBySem(sem_val, admin_id) {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -1169,7 +1169,7 @@ async function previewMyJourneyBySem(sem_val, admin_id) {
                     const headerDiv = document.createElement('div');
                     headerDiv.classList.add('myjourney-template-header');
                     const headerImg = document.createElement('img');
-                    headerImg.src = 'assets/myjourney-header-template.png';
+                    headerImg.src = 'assets/myjourney-header-template-1.png';
                     headerImg.classList.add('myjourney-template-header-img');
                     headerImg.id = 'myjourney-template-header-img';
                     headerImg.setAttribute('crossorigin', 'anonymous');
@@ -1349,7 +1349,7 @@ async function previewMyJourneyByAll(acad_val, sem_val, admin_id) {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -1445,7 +1445,7 @@ async function previewMyJourneyByAll(acad_val, sem_val, admin_id) {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -1491,7 +1491,7 @@ async function previewMyJourneyByAll(acad_val, sem_val, admin_id) {
                         const headerDiv = document.createElement('div');
                         headerDiv.classList.add('myjourney-template-header');
                         const headerImg = document.createElement('img');
-                        headerImg.src = 'assets/myjourney-header-template.png';
+                        headerImg.src = 'assets/myjourney-header-template-1.png';
                         headerImg.classList.add('myjourney-template-header-img');
                         headerImg.id = 'myjourney-template-header-img';
                         headerImg.setAttribute('crossorigin', 'anonymous');

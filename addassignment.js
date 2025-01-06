@@ -469,18 +469,20 @@ async function uploadFileToGitHub(token, owner, repo, filePath, fileContent, fil
 async function handleImage(fileUrl, animations) {
     const imgElement = document.getElementById("viewattachedfile-img");
     const container = document.getElementById("viewattachedfile-container");
+    const closebtn = document.getElementById("viewattachedfile-img-close-btn");
 
     imgElement.src = fileUrl;
     container.style.display = "flex";
     container.style.animation = animations.fadeIn.container;
     imgElement.style.animation = animations.fadeIn.content;
 
-    addTouchClose(container, imgElement, animations);
+    addTouchClose(container, imgElement, animations, closebtn);
 
 }
 async function handleDocx(fileUrl, animations) {
     const container = document.getElementById("viewattachedfile-container-docx");
     const output = document.getElementById("output-wordfile");
+    const closebtn = document.getElementById("viewattachedfile-docx-close-btn");
 
     container.style.display = "flex";
     container.style.animation = animations.fadeIn.container;
@@ -495,12 +497,13 @@ async function handleDocx(fileUrl, animations) {
         console.error("Error converting DOCX file:", error);
     }
 
-    addTouchClose(container, output, animations);
+    addTouchClose(container, output, animations, closebtn);
 
 }
 async function handlePdf(fileUrl, animations) {
     const container = document.getElementById("viewattachedfile-container-pdf");
     const output = document.getElementById("output-pdffile");
+    const closebtn = document.getElementById("viewattachedfile-pdf-close-btn");
 
     container.style.display = "flex";
     container.style.animation = animations.fadeIn.container;
@@ -517,7 +520,7 @@ async function handlePdf(fileUrl, animations) {
     } catch (error) {
         console.error("Error rendering PDF file:", error);
     }
-    addTouchClose(container, output, animations);
+    addTouchClose(container, output, animations, closebtn);
 
 }
 function renderPdfPage(page, container) {
@@ -541,21 +544,14 @@ function renderPdfPage(page, container) {
         container.appendChild(canvas);
     });
 }
-function addTouchClose(container, content, animations) {
-    let startY = 0, endY = 0;
-    container.addEventListener("touchstart", (event) => {
-        startY = event.touches[0].clientY;
-    });
-    container.addEventListener("touchend", (event) => {
-        endY = event.changedTouches[0].clientY;
-        const dragDistance = endY - startY;
-        if (dragDistance > 400) {
-            content.style.animation = animations.fadeOut.content;
-            container.style.animation = animations.fadeOut.container;
-            setTimeout(() => {
-                container.style.display = "none";
-            }, 500);
-        }
+function addTouchClose(container, content, animations, closebtn) {
+
+    closebtn.addEventListener("click", (event) => {
+        content.style.animation = animations.fadeOut.content;
+        container.style.animation = animations.fadeOut.container;
+        setTimeout(() => {
+            container.style.display = "none";
+        }, 500);
     });
 }
 

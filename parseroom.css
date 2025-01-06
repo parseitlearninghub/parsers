@@ -706,6 +706,9 @@ body {
   margin-right: 12px;
 }
 
+.bulletin-close-div {
+  width: 25px;
+}
 .bulletin_lbl {
   font-family: Inter-Bold;
   font-size: 20px;
@@ -932,6 +935,7 @@ body {
   z-index: 300;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .creatediscussroom-wrapper {
@@ -950,6 +954,18 @@ body {
   font-family: Inter-Bold;
   font-size: 18px;
   padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  box-sizing: border-box;
+}
+
+.creatediscuss-span {
+  width: 100%;
+}
+
+#viewattachedfile-img-close-btn {
 }
 
 .discussroomname-txt {
@@ -965,8 +981,6 @@ body {
   outline: none;
 }
 .createroombtn {
-  width: 100%;
-  width: 20%;
   height: 40px;
   border-radius: 4px;
   background-color: #f30505;
@@ -978,7 +992,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
+  width: 100%;
   background-color: transparent;
   margin-top: 10px;
   gap: 10px;
@@ -989,6 +1003,7 @@ body {
   width: 100%;
   height: 200px;
   overflow: scroll;
+  padding-bottom: 10px;
 }
 
 .discuss-member {

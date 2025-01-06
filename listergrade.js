@@ -79,6 +79,7 @@ async function getSubmissions() {
                 inputElement.className = 'student-id';
                 inputElement.id = 'finalgrade-txt';
                 inputElement.value = currentGrade;
+                inputElement.disabled = true;
 
                 bottomMenu.appendChild(inputElement);
                 topMenu.innerHTML = `<span class="student-name">${studentid}</span><span class="student-score"></span>
