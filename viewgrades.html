@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Train chatbot</title>
+    <link rel="stylesheet" href="viewgrades.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+  </head>
+  <body>
+    <div id="loading_animation_div">
+      <img id="loading_animation_gif" src="assets/loading_animation.gif" />
+      <h1 id="parsing_lbl">Parsing...</h1>
+    </div>
+    <id id="home_trainchatbot">
+      <section class="trainchatbot-wrapper">
+        <button id="canceladdchatbot-btn">
+          <img
+            class="canceladdcluster-btn"
+            src="assets/icons/arrow-left-solid.svg"
+          />
+        </button>
+        <section class="header-title-wrapper">
+          <label class="header-title">View Student Grades</label>
+        </section>
+        <section class="chatbot-data-wrapper">
+          <section class="myjourney-selection-container">
+            <section class="myjourney-select-top">
+              <select
+                class="myjourney-selection"
+                id="myjourney-select-acad"
+              ></select>
+              <select
+                class="myjourney-selection"
+                id="myjourney-select-sem"
+              ></select>
+            </section>
+            <input
+              type="text"
+              class="student-search-txt"
+              id="student-search-txt"
+              placeholder="Search Student ID"
+            />
+            <section class="myjourney-select-top">
+              <button class="show-myjourney-btn" id="show-myjourney-btn">
+                Show My Journey
+              </button>
+            </section>
+          </section>
+          <section
+            class="myjourney-result-container"
+            id="myjourney-result-container"
+          >
+            <!-- <section class="myjourney-template" id="myjourney-template">
+              <div class="myjourney-template-header">
+                <img
+                  src="assets/myjourney-header-template.jpg"
+                  class="myjourney-template-header-img"
+                  id="myjourney-template-header-img"
+                  crossorigin="anonymous"
+                />
+              </div>
+
+              <div class="myjourney-template-body">
+                <table
+                  class="myjourney-table-template"
+                  id="my-table"
+                  border="1"
+                  style="border-collapse: collapse; width: 100%"
+                >
+                  <thead>
+                    <tr>
+                      <th>Subject</th>
+                      <th>Description</th>
+                      <th>Unit</th>
+                      <th>Grade</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tbody"></tbody>
+                </table>
+              </div>
+            </section> -->
+          </section>
+        </section>
+        <section class="fillers"></section>
+      </section>
+    </id>
+    <script type="module" src="viewgrades.js"></script>
+  </body>
+</html>

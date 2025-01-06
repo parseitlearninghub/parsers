@@ -489,27 +489,29 @@ document.getElementById("homeshare_btn").addEventListener("click", function () {
 // });
 
 document.getElementById("homequiz_btn").addEventListener("click", function () {
-  showBodyWrapper("quiz_teacher_sec");
-  selectNavIcon("homequiz_img");
-  selectNavLbl("homequiz_lbl");
-  changeHomeLbl("lobby_title", "Quiz");
+  // showBodyWrapper("quiz_teacher_sec");
+  // selectNavIcon("homequiz_img");
+  // selectNavLbl("homequiz_lbl");
+  // changeHomeLbl("lobby_title", "Quiz");
 
-  //revert
-  hideBodyWrapper("home_all_sec");
-  revertNavIcon("homelobby_imgx");
-  revertNavLbl("homelobby_lblx");
+  // //revert
+  // hideBodyWrapper("home_all_sec");
+  // revertNavIcon("homelobby_imgx");
+  // revertNavLbl("homelobby_lblx");
 
-  hideBodyWrapper("honors_teacher_sec");
-  revertNavIcon("homehonors_img");
-  revertNavLbl("homehonors_lbl");
+  // hideBodyWrapper("honors_teacher_sec");
+  // revertNavIcon("homehonors_img");
+  // revertNavLbl("homehonors_lbl");
 
-  hideBodyWrapper("share_teacher_sec");
-  revertNavIcon("homeshare_img");
-  revertNavLbl("homeshare_lbl");
+  // hideBodyWrapper("share_teacher_sec");
+  // revertNavIcon("homeshare_img");
+  // revertNavLbl("homeshare_lbl");
 
   // hideBodyWrapper("chatgpt_all_sec");
   // revertNavIcon("homechatbot_imgx");
   // revertNavLbl("homechatbot_lblx");
+
+  window.location.href = 'viewgrades.html';
 });
 document.getElementById("game-1").addEventListener("click", function () {
   window.location.href = "https://parseitlearninghub.github.io/game-flipcard/";
