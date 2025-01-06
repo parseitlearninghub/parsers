@@ -3027,7 +3027,7 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
     <section class="preview-honorroll-table-header">
       <span class="preview-honorroll-table-left ${fontcolor}">NO.</span>
       <span class="preview-honorroll-table-middle ${fontcolor}">NAME OF STUDENT</span>
-      <span class="preview-honorroll-table-right ${fontcolor}">RANK</span>
+      <span class="preview-honorroll-table-right ${fontcolor}">GPA</span>
     </section>`;
 
     let currentRank = 1; // Initialize the rank
@@ -3080,10 +3080,12 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
     //document.getElementById('preview-honorroll').appendChild(getLink);
     const element = document.getElementById('preview-honorroll-wrapper');
 
-    // html2canvas(document.querySelector("#preview-honorroll-wrapper")).then((canvas) => {
-    //   const image = canvas.toDataURL("image/png"); // Base64 string of the image
-    //   uploadToGitHub(image);
-    // });
+    html2canvas(document.querySelector("#preview-honorroll-wrapper")).then((canvas) => {
+      const base64Image = canvas.toDataURL("image/png");
+      uploadToGitHub(base64Image);
+
+    });
+
 
 
     let startY = 0;
@@ -3105,37 +3107,68 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
   });
 });
 
-// async function uploadToGitHub(base64Image) {
-//   const token = await getApikey();
-//   const owner = "parseitlearninghub";
-//   const repo = "parseitlearninghub-storage";
-//   const filePath = `PARSEIT/storage/${user_parser}/honorroll/downloads/test.png`;
+async function getApikeyGithub() {
+  const apikeyRef = child(dbRef, "PARSEIT/administration/apikeys/");
+  const snapshot = await get(apikeyRef);
+  if (snapshot.exists()) {
+    const currentData = snapshot.val().githubtoken;
+    return currentData;
+  } else {
+    return null;
+  }
+}
 
-//   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
-//   const data = {
-//     message: "deanslister " + user_parser,
-//     content: base64Image,
-//   };
+async function uploadToGitHub(base64Image) {
+  const code = Date.now().toString();
+  const token = await getApikeyGithub();
+  const owner = "parseitlearninghub";
+  const repo = "parseitlearninghub-storage";
+  const userParser = user_parser; // Replace with the actual value of `user_parser`
+  const filePath = `PARSEIT/storage/${userParser}/honorroll/downloads/${code}.png`;
 
-//   try {
-//     const response = await fetch(url, {
-//       method: "PUT",
-//       headers: {
-//         "Authorization": `Bearer ${token}`,
-//         "Accept": "application/vnd.github.v3+json",
-//       },
-//       body: JSON.stringify(data),
-//     });
+  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+  const base64Content = base64Image.replace(/^data:image\/\w+;base64,/, "");
+  const data = {
+    message: `deanslister ${userParser}`,
+    content: base64Content,
+  };
 
-//     const responseData = await response.json();
+  try {
+    const response = await fetch(url, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Accept": "application/vnd.github.v3+json",
+      },
+      body: JSON.stringify(data),
+    });
 
-//     let updateDBFileUrl = responseData.content.download_url;
+    if (!response.ok) {
+      throw new Error(`GitHub API returned status ${response.status}`);
+    }
 
-//     console.log(updateDBFileUrl);
+    const responseData = await response.json();
+    const updateDBFileUrl = responseData.content.download_url;
+    document.getElementById('downloaddeans-pdf-btn').addEventListener('click', async (event) => {
+      navigator.clipboard.writeText(updateDBFileUrl)
+        .then(() => {
+          document.getElementById("downloaddeans-pdf-btn").innerText = 'Copied! Paste url in browser to download.';
+          setTimeout(() => {
+            document.getElementById("downloaddeans-pdf-btn").innerText = 'Copy Link';
+            window.location.reload();
+          }, 3500);
+        })
+        .catch(err => {
+          document.getElementById("downloaddeans-pdf-btn").innerText = 'Try again.';
+          setTimeout(() => {
+            document.getElementById("downloaddeans-pdf-btn").innerText = 'Copy Link';
+          }, 3500);
+        });
+    });
 
-//   } catch (error) {
-//     console.error("Error uploading file:", error);
-//   }
-// }
+  } catch (error) {
+    console.error("Error uploading file:", error);
+  }
+}
 
 
