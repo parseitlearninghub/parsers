@@ -806,6 +806,7 @@ async function getTeacherData(id) {
 
 document.getElementById("check_bulletin").addEventListener("click", async (event) => {
   await getAssignments();
+  await getMaterials();
   document.getElementById("bulletin-div").style.display = "flex";
   document.getElementById("bulletin-div").style.animation =
     "opacity_bg 0.25s ease-in-out forwards";
@@ -860,7 +861,7 @@ document.getElementById("bulletin_assignment").addEventListener("click", () => {
 document.getElementById("bulletin_announcement").addEventListener("click", () => {
   showBulletinMenu("bulletin_announcement", "bulletin_assignment", "bulletin-announcement", "bulletin-assignment");
   if (user_parser_type === "teacher") {
-    document.getElementById("teacher-widget-div").style.display = "none";
+    document.getElementById("teacher-widget-div").style.display = "flex";
   }
   else {
     document.getElementById("teacher-widget-div").style.display = "none";
@@ -1099,8 +1100,11 @@ function Due(date) {
 
 
 document.getElementById("widget-texteditor").addEventListener("click", () => {
-  console.log("clicked");
   window.location.href = `addassignment.html`;
+});
+
+document.getElementById("widget-pdf").addEventListener("click", () => {
+  window.location.href = `addmaterials.html`;
 });
 
 // function previousPage() {
@@ -1290,4 +1294,152 @@ async function getDiscussionRooms() {
     }
   });
 
+}
+
+
+
+async function getMaterials() {
+  const type = localStorage.getItem("type-parser");
+  const acadref = localStorage.getItem("parseroom-acadref");
+  const yearlvl = localStorage.getItem("parseroom-yearlvl");
+  const sem = localStorage.getItem("parseroom-sem");
+  const subject = localStorage.getItem("parseroom-code");
+  const section = localStorage.getItem("parseroom-section");
+  const studentid = localStorage.getItem("user-parser");
+
+
+  const assignmentRef = ref(
+    database,
+    `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/materials/`
+  );
+  onValue(assignmentRef, async (snapshot) => {
+    if (snapshot.exists()) {
+      const assignments = snapshot.val();
+      const containerNotDone = document.getElementById("bullettin-materials-cont");
+      containerNotDone.innerHTML = "";
+      for (const assignmentKey in assignments) {
+        const assignment = assignments[assignmentKey];
+        const assignment_title = assignment.header;
+        if (assignment_title !== undefined) {
+          const assignment_date = assignment.date;
+          const wrapper = document.createElement("div");
+          const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/materials/${assignmentKey}/attachedfile`);
+          const files = await get(usernameRef);
+          console.log(files.val());
+
+          wrapper.className = "material-notdone-wrapper";
+          wrapper.addEventListener("click", (event) => {
+            window.location.href = `viewmaterials.html?assignment=${assignmentKey}`;
+          });
+
+          const iconSection = document.createElement("section");
+          iconSection.className = "assignment-icon";
+
+          const iconImg = document.createElement("img");
+          iconImg.src = "assets/icons/clipboard.png";
+          iconImg.className = "done-assignment-img";
+
+          iconSection.appendChild(iconImg);
+
+          const detailsSection = document.createElement("section");
+          detailsSection.className = "assignment-details";
+
+          const titleLabel = document.createElement("label");
+          titleLabel.className = "assignment-title";
+          titleLabel.textContent = assignment_title;
+
+          const dateLabel = document.createElement("label");
+          dateLabel.className = "assignment-date";
+          dateLabel.textContent = `${formatDateTime(assignment_date)}`;
+
+          detailsSection.appendChild(titleLabel);
+          detailsSection.appendChild(dateLabel);
+
+          wrapper.appendChild(iconSection);
+          wrapper.appendChild(detailsSection);
+          containerNotDone.appendChild(wrapper);
+        }
+      }
+    } else {
+      console.log("No Assignments");
+    }
+  });
+
+
+  // if (type === "teacher") {
+  //   const assignmentRef = ref(
+  //     database,
+  //     `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/`
+  //   );
+  //   onValue(assignmentRef, async (snapshot) => {
+  //     if (snapshot.exists()) {
+  //       const assignments = snapshot.val();
+  //       const containerNotDone = document.getElementById("notdone-assignment");
+  //       const containerDone = document.getElementById("done-assignment");
+  //       containerNotDone.innerHTML = "";
+  //       containerDone.innerHTML = "";
+  //       for (const assignmentKey in assignments) {
+
+
+  //         const assignment = assignments[assignmentKey];
+  //         const assignment_title = assignment.header;
+  //         if (assignment_title !== undefined) {
+  //           const assignment_date = assignment.date;
+  //           const assignment_duedate = assignment.duedate;
+  //           let assignment_status = '';
+  //           const wrapper = document.createElement("div");
+  //           const usernameRef = child(dbRef, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/assignment/${assignmentKey}/completed/${user_parser}/submitted/`);
+  //           const snapshot = await get(usernameRef);
+
+  //           wrapper.className = "assignment-notdone-wrapper";
+  //           wrapper.addEventListener("click", (event) => {
+  //             window.location.href = `manageassignment.html?assignmentcode=${assignmentKey}`;
+  //           });
+
+  //           const iconSection = document.createElement("section");
+  //           iconSection.className = "assignment-icon";
+
+  //           const iconImg = document.createElement("img");
+  //           iconImg.src = "assets/icons/clipboard.png";
+  //           iconImg.className = "assignment-img";
+
+
+  //           iconSection.appendChild(iconImg);
+
+  //           const detailsSection = document.createElement("section");
+  //           detailsSection.className = "assignment-details";
+
+  //           const titleLabel = document.createElement("label");
+  //           titleLabel.className = "assignment-title";
+  //           titleLabel.textContent = assignment_title;
+
+  //           const dateLabel = document.createElement("label");
+  //           dateLabel.className = "assignment-date";
+  //           dateLabel.textContent = `${formatDateTime(assignment_date)}`;
+
+  //           const dueLabel = document.createElement("label");
+  //           dueLabel.className = "assignment-due";
+  //           dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+
+
+  //           detailsSection.appendChild(titleLabel);
+  //           detailsSection.appendChild(dateLabel);
+  //           detailsSection.appendChild(dueLabel);
+
+  //           wrapper.appendChild(iconSection);
+  //           wrapper.appendChild(detailsSection);
+
+
+  //           containerDone.appendChild(wrapper);
+  //           const submission_date = new Date(snapshot.val());
+  //           dueLabel.textContent = `Due ${formatDateTime(assignment_duedate)}`;
+
+
+  //         }
+  //       }
+  //     } else {
+  //       //console.log("No Assignments");
+  //     }
+  //   });
+  // }
 }

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Train chatbot</title>
+    <link rel="stylesheet" href="addmaterials.css" />
+  </head>
+  <body>
+    <div id="loading_animation_div">
+      <img id="loading_animation_gif" src="assets/loading_animation.gif" />
+      <h1 id="parsing_lbl">Parsing...</h1>
+    </div>
+
+    <div class="check_animation_div" id="check_animation_div">
+      <img src="assets/check-animation.gif" class="check-animation" />
+    </div>
+
+    <section class="viewattachedfile-container" id="viewattachedfile-container">
+      <img
+        src=""
+        alt="Image from the link"
+        id="viewattachedfile-img"
+        class="viewattachedfile-cont"
+      />
+      <img
+        src="assets/icons/circle-xmark-solid.svg"
+        alt=""
+        class="bulletin-close-div"
+        id="viewattachedfile-img-close-btn"
+      />
+    </section>
+
+    <section
+      class="viewattachedfile-container-docs"
+      id="viewattachedfile-container-docx"
+    >
+      <div id="output-wordfile" class="viewattachedfile-cont-docs"></div>
+      <img
+        src="assets/icons/circle-xmark-solid.svg"
+        alt=""
+        class="bulletin-close-div"
+        id="viewattachedfile-docx-close-btn"
+      />
+    </section>
+
+    <section
+      class="viewattachedfile-container-pdf"
+      id="viewattachedfile-container-pdf"
+    >
+      <div id="output-pdffile" class="viewattachedfile-cont-pdf"></div>
+      <img
+        src="assets/icons/circle-xmark-solid.svg"
+        alt=""
+        class="bulletin-close-div"
+        id="viewattachedfile-pdf-close-btn"
+      />
+    </section>
+
+    <id id="home_trainchatbot">
+      <section class="trainchatbot-wrapper">
+        <button id="canceladdchatbot-btn">
+          <img
+            class="canceladdcluster-btn"
+            src="assets/icons/arrow-left-solid.svg"
+          />
+        </button>
+        <section class="header-title-wrapper">
+          <label class="header-title">Upload Materials</label>
+        </section>
+        <section class="chatbot-data-wrapper">
+          <section class="duedate-wrapper">
+            <input
+              maxlength="50"
+              type="text"
+              class="createassigment-txt"
+              placeholder="Enter Header"
+              id="header-title"
+            />
+          </section>
+          <section class="duedate-wrapper">
+            <textarea
+              row="0"
+              oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px';"
+              id="createassigment-instructions"
+              placeholder="Enter Instructions"
+            ></textarea>
+          </section>
+
+          <section class="scorring-wrapper">
+            <button class="attachfile-btn" id="attach-document-btn">
+              Attach Document
+            </button>
+            <button class="attachfile-btn" id="attach-quiz-btn">
+              Attach Quiz
+            </button>
+          </section>
+
+          <section
+            class="duedate-wrapper"
+            id="assigment-attachedfile-container"
+          >
+            <!-- <section class="attachedfile-container" id="attachedfile-container">
+              <section class="progress-bar-wrapper">
+                <div class="progress-bar-fill"></div>
+                <label class="sticky-attached" for="">filename.extenstion</label>
+              </section>
+              <section class="remove-attachedfile">
+                <img src="assets/icons/xmark-solid.svg" alt="" class="remove-attachedfile-img" />
+              </section>
+            </section> -->
+          </section>
+
+          <button id="createassignment-btn">Upload Materials</button>
+        </section>
+
+        <section class="fillers">
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,video/*"
+          />
+
+          <form id="datetimeForm">
+            <input
+              type="datetime-local"
+              id="datetime"
+              name="datetime"
+              placeholder="Set Due Date"
+            />
+          </form>
+        </section>
+
+        <section class="fillers"></section>
+        <section class="fillers"></section>
+        <section class="fillers"></section>
+      </section>
+    </id>
+    <script type="module" src="addmaterials.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.2/mammoth.browser.min.js"></script>
+  </body>
+</html>
