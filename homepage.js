@@ -2965,12 +2965,14 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
 
     let fontcolor = '';
     let fontcolorheader = '';
+    let header = 'myjourney-header-template-1.png';
     if (theme === undefined) {
       theme = 'theme3.png';
     }
     if (theme === 'theme2.png') {
       fontcolor = 'theme2';
       fontcolorheader = 'theme2header';
+      header = 'myjourney-header-template.png';
     }
     if (theme === 'theme1.png') {
       fontcolor = 'theme1';
@@ -3004,7 +3006,7 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
     const section = document.createElement('section');
     section.className = 'preview-honorroll-header';
     section.innerHTML = `
-      <img src="assets/myjourney-header-template.png" alt="" class="honorroll-banner" />
+      <img src="assets/${header}" alt="" class="honorroll-banner" />
       <span class="honorroll-greetings ${fontcolorheader}">Congratulations</span>
       <section class="honorroll-course-wrapper ${fontcolorheader}">
         <span class="honorroll-title-lbl">Course Year / Section: </span>
