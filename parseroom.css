@@ -762,7 +762,7 @@ body {
 }
 
 .bulletin-info-announcement {
-  background-color: teal;
+  background-color: rgb(245, 245, 245);
 }
 
 .notdone-assignment {
@@ -963,9 +963,6 @@ body {
 
 .creatediscuss-span {
   width: 100%;
-}
-
-#viewattachedfile-img-close-btn {
 }
 
 .discussroomname-txt {
