@@ -1904,6 +1904,7 @@ body {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.363);
   z-index: 300;
+  flex-direction: column;
 }
 
 .preview-honorroll-wrapper {
@@ -1963,7 +1964,7 @@ body {
   margin-bottom: 1px;
 }
 .honorroll-title-lbl {
-  font-family: Inter-Bold;
+  font-family: Inter-Regular;
   margin-right: 3px;
 }
 
@@ -1976,7 +1977,7 @@ body {
 }
 
 .preview-honorroll-table-left {
-  font-family: Inter-Bold;
+  font-family: Inter-Regular;
   font-size: 6px;
   width: 40px;
   background-color: transparent;
@@ -1987,7 +1988,7 @@ body {
   padding-bottom: 2px;
 }
 .preview-honorroll-table-middle {
-  font-family: Inter-Bold;
+  font-family: Inter-Regular;
   font-size: 6px;
   width: 100%;
   border: 0.05rem solid #000000;
@@ -1997,7 +1998,7 @@ body {
   padding-bottom: 2px;
 }
 .preview-honorroll-table-right {
-  font-family: Inter-Bold;
+  font-family: Inter-Regular;
   font-size: 6px;
   width: 50px;
   background-color: transparent;
@@ -2024,4 +2025,16 @@ body {
   color: #fefefe;
   border: 0.05rem solid #fefefe;
   background-color: #070d2a;
+}
+
+#downloaddeans-pdf-btn {
+  width: 85%;
+  height: 30px;
+  background-color: #f30505;
+  border: none;
+  border-radius: 4px;
+  color: #fefefe;
+  font-family: Inter-Regular;
+  font-size: 12px;
+  margin-top: 10px;
 }

@@ -3035,7 +3035,7 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
 
 
 
-    deanslist.sort((a, b) => b.gpa - a.gpa).forEach((dean, index) => {
+    deanslist.sort((a, b) => a.gpa - b.gpa).forEach((dean, index) => {
 
       if (previousGPA !== dean.gpa) {
         currentRank = index + 1;
@@ -3047,7 +3047,7 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
     <section class="preview-honorroll-table-header">
       <span class="preview-honorroll-table-left ${fontcolor}">${index + 1}</span>
       <span class="preview-honorroll-table-middle ${fontcolor}">${dean.studentname}</span>
-      <span class="preview-honorroll-table-right ${fontcolor}">${currentRank}</span>
+      <span class="preview-honorroll-table-right ${fontcolor}">${dean.gpa}</span>
     </section>
   `;
     });
@@ -3056,33 +3056,86 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
     const footer = document.createElement('section');
     footer.className = 'preview-honorroll-footer';
 
-    // Append these sections to a container element
+    // // Append these sections to a container element
+    // const getLink = document.createElement('button');
+    // getLink.textContent = 'Get Link';
+    // getLink.id = `downloaddeans-pdf-btn`;
+    // getLink.className = 'downloaddeans-pdf-btn';
+    // getLink.addEventListener('click', async (event) => {
+    //   const element = document.getElementById('preview-honorroll-wrapper');
+    //   html2canvas(element, { scale: 3 }) // Increase scale for higher quality
+    //     .then(canvas => {
+    //       const imageData = canvas.toDataURL(); // Get the image data URL
+    //       uploadImageToGitHub(imageData).then((imageUrl) => {
+    //         console.log(imageUrl);
+    //       })
+    //     });
+    // });
+
 
     previewHonorrollWrapper.appendChild(section);
     previewHonorrollWrapper.appendChild(body);
     previewHonorrollWrapper.appendChild(footer);
 
-  });
+    //document.getElementById('preview-honorroll').appendChild(getLink);
+    const element = document.getElementById('preview-honorroll-wrapper');
+
+    // html2canvas(document.querySelector("#preview-honorroll-wrapper")).then((canvas) => {
+    //   const image = canvas.toDataURL("image/png"); // Base64 string of the image
+    //   uploadToGitHub(image);
+    // });
 
 
-  // const element = document.getElementById('preview-honorroll-wrapper');
-  // html2canvas(element, { scale: 3 }) // Increase the scale for HD quality
-  //   .then(canvas => {
-  //     const link = document.createElement('a');
-  //     link.download = 'div-image.png';
-  //     link.href = canvas.toDataURL();
-  //     link.click();
-  //   });
+    let startY = 0;
+    let endY = 0;
+    document.addEventListener("touchstart", (event) => {
+      startY = event.touches[0].clientY;
+    });
+    document.addEventListener("touchend", (event) => {
+      endY = event.changedTouches[0].clientY;
+      if (endY - startY > 300) {
+        document.getElementById('preview-honorroll').style.display = 'none';
 
-  let startY = 0;
-  let endY = 0;
-  document.addEventListener("touchstart", (event) => {
-    startY = event.touches[0].clientY;
-  });
-  document.addEventListener("touchend", (event) => {
-    endY = event.changedTouches[0].clientY;
-    if (endY - startY > 300) {
-      document.getElementById('preview-honorroll').style.display = 'none';
-    }
+      }
+    });
+
+
+
+
   });
 });
+
+// async function uploadToGitHub(base64Image) {
+//   const token = await getApikey();
+//   const owner = "parseitlearninghub";
+//   const repo = "parseitlearninghub-storage";
+//   const filePath = `PARSEIT/storage/${user_parser}/honorroll/downloads/test.png`;
+
+//   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${filePath}`;
+//   const data = {
+//     message: "deanslister " + user_parser,
+//     content: base64Image,
+//   };
+
+//   try {
+//     const response = await fetch(url, {
+//       method: "PUT",
+//       headers: {
+//         "Authorization": `Bearer ${token}`,
+//         "Accept": "application/vnd.github.v3+json",
+//       },
+//       body: JSON.stringify(data),
+//     });
+
+//     const responseData = await response.json();
+
+//     let updateDBFileUrl = responseData.content.download_url;
+
+//     console.log(updateDBFileUrl);
+
+//   } catch (error) {
+//     console.error("Error uploading file:", error);
+//   }
+// }
+
+
