@@ -167,6 +167,7 @@ function sendVerificationCode(id, email, code) {
     //for testing purposes
     //document.getElementById("verificationcode_txt").value = code;
 
+    const type = localStorage.getItem("type-parser");
     updateDBVerification(id, code, type); //this supposed to go
 
     emailjs.send('service_g8cli5d', 'template_b0rhzue', {
@@ -243,11 +244,8 @@ function submitVerificationCode(id, code) {
 }
 
 function removeDBVerification(id, type) {
-    if (type === "student") {
-        remove(ref(database, "PARSEIT/administration/students/" + id + "/verificationcode"));
-    } else {
-        remove(ref(database, "PARSEIT/administration/teachers/" + id + "/verificationcode"));
-    }
+    remove(ref(database, "PARSEIT/administration/students/" + id + "/verificationcode"));
+    remove(ref(database, "PARSEIT/administration/teachers/" + id + "/verificationcode"));
 
 }
 
@@ -373,8 +371,6 @@ function createParser(email, password, id, username) {
             // Handle errors
             console.error("Error signing up:", error.code, error.message);
         });
-
-
 }
 
 function updateParser(id, type, username) {

@@ -80,6 +80,8 @@ document.getElementById("login_btn").addEventListener("click", function () {
                 }
                 localStorage.setItem("activate-parser", id);
                 localStorage.setItem("email-parser", parser[0].email);
+                localStorage.setItem("type-parser", parser[0].type);
+                console
                 window.location.href = "activate.html";
 
 
@@ -180,6 +182,7 @@ function getParser(id) {
                 parser[0].middlename = snapshot.val().middlename;
                 parser[0].suffix = snapshot.val().suffix;
                 parser[0].temporarypass = snapshot.val().temporarypass;
+                parser[0].type = snapshot.val().type;
                 localStorage.setItem("type-parser", "student");
                 resolve();
             } else {
@@ -192,6 +195,7 @@ function getParser(id) {
                         parser[0].middlename = snapshot.val().middlename;
                         parser[0].suffix = snapshot.val().suffix;
                         parser[0].temporarypass = snapshot.val().temporarypass;
+                        parser[0].type = snapshot.val().type;
                         localStorage.setItem("type-parser", "teacher");
                         resolve();
                     } else {

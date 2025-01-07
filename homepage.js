@@ -3216,3 +3216,6 @@ async function sendNotification(email, message) {
 }
 
 
+document.getElementById('viewattachedfile-honors-close-btn').addEventListener('click', async () => {
+  document.getElementById('preview-honorroll').style.display = 'none';
+});
