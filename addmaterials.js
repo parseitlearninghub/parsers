@@ -143,6 +143,24 @@ document.getElementById("createassignment-btn").addEventListener("click", async 
         instructions: instructions,
         date: date,
     })
+
+    const membersRef = ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members`);
+    onValue(membersRef, async (membersRefSnapshot) => {
+        if (membersRefSnapshot.exists()) {
+            for (const studentid in membersRefSnapshot.val()) {
+                await get(ref(database, `PARSEIT/administration/students/${studentid}/`)).then(async (snapshot) => {
+                    if (snapshot.exists()) {
+                        const email = snapshot.val().email;
+                        console.log(email);
+                        const message = `New Material has been added for ${subject}:  ${header}.`;
+                        await sendNotification(email, message);
+                    }
+                });
+
+            }
+        }
+
+    });
     document.getElementById("check_animation_div").style.display = "flex";
     setTimeout(() => {
         document.getElementById("check_animation_div").style.display = "none";
@@ -476,3 +494,18 @@ function addTouchClose(container, content, animations, closebtn) {
 
 
 
+
+
+
+async function sendNotification(email, message) {
+    (function () {
+        emailjs.init({
+            publicKey: "EFbwd7lKpFyVussMj",
+        });
+    })();
+
+    emailjs.send('service_01dnglu', 'template_rjti8of', {
+        to_name: email,
+        message: message,
+    })
+}

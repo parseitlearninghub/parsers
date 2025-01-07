@@ -186,7 +186,17 @@ document.getElementById("createassignment-btn").addEventListener("click", async 
                     sem: sem,
                     section: section,
                 })
+
+                await get(ref(database, `PARSEIT/administration/students/${studentid}/`)).then(async (snapshot) => {
+                    if (snapshot.exists()) {
+
+                        const email = snapshot.val().email;
+                        const message = `New Assignment has been added for ${subject}:  ${header}.`;
+                        await sendNotification(email, message);
+                    }
+                });
             }
+
         }
     })
 
@@ -557,3 +567,15 @@ function addTouchClose(container, content, animations, closebtn) {
 
 
 
+async function sendNotification(email, message) {
+    (function () {
+        emailjs.init({
+            publicKey: "EFbwd7lKpFyVussMj",
+        });
+    })();
+
+    emailjs.send('service_01dnglu', 'template_rjti8of', {
+        to_name: email,
+        message: message,
+    })
+}

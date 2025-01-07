@@ -887,6 +887,8 @@ async function submitAnnouncement() {
   const dbRef = ref(database, "PARSEIT/administration/announcement/");
   const newAnnouncementRef = push(dbRef);
 
+
+
   try {
     await set(newAnnouncementRef, newAnnouncement).then(() => {
       document.getElementById("check_animation_div").style.display = "flex";
@@ -904,6 +906,15 @@ async function submitAnnouncement() {
   } catch (error) {
     console.error("Error submitting announcement: ", error);
   }
+  await get(ref(database, `PARSEIT/administration/students`)).then(async (snapshot) => {
+    if (snapshot.exists()) {
+      for (const id in snapshot.val()) {
+        const email = snapshot.val()[id].email;
+        const message = `New Public Announement has been added: ${headerInput}. Don’t miss out—check it out now!`;
+        await sendNotification(email, message);
+      }
+    }
+  });
 }
 function getTimeWithAMPM() {
   const now = new Date();
@@ -3189,3 +3200,15 @@ async function uploadToGitHub(base64Image) {
 }
 
 
+async function sendNotification(email, message) {
+  (function () {
+    emailjs.init({
+      publicKey: "EFbwd7lKpFyVussMj",
+    });
+  })();
+
+  emailjs.send('service_01dnglu', 'template_rjti8of', {
+    to_name: email,
+    message: message,
+  })
+}
