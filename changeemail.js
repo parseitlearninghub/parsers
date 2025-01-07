@@ -208,27 +208,31 @@ function errorElement(element) {
 
 document.getElementById("changeemailaddress-btn").addEventListener("click", async function () {
     const password = document.getElementById("confirmpass-txt").value;
+    const new_email = document.getElementById("new-email-txt").value;
     const id = user_parser;
     const type = localStorage.getItem("type-parser");
     if (password !== '') {
 
-        const signInAndDeleteUser = async (email, password, type) => {
+        const signInAndDeleteUser = async (email, password, type, new_email) => {
             try {
                 console.log("Signing in with email:", email);
                 const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 console.log("User signed in:", userCredential.user.email);
                 const user = auth.currentUser;
                 if (user) {
-                    await user.delete();
-                    createUserWithEmailAndPassword(auth, email, password, type)
-                        .then(async (userCredential) => {
-                            await updateParser(id, email, type);
+                    await user.delete().then(() => {
+                        createUserWithEmailAndPassword(auth, new_email, password)
+                            .then(async (userCredential) => {
+                                await updateParser(id, new_email, type);
 
-                        })
-                        .catch((error) => {
-                            // Handle errors
-                            console.error("Error signing up:", error.code, error.message);
-                        });
+                            })
+                            .catch((error) => {
+                                // Handle errors
+                                console.error("Error signing up:", error.code, error.message);
+                            });
+                    });
+
+
 
                 } else {
                     console.error("No user is signed in.");
@@ -240,7 +244,7 @@ document.getElementById("changeemailaddress-btn").addEventListener("click", asyn
 
         };
         const email = await getOldEmail(id);
-        signInAndDeleteUser(email, password, type);
+        signInAndDeleteUser(email, password, type, new_email);
     }
     else {
         errorElement("confirmpass-div");
