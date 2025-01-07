@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Train chatbot</title>
+    <link rel="stylesheet" href="settings.css" />
+  </head>
+  <body>
+    <div id="loading_animation_div">
+      <img id="loading_animation_gif" src="assets/loading_animation.gif" />
+      <h1 id="parsing_lbl">Parsing...</h1>
+    </div>
+
+    <div id="notif_div">
+      <div id="notif_cont">
+        <section class="msg_sec">
+          <label id="msg_lbl"></label>
+        </section>
+        <section class="close_sec">
+          <button id="notifclose_btn">
+            <img class="x_icon" src="assets/icons/circle-xmark-solid.svg" />
+          </button>
+        </section>
+      </div>
+    </div>
+
+    <id id="home_trainchatbot">
+      <section class="trainchatbot-wrapper">
+        <button id="canceladdchatbot-btn">
+          <img
+            class="canceladdcluster-btn"
+            src="assets/icons/arrow-left-solid.svg"
+          />
+        </button>
+        <section class="header-title-wrapper">
+          <label class="header-title">Settings</label>
+        </section>
+        <section class="chatbot-data-wrapper">
+          <div class="side_options_wrapper" id="changeemail_btn">
+            <img class="sidebaroptions_img" src="assets/icons/mail.svg" />
+            <span class="sidebar_options_lbl">Change Email</span>
+          </div>
+        </section>
+        <section class="chatbot-data-wrapper">
+          <div class="side_options_wrapper" id="changepass_btn">
+            <img class="sidebaroptions_img" src="assets/icons/key.svg" />
+            <span class="sidebar_options_lbl">Change Password</span>
+          </div>
+        </section>
+      </section>
+    </id>
+    <script type="module" src="settings.js"></script>
+  </body>
+</html>

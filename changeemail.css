@@ -1,0 +1,257 @@
+@font-face {
+  font-family: "Inter-Bold";
+  src: url(assets/fonts/Inter-Bold.otf);
+}
+
+@font-face {
+  font-family: "Inter-Medium";
+  src: url(assets/fonts/Inter-Medium.otf);
+}
+
+@font-face {
+  font-family: "Inter-Regular";
+  src: url(assets/fonts/Inter-Regular.otf);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+}
+
+#home_div {
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  display: none;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+#loading_animation_div {
+  height: 100%;
+  width: 100%;
+  background-color: #fefefe;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  z-index: 1000;
+  position: fixed;
+}
+
+#loading_animation_gif {
+  height: 50px;
+  width: 50px;
+}
+
+#parsing_lbl {
+  font-family: Inter-Regular;
+  color: #f30505;
+  margin-top: 15px;
+  font-size: 12px;
+}
+
+#home_trainchatbot {
+  background-color: transparent;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.trainchatbot-wrapper {
+  width: 90%;
+  height: 100%;
+  background-color: transparent;
+  overflow-x: scroll;
+  scrollbar-width: none;
+}
+
+#canceladdchatbot-btn {
+  border: none;
+  background-color: #fefefe;
+  padding-top: 10px;
+  padding-bottom: 15px;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.canceladdcluster-btn {
+  width: 15px;
+  margin-top: 10px;
+}
+
+.fillers {
+  width: 100%;
+  height: 150px;
+  margin-bottom: 15px;
+  background-color: violet;
+}
+.header-title-wrapper {
+  height: 40px;
+}
+.header-title {
+  font-family: Inter-Bold;
+  font-size: 20px;
+  background-color: transparent;
+  width: 100%;
+  height: 150px;
+}
+
+.chatbot-data-wrapper {
+  width: 100%;
+  background-color: transparent;
+  margin-bottom: 15px;
+}
+
+.side_options_wrapper {
+  height: 40px;
+  background-color: transparent;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  outline: 0.5px solid #dcdcdc;
+  margin: 10px;
+  box-sizing: content-box;
+  border-radius: 3px;
+}
+
+.sidebar_options_lbl {
+  font-family: Inter-Medium;
+  font-size: 18px;
+  margin-left: 15px;
+}
+.sidebaroptions_img {
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background-size: cover;
+  background-position: center;
+  margin-left: 10px;
+  aspect-ratio: 1/1;
+  margin-right: -5px;
+  filter: invert(22%) sepia(100%) saturate(7416%) hue-rotate(4deg)
+    brightness(95%) contrast(109%);
+}
+
+#notif_div {
+  width: 85%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 1;
+  position: fixed;
+  pointer-events: none;
+  /* display: flex; */
+  display: none;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+#notif_cont {
+  width: 100%;
+  height: 50px;
+  background-color: #fefefe;
+  margin-bottom: 25px;
+  display: flex;
+  border-radius: 7px;
+  overflow: hidden;
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+    rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+}
+
+.msg_sec {
+  background-color: #f30505;
+  width: 100%;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.close_sec {
+  background-color: #f30505;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  width: fit-content;
+}
+
+#msg_lbl {
+  margin-left: 15px;
+  color: #fefefe;
+  font-family: Inter-Regular;
+  font-size: 14px;
+}
+
+#notifclose_btn {
+  margin-right: 5px;
+  border: none;
+  background-color: transparent;
+  pointer-events: all;
+}
+
+.x_icon {
+  width: 20px;
+  filter: invert(100%) sepia(100%) saturate(0%) hue-rotate(240deg)
+    brightness(102%) contrast(102%);
+}
+
+.verify-new-email {
+  width: 100%;
+  border: none;
+  padding-left: 15px;
+  font-family: Inter-Regular;
+}
+
+.verify-new-email:focus {
+  outline: none;
+}
+
+.verify-btn {
+  background-color: transparent;
+  border: none;
+  border-radius: 4px;
+  font-family: Inter-Regular;
+  font-size: 14px;
+  padding-right: 15px;
+}
+.side_options_wrapperx {
+  height: 40px;
+  background-color: transparent;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin: 10px;
+  box-sizing: content-box;
+  border-radius: 3px;
+}
+
+.changeemailaddress-btn {
+  width: 100%;
+  background-color: #f30505;
+  height: 100%;
+  border: none;
+  color: #fefefe;
+  font-family: Inter-Regular;
+  font-size: 14px;
+  border-radius: 4px;
+}
+
+#new-code-div,
+#confirmpass-div,
+#changeemailaddress-btn {
+  display: none;
+}

@@ -11,8 +11,9 @@ import {
   push,
   set,
   remove,
-  update
+  update,
 } from "https://www.gstatic.com/firebasejs/10.13.1/firebase-database.js";
+
 const firebaseConfig = {
   apiKey: "AIzaSyCFqgbA_t3EBVO21nW70umJOHX3UdRr9MY",
   authDomain: "parseit-8021e.firebaseapp.com",
@@ -570,10 +571,11 @@ document.getElementById("myJourney_btn").addEventListener("click", (event) => {
 
 document.getElementById("settings_btn").addEventListener("click", (event) => {
   event.preventDefault();
-  document.getElementById("nofeature").style.display = "flex";
-  setTimeout(() => {
-    document.getElementById("nofeature").style.display = "none";
-  }, 1000);
+  // document.getElementById("nofeature").style.display = "flex";
+  // setTimeout(() => {
+  //   document.getElementById("nofeature").style.display = "none";
+  // }, 1000);
+  window.location.href = "settings.html";
 });
 
 
@@ -3212,3 +3214,5 @@ async function sendNotification(email, message) {
     message: message,
   })
 }
+
+

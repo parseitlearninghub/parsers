@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Train chatbot</title>
+    <link rel="stylesheet" href="changeemail.css" />
+  </head>
+  <body>
+    <div id="loading_animation_div">
+      <img id="loading_animation_gif" src="assets/loading_animation.gif" />
+      <h1 id="parsing_lbl">Parsing...</h1>
+    </div>
+
+    <div id="notif_div">
+      <div id="notif_cont">
+        <section class="msg_sec">
+          <label id="msg_lbl"></label>
+        </section>
+        <section class="close_sec">
+          <button id="notifclose_btn">
+            <img class="x_icon" src="assets/icons/circle-xmark-solid.svg" />
+          </button>
+        </section>
+      </div>
+    </div>
+
+    <id id="home_trainchatbot">
+      <section class="trainchatbot-wrapper">
+        <button id="canceladdchatbot-btn">
+          <img
+            class="canceladdcluster-btn"
+            src="assets/icons/arrow-left-solid.svg"
+          />
+        </button>
+        <section class="header-title-wrapper">
+          <label class="header-title">Change Email Address</label>
+        </section>
+        <section class="chatbot-data-wrapper">
+          <div class="side_options_wrapper" id="new-email-div">
+            <input
+              type="text"
+              class="verify-new-email"
+              id="new-email-txt"
+              placeholder="Verify New Email"
+            />
+            <button class="verify-btn" id="verify-new-email-btn">Verify</button>
+          </div>
+          <div class="side_options_wrapper" id="new-code-div">
+            <input
+              type="text"
+              class="verify-new-email"
+              id="new-code-txt"
+              placeholder="Enter Code"
+            />
+            <button class="verify-btn" id="verify-code-btn">Submit</button>
+          </div>
+          <div class="side_options_wrapper" id="confirmpass-div">
+            <input
+              type="text"
+              class="verify-new-email"
+              id="confirmpass-txt"
+              placeholder="Enter Password"
+            />
+          </div>
+          <div class="side_options_wrapperx">
+            <button class="changeemailaddress-btn" id="changeemailaddress-btn">
+              Change Email
+            </button>
+          </div>
+        </section>
+      </section>
+    </id>
+    <script type="module" src="changeemail.js"></script>
+    <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"
+    ></script>
+  </body>
+</html>
