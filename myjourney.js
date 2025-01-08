@@ -330,7 +330,7 @@ async function previewMyJourney() {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -426,7 +426,7 @@ async function previewMyJourney() {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -472,7 +472,7 @@ async function previewMyJourney() {
                     const headerDiv = document.createElement('div');
                     headerDiv.classList.add('myjourney-template-header');
                     const headerImg = document.createElement('img');
-                    headerImg.src = 'assets/myjourney-header-template.png';
+                    headerImg.src = 'assets/myjourney-header-template-1.png';
                     headerImg.classList.add('myjourney-template-header-img');
                     headerImg.id = 'myjourney-template-header-img';
                     headerImg.setAttribute('crossorigin', 'anonymous');
@@ -680,7 +680,7 @@ async function previewMyJourneyByAcad(acad_val) {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -776,7 +776,7 @@ async function previewMyJourneyByAcad(acad_val) {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -822,7 +822,7 @@ async function previewMyJourneyByAcad(acad_val) {
                         const headerDiv = document.createElement('div');
                         headerDiv.classList.add('myjourney-template-header');
                         const headerImg = document.createElement('img');
-                        headerImg.src = 'assets/myjourney-header-template.png';
+                        headerImg.src = 'assets/myjourney-header-template-1.png';
                         headerImg.classList.add('myjourney-template-header-img');
                         headerImg.id = 'myjourney-template-header-img';
                         headerImg.setAttribute('crossorigin', 'anonymous');
@@ -1023,7 +1023,7 @@ async function previewMyJourneyBySem(sem_val) {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -1119,7 +1119,7 @@ async function previewMyJourneyBySem(sem_val) {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -1166,7 +1166,7 @@ async function previewMyJourneyBySem(sem_val) {
                     const headerDiv = document.createElement('div');
                     headerDiv.classList.add('myjourney-template-header');
                     const headerImg = document.createElement('img');
-                    headerImg.src = 'assets/myjourney-header-template.png';
+                    headerImg.src = 'assets/myjourney-header-template-1.png';
                     headerImg.classList.add('myjourney-template-header-img');
                     headerImg.id = 'myjourney-template-header-img';
                     headerImg.setAttribute('crossorigin', 'anonymous');
@@ -1347,7 +1347,7 @@ async function previewMyJourneyByAll(acad_val, sem_val) {
                     };
 
 
-                    const imgSrc = "assets/myjourney-header-template.png";
+                    const imgSrc = "assets/myjourney-header-template-1.png";
                     const canvas = document.createElement("canvas");
                     const ctx = canvas.getContext("2d");
 
@@ -1443,7 +1443,7 @@ async function previewMyJourneyByAll(acad_val, sem_val) {
                             if (yOffset > 280) {
                                 pdf.addPage();
                                 yOffset = 80;
-                                const imgSrc = "assets/myjourney-header-template.png";
+                                const imgSrc = "assets/myjourney-header-template-1.png";
                                 const canvas = document.createElement("canvas");
                                 const ctx = canvas.getContext("2d");
                                 const imgElement = new Image();
@@ -1489,7 +1489,7 @@ async function previewMyJourneyByAll(acad_val, sem_val) {
                         const headerDiv = document.createElement('div');
                         headerDiv.classList.add('myjourney-template-header');
                         const headerImg = document.createElement('img');
-                        headerImg.src = 'assets/myjourney-header-template.png';
+                        headerImg.src = 'assets/myjourney-header-template-1.png';
                         headerImg.classList.add('myjourney-template-header-img');
                         headerImg.id = 'myjourney-template-header-img';
                         headerImg.setAttribute('crossorigin', 'anonymous');

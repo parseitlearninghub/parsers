@@ -2927,7 +2927,7 @@ async function calculateUnit(studentid) {
   let finalgrade = grade / totalunit;
   await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/`), {
     unit: totalunit,
-    gpa: finalgrade.toFixed(2),
+    gpa: finalgrade.toFixed(3),
   });
   await checkHonorGenerate();
   await getHonorDraftCluster();
@@ -2979,7 +2979,7 @@ document.getElementById("generate-mydraft-btn").addEventListener("click", async 
       const gpa = studentData.gpa;
       const unit = studentData.unit;
       const fullname = await getFullname(studentid);
-      if (gpa <= 1.75 && unit >= 17) {
+      if (gpa <= 1.750 && unit >= 17) {
         const student = {
           studentname: fullname,
           gpa: gpa,
