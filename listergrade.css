@@ -170,6 +170,8 @@ body {
   border-radius: 4px;
   border: 0.3px solid #dcdcdc;
   text-align: center;
+  margin-right: 65px;
+  margin-left: 10px;
 }
 
 .student-id:focus {

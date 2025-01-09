@@ -74,12 +74,49 @@ async function getSubmissions() {
                 bottomMenu.className = "bottom-menu-assignment";
 
                 let currentGrade = membersRefSnapshot.val()[studentid].finalgrade;
+                if (parseFloat(currentGrade) <= 0) {
+                    currentGrade = '';
+                }
                 const inputElement = document.createElement('input');
                 inputElement.type = 'number';
                 inputElement.className = 'student-id';
                 inputElement.id = 'finalgrade-txt';
                 inputElement.value = currentGrade;
                 inputElement.disabled = true;
+
+                let status = membersRefSnapshot.val()[studentid].status || ''; // Current status
+                const unitDropdown = document.createElement('select');
+                unitDropdown.className = '';
+
+                // Define the dropdown options
+                const options = [
+                    { value: '', text: 'Pending' }, // Empty option as default
+                    { value: 'WDN', text: 'WDN' },
+                    { value: 'DRP', text: 'DRP' },
+                    { value: 'INC', text: 'INC' },
+                ];
+
+                // Populate the dropdown with options
+                options.forEach(async (optionData) => {
+                    const option = document.createElement('option');
+                    option.value = optionData.value;
+                    option.textContent = optionData.text;
+
+                    // Set the default selected value
+                    if (optionData.value === status) {
+                        option.selected = true;
+
+                    }
+                    unitDropdown.appendChild(option);
+                });
+                unitDropdown.disabled = true;
+                bottomMenu.appendChild(unitDropdown);
+                if (currentGrade !== '') {
+                    unitDropdown.style.visibility = 'hidden';
+                }
+
+
+
 
                 bottomMenu.appendChild(inputElement);
                 topMenu.innerHTML = `<span class="student-name">${studentid}</span><span class="student-score"></span>
