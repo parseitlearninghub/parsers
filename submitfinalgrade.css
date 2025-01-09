@@ -170,6 +170,8 @@ body {
   border-radius: 4px;
   border: 0.3px solid #dcdcdc;
   text-align: center;
+  margin-right: 60px;
+  margin-left: 15px;
 }
 
 .student-id:focus {
@@ -200,6 +202,15 @@ body {
   aspect-ratio: 1/1;
 }
 
+.draft-student-name-unit {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Inter-Light;
+  opacity: 0.5;
+}
 .student-status-gray {
   margin-right: 15px;
   margin-bottom: 7px;

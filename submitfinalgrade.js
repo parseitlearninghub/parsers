@@ -76,11 +76,75 @@ async function getSubmissions() {
                 bottomMenu.className = "bottom-menu-assignment";
 
                 let currentGrade = membersRefSnapshot.val()[studentid].finalgrade;
+                if (parseFloat(currentGrade) <= 0) {
+                    currentGrade = '';
+                }
                 const inputElement = document.createElement('input');
                 inputElement.type = 'number';
                 inputElement.className = 'student-id';
                 inputElement.id = 'finalgrade-txt';
                 inputElement.value = currentGrade;
+
+                let status = membersRefSnapshot.val()[studentid].status || ''; // Current status
+                const unitDropdown = document.createElement('select');
+                unitDropdown.className = '';
+
+
+
+                // Define the dropdown options
+                const options = [
+                    { value: '', text: 'Status' }, // Empty option as default
+                    { value: 'WDN', text: 'WDN' },
+                    { value: 'DRP', text: 'DRP' },
+                    { value: 'INC', text: 'INC' },
+                ];
+
+                // Populate the dropdown with options
+                options.forEach(async (optionData) => {
+                    const option = document.createElement('option');
+                    option.value = optionData.value;
+                    option.textContent = optionData.text;
+
+                    // Set the default selected value
+                    if (optionData.value === status) {
+                        option.selected = true;
+
+                    }
+                    unitDropdown.appendChild(option);
+                });
+
+                if (status !== '') {
+                    inputElement.disabled = true;
+                    inputElement.value = '';
+                }
+                else {
+                    inputElement.disabled = false;
+                    inputElement.value = currentGrade;
+                }
+
+                unitDropdown.addEventListener('change', async () => {
+                    const selectedOption = unitDropdown.value;
+                    if (selectedOption === '') {
+                        inputElement.disabled = true;
+                        inputElement.value = '';
+                        await remove(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members/${studentid}/status`))
+                    }
+                    else {
+                        inputElement.disabled = false;
+
+                        await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members/${studentid}/`), {
+                            status: selectedOption,
+                            finalgrade: '0',
+                        });
+                        inputElement.value = currentGrade;
+                    }
+
+                })
+
+                // Append the dropdown to the bottom menu
+                bottomMenu.appendChild(unitDropdown);
+
+
 
                 bottomMenu.appendChild(inputElement);
                 topMenu.innerHTML = `<span class="student-name">${fullname}</span><span class="student-score"></span>
@@ -91,7 +155,6 @@ async function getSubmissions() {
                 assignmentWrapper.addEventListener("click", async (event) => {
                     navigator.clipboard.writeText(`@${username}`).then(() => {
                         assignmentWrapper.style.backgroundColor = '#f1f1f1d8';
-                        inputElement.focus();
                         setTimeout(() => {
                             assignmentWrapper.style.backgroundColor = '#fafafa';
                         }, 1000);
@@ -99,7 +162,8 @@ async function getSubmissions() {
                 });
 
                 inputElement.addEventListener("blur", async () => {
-                    if (inputElement.value !== "") {
+
+                    if (inputElement.value !== "" && parseFloat(inputElement.value) <= 5.0 && parseFloat(inputElement.value) > 0) {
                         await update(ref(database, `PARSEIT/administration/parseclass/${acadref}/${yearlvl}/${sem}/${subject}/${section}/members/${studentid}/`), {
                             finalgrade: inputElement.value,
                         });
@@ -108,6 +172,8 @@ async function getSubmissions() {
                         inputElement.value = currentGrade;
                     }
                 });
+
+
 
                 container.appendChild(assignmentWrapper);
             });

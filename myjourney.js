@@ -407,7 +407,10 @@ async function previewMyJourney() {
                             // Split text for word wrapping (only for Description and Subject)
                             const subjectLines = pdf.splitTextToSize(subject, columnWidths.subject);
                             const descriptionLines = pdf.splitTextToSize(subjectData.name, columnWidths.description);
-
+                            let finalgrade = subjectData.finalgrade;
+                            if (parseFloat(subjectData.finalgrade) <= 0) {
+                                finalgrade = ''
+                            }
                             // Add subject, description, unit, and grade with word wrapping
                             pdf.text(subjectLines, 15, yOffset);
                             pdf.rect(13, yOffset - 5.5, 40, 8);
@@ -415,7 +418,7 @@ async function previewMyJourney() {
                             pdf.rect(53, yOffset - 5.5, 112, 8);
                             pdf.text(subjectData.unit.toString(), 167, yOffset);
                             pdf.rect(165, yOffset - 5.5, 13, 8);
-                            pdf.text(subjectData.finalgrade.toString(), 180, yOffset);
+                            pdf.text(finalgrade.toString(), 180, yOffset);
                             pdf.rect(178, yOffset - 5.5, 20, 8);
 
 
@@ -544,7 +547,11 @@ async function previewMyJourney() {
                             const unitsCell = document.createElement("td");
                             unitsCell.textContent = snapshot.val()[acadref][semester][subject].unit;
                             const gradeCell = document.createElement("td");
-                            gradeCell.textContent = snapshot.val()[acadref][semester][subject].finalgrade;
+                            let finalgrade = snapshot.val()[acadref][semester][subject].finalgrade;
+                            if (parseFloat(snapshot.val()[acadref][semester][subject].finalgrade) <= 0) {
+                                finalgrade = '';
+                            }
+                            gradeCell.textContent = finalgrade;
                             row.appendChild(subjectCell);
                             row.appendChild(descriptionCell);
                             row.appendChild(unitsCell);
@@ -765,7 +772,12 @@ async function previewMyJourneyByAcad(acad_val) {
                             pdf.rect(53, yOffset - 5.5, 112, 8);
                             pdf.text(subjectData.unit.toString(), 167, yOffset);
                             pdf.rect(165, yOffset - 5.5, 13, 8);
-                            pdf.text(subjectData.finalgrade.toString(), 180, yOffset);
+
+                            let finalgrade = subjectData.finalgrade;
+                            if (parseFloat(subjectData.finalgrade) <= 0) {
+                                finalgrade = ''
+                            }
+                            pdf.text(finalgrade.toString(), 180, yOffset);
                             pdf.rect(178, yOffset - 5.5, 20, 8);
 
 
@@ -895,7 +907,11 @@ async function previewMyJourneyByAcad(acad_val) {
                                 const unitsCell = document.createElement("td");
                                 unitsCell.textContent = snapshot.val()[acadref][semester][subject].unit;
                                 const gradeCell = document.createElement("td");
-                                gradeCell.textContent = snapshot.val()[acadref][semester][subject].finalgrade;
+                                let finalgrade = snapshot.val()[acadref][semester][subject].finalgrade;
+                                if (parseFloat(snapshot.val()[acadref][semester][subject].finalgrade) <= 0) {
+                                    finalgrade = '';
+                                }
+                                gradeCell.textContent = finalgrade;
                                 row.appendChild(subjectCell);
                                 row.appendChild(descriptionCell);
                                 row.appendChild(unitsCell);
@@ -1108,7 +1124,11 @@ async function previewMyJourneyBySem(sem_val) {
                             pdf.rect(53, yOffset - 5.5, 112, 8);
                             pdf.text(subjectData.unit.toString(), 167, yOffset);
                             pdf.rect(165, yOffset - 5.5, 13, 8);
-                            pdf.text(subjectData.finalgrade.toString(), 180, yOffset);
+                            let finalgrade = subjectData.finalgrade;
+                            if (parseFloat(subjectData.finalgrade) <= 0) {
+                                finalgrade = ''
+                            }
+                            pdf.text(finalgrade.toString(), 180, yOffset);
                             pdf.rect(178, yOffset - 5.5, 20, 8);
 
 
@@ -1239,7 +1259,11 @@ async function previewMyJourneyBySem(sem_val) {
                             const unitsCell = document.createElement("td");
                             unitsCell.textContent = snapshot.val()[acadref][semester][subject].unit;
                             const gradeCell = document.createElement("td");
-                            gradeCell.textContent = snapshot.val()[acadref][semester][subject].finalgrade;
+                            let finalgrade = snapshot.val()[acadref][semester][subject].finalgrade;
+                            if (parseFloat(snapshot.val()[acadref][semester][subject].finalgrade) <= 0) {
+                                finalgrade = '';
+                            }
+                            gradeCell.textContent = finalgrade;
                             row.appendChild(subjectCell);
                             row.appendChild(descriptionCell);
                             row.appendChild(unitsCell);
@@ -1432,7 +1456,11 @@ async function previewMyJourneyByAll(acad_val, sem_val) {
                             pdf.rect(53, yOffset - 5.5, 112, 8);
                             pdf.text(subjectData.unit.toString(), 167, yOffset);
                             pdf.rect(165, yOffset - 5.5, 13, 8);
-                            pdf.text(subjectData.finalgrade.toString(), 180, yOffset);
+                            let finalgrade = subjectData.finalgrade;
+                            if (parseFloat(subjectData.finalgrade) <= 0) {
+                                finalgrade = ''
+                            }
+                            pdf.text(finalgrade.toString(), 180, yOffset);
                             pdf.rect(178, yOffset - 5.5, 20, 8);
 
 
@@ -1562,7 +1590,11 @@ async function previewMyJourneyByAll(acad_val, sem_val) {
                                 const unitsCell = document.createElement("td");
                                 unitsCell.textContent = snapshot.val()[acadref][semester][subject].unit;
                                 const gradeCell = document.createElement("td");
-                                gradeCell.textContent = snapshot.val()[acadref][semester][subject].finalgrade;
+                                let finalgrade = snapshot.val()[acadref][semester][subject].finalgrade;
+                                if (parseFloat(snapshot.val()[acadref][semester][subject].finalgrade) <= 0) {
+                                    finalgrade = '';
+                                }
+                                gradeCell.textContent = finalgrade;
                                 row.appendChild(subjectCell);
                                 row.appendChild(descriptionCell);
                                 row.appendChild(unitsCell);
