@@ -2784,6 +2784,8 @@ document.getElementById("honordelete-mydraft-btn").addEventListener("click", asy
 
 async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
   const acadRef = ref(database, `PARSEIT/administration/parseclass/${acad_val}`);
+  let applicable = true;
+  let remarks = '';
   onValue(acadRef, async (acadRefSnapshot) => {
     if (acadRefSnapshot.exists()) {
       const updates = {};
@@ -2805,7 +2807,11 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
                     if (typeof value[subKey] === "object" && value[subKey] !== null) {
                       for (const studentKey in value[subKey]) {
                         if (studentKey === studentid) {
-
+                          if (value[subKey][studentKey].status !== undefined) {
+                            applicable = false;
+                            remarks += `${value[subKey][studentKey].status} `;
+                          }
+                          console.log(value[subKey][studentKey].status);
                           if (!updates[acad_val]) updates[acad_val] = {};
                           if (!updates[acad_val][sem]) updates[acad_val][sem] = {};
 
@@ -2826,7 +2832,14 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
         }
       }
 
-      if (Object.keys(updates).length !== 0) {
+      if (!applicable) {
+        showMessage("Not Applicable: " + remarks);
+      }
+      else if (Object.keys(updates).length !== 0) {
+        showMessage("No Data Found");
+      }
+
+      if (Object.keys(updates).length !== 0 && applicable) {
         await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`));
         await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`), updates);
         await calculateUnit(studentid);
@@ -3219,3 +3232,12 @@ async function sendNotification(email, message) {
 document.getElementById('viewattachedfile-honors-close-btn').addEventListener('click', async () => {
   document.getElementById('preview-honorroll').style.display = 'none';
 });
+
+document.getElementById("notifclose_btn").addEventListener("click", function () {
+  document.getElementById("notif_div").style.display = "none";
+});
+
+function showMessage(message) {
+  document.getElementById("msg_lbl").innerText = message;
+  document.getElementById("notif_div").style.display = "flex";
+}
