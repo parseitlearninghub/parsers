@@ -160,7 +160,7 @@ async function getSubmissions() {
                         let finalgrade = grade / totalunit;
                         await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${activestudentid}/`), {
                             unit: totalunit,
-                            gpa: finalgrade.toFixed(2),
+                            gpa: finalgrade.toFixed(3),
                         });
 
                     }

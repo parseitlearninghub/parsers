@@ -2848,7 +2848,6 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
       }
       else {
         errorElement('honoradd-mydraft-txt');
-        showMessage("No Data Found");
       }
     }
     else {
