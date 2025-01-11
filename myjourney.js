@@ -291,13 +291,16 @@ async function previewMyJourney() {
                                         if (typeof value[subKey] === "object" && value[subKey] !== null) {
                                             for (const studentKey in value[subKey]) {
                                                 if (studentKey === admin_id) {
-
+                                                    let finalgrade = value[subKey][studentKey].finalgrade;
+                                                    if (value[subKey][studentKey].status !== undefined) {
+                                                        finalgrade = value[subKey][studentKey].status;
+                                                    }
                                                     if (!updates[acadref]) updates[acadref] = {};
                                                     if (!updates[acadref][sem]) updates[acadref][sem] = {};
 
                                                     updates[acadref][sem][subject] = {
                                                         name: subjectSnapshot[subject].name,
-                                                        finalgrade: value[subKey][studentKey].finalgrade,
+                                                        finalgrade: finalgrade,
                                                         unit: subjectSnapshot[subject].unit,
                                                     };
                                                 }
@@ -652,13 +655,16 @@ async function previewMyJourneyByAcad(acad_val) {
                                     if (typeof value[subKey] === "object" && value[subKey] !== null) {
                                         for (const studentKey in value[subKey]) {
                                             if (studentKey === admin_id) {
-
+                                                let finalgrade = value[subKey][studentKey].finalgrade;
+                                                if (value[subKey][studentKey].status !== undefined) {
+                                                    finalgrade = value[subKey][studentKey].status;
+                                                }
                                                 if (!updates[acad_val]) updates[acad_val] = {};
                                                 if (!updates[acad_val][sem]) updates[acad_val][sem] = {};
 
                                                 updates[acad_val][sem][subject] = {
                                                     name: subjectSnapshot[subject].name,
-                                                    finalgrade: value[subKey][studentKey].finalgrade,
+                                                    finalgrade: finalgrade,
                                                     unit: subjectSnapshot[subject].unit,
                                                 };
                                             }
@@ -999,13 +1005,16 @@ async function previewMyJourneyBySem(sem_val) {
                                             if (typeof value[subKey] === "object" && value[subKey] !== null) {
                                                 for (const studentKey in value[subKey]) {
                                                     if (studentKey === admin_id) {
-
+                                                        let finalgrade = value[subKey][studentKey].finalgrade;
+                                                        if (value[subKey][studentKey].status !== undefined) {
+                                                            finalgrade = value[subKey][studentKey].status;
+                                                        }
                                                         if (!updates[acadref]) updates[acadref] = {};
                                                         if (!updates[acadref][sem]) updates[acadref][sem] = {};
 
                                                         updates[acadref][sem][subject] = {
                                                             name: subjectSnapshot[subject].name,
-                                                            finalgrade: value[subKey][studentKey].finalgrade,
+                                                            finalgrade: finalgrade,
                                                             unit: subjectSnapshot[subject].unit,
                                                         };
                                                     }
@@ -1334,13 +1343,16 @@ async function previewMyJourneyByAll(acad_val, sem_val) {
                                         if (typeof value[subKey] === "object" && value[subKey] !== null) {
                                             for (const studentKey in value[subKey]) {
                                                 if (studentKey === admin_id) {
-
+                                                    let finalgrade = value[subKey][studentKey].finalgrade;
+                                                    if (value[subKey][studentKey].status !== undefined) {
+                                                        finalgrade = value[subKey][studentKey].status;
+                                                    }
                                                     if (!updates[acad_val]) updates[acad_val] = {};
                                                     if (!updates[acad_val][sem]) updates[acad_val][sem] = {};
 
                                                     updates[acad_val][sem][subject] = {
                                                         name: subjectSnapshot[subject].name,
-                                                        finalgrade: value[subKey][studentKey].finalgrade,
+                                                        finalgrade: finalgrade,
                                                         unit: subjectSnapshot[subject].unit,
                                                     };
                                                 }

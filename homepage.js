@@ -2811,7 +2811,7 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
                             applicable = false;
                             remarks += `${value[subKey][studentKey].status} `;
                           }
-                          console.log(value[subKey][studentKey].status);
+
                           if (!updates[acad_val]) updates[acad_val] = {};
                           if (!updates[acad_val][sem]) updates[acad_val][sem] = {};
 
@@ -2848,6 +2848,7 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
       }
       else {
         errorElement('honoradd-mydraft-txt');
+        showMessage("No Data Found");
       }
     }
     else {
