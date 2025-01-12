@@ -38,8 +38,7 @@ window.addEventListener("load", async function () {
     //     document.getElementById("span-yearlvl").style.display = "none";
     //     document.getElementById("span-section").style.display = "none";
     // }
-    document.getElementById("span-username").style.display = "flex";
-    document.getElementById("span-tag").style.display = "flex";
+
     await getCreds(user_parser, active_parser_type);
 });
 
@@ -170,7 +169,6 @@ async function getCreds(username, type) {
     if (snapshot.exists()) {
         snapshot.val();
         document.getElementById('profile-fullname').innerText = snapshot.val().firstname + " " + snapshot.val().lastname;
-        document.getElementById('span-username').innerText = await getparser_username(username);
         document.getElementById('span-section').innerText = snapshot.val().section;
         if (snapshot.val().yearlvl === "1") {
             document.getElementById('span-yearlvl').innerText = "Freshman";
@@ -182,8 +180,9 @@ async function getCreds(username, type) {
             document.getElementById('span-yearlvl').innerText = "Junior";
         }
         else if (snapshot.val().yearlvl === "4") {
-            document.getElementById('span-yearlvl').innerText = "Senior";
+
         }
+        document.getElementById('span-yearlvl').innerText = snapshot.val().email;
     } else {
         console.log("No data available");
         return null;

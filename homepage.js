@@ -2786,6 +2786,7 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
   const acadRef = ref(database, `PARSEIT/administration/parseclass/${acad_val}`);
   let applicable = true;
   let remarks = '';
+  let totalunits = 0;
   onValue(acadRef, async (acadRefSnapshot) => {
     if (acadRefSnapshot.exists()) {
       const updates = {};
@@ -2807,7 +2808,17 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
                     if (typeof value[subKey] === "object" && value[subKey] !== null) {
                       for (const studentKey in value[subKey]) {
                         if (studentKey === studentid) {
-                          if (value[subKey][studentKey].status !== undefined) {
+                          let unit = subjectSnapshot[subject].unit;
+                          if (value[subKey][studentKey].status === "WDN") {
+                            unit = 0;
+                          }
+
+                          if (value[subKey][studentKey].status === "INC") {
+                            applicable = false;
+                            remarks += `${value[subKey][studentKey].status} `;
+                          }
+
+                          if (value[subKey][studentKey].status === "DRP") {
                             applicable = false;
                             remarks += `${value[subKey][studentKey].status} `;
                           }
@@ -2815,10 +2826,13 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
                           if (!updates[acad_val]) updates[acad_val] = {};
                           if (!updates[acad_val][sem]) updates[acad_val][sem] = {};
 
+
+                          totalunits += parseFloat(unit);
+
                           updates[subject] = {
                             name: subjectSnapshot[subject].name,
                             finalgrade: value[subKey][studentKey].finalgrade,
-                            unit: subjectSnapshot[subject].unit,
+                            unit: unit,
                           };
                         }
                       }
@@ -2832,14 +2846,21 @@ async function previewMyJourneyByAll(acad_val, sem_val, studentid, active) {
         }
       }
 
+
+      if (Object.keys(updates).length === 0) {
+        showMessage("No Data Found");
+      }
       if (!applicable) {
         showMessage("Not Applicable: " + remarks);
       }
-      else if (Object.keys(updates).length !== 0) {
-        showMessage("No Data Found");
+
+      if (totalunits < 18) {
+        showMessage("Not Applicable: Minimum units not acquired");
       }
 
-      if (Object.keys(updates).length !== 0 && applicable) {
+
+
+      if (Object.keys(updates).length !== 0 && applicable && totalunits >= 18) {
         await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`));
         await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`), updates);
         await calculateUnit(studentid);
@@ -2869,6 +2890,8 @@ async function updateMyDraftHonor(acad_val, sem_val, studentid, active) {
   onValue(acadRef, async (acadRefSnapshot) => {
     if (acadRefSnapshot.exists()) {
       const updates = {};
+      let applicable = true;
+      let totalunits = 0;
       const yearlvlSnapshot = acadRefSnapshot.val();
       for (const yearlvl in yearlvlSnapshot) {
         const semSnapshot = yearlvlSnapshot[yearlvl];
@@ -2888,13 +2911,29 @@ async function updateMyDraftHonor(acad_val, sem_val, studentid, active) {
                       for (const studentKey in value[subKey]) {
                         if (studentKey === studentid) {
 
+                          let unit = subjectSnapshot[subject].unit;
+                          if (value[subKey][studentKey].status === "WDN") {
+                            unit = 0;
+                          }
+
+                          if (value[subKey][studentKey].status === "INC") {
+                            applicable = false;
+                          }
+
+                          if (value[subKey][studentKey].status === "DRP") {
+                            applicable = false;
+                            remarks += `${value[subKey][studentKey].status} `;
+                          }
+
                           if (!updates[acad_val]) updates[acad_val] = {};
                           if (!updates[acad_val][sem]) updates[acad_val][sem] = {};
+
+                          totalunits += parseFloat(unit);
 
                           updates[subject] = {
                             name: subjectSnapshot[subject].name,
                             finalgrade: value[subKey][studentKey].finalgrade,
-                            unit: subjectSnapshot[subject].unit,
+                            unit: unit,
                           };
                         }
                       }
@@ -2908,7 +2947,7 @@ async function updateMyDraftHonor(acad_val, sem_val, studentid, active) {
         }
       }
 
-      if (Object.keys(updates).length !== 0) {
+      if (Object.keys(updates).length !== 0 && applicable && totalunits >= 18) {
         await remove(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`));
         await update(ref(database, `PARSEIT/administration/teachers/${user_parser}/honorroll/myclusters/${active}/cluster/${studentid}/subjects`), updates);
         await calculateUnit(studentid);
