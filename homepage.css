@@ -1085,6 +1085,7 @@ body {
   vertical-align: middle;
   margin-right: 10px;
   color: #898989;
+  text-wrap: nowrap;
 }
 .select-bg-img {
   width: 12px;
